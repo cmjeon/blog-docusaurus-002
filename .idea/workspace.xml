@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="dadc3de9-67e7-40e0-b3a2-05c6e1b040ce" name="Changes" comment="initial commit">
+    <list default="true" id="dadc3de9-67e7-40e0-b3a2-05c6e1b040ce" name="Changes" comment="docusaurus 수정">
       <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/docusaurus.config.js" beforeDir="false" afterPath="$PROJECT_DIR$/docusaurus.config.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -89,14 +88,7 @@
       <workItem from="1661079986126" duration="7601000" />
       <workItem from="1663598114221" duration="3003000" />
       <workItem from="1664024643186" duration="1405000" />
-      <workItem from="1664074906204" duration="917000" />
-    </task>
-    <task id="LOCAL-00042" summary="정규표현식 실습해보자">
-      <created>1655768015593</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1655768015593</updated>
+      <workItem from="1664074906204" duration="2565000" />
     </task>
     <task id="LOCAL-00043" summary="정규표현식 실습해보자">
       <created>1655851748407</created>
@@ -434,7 +426,14 @@
       <option name="project" value="LOCAL" />
       <updated>1664075214494</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="docusaurus 수정">
+      <created>1664075834710</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1664075834710</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -462,7 +461,6 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="[POST] 2021 UX 트렌트" />
     <MESSAGE value="[POST] AI 와 UX 의 상호 보완" />
     <MESSAGE value="[POST] JUnit 5 테스트 연습하기" />
     <MESSAGE value="[POST] TDD 알아보기" />
@@ -487,6 +485,7 @@
     <MESSAGE value="[CHORE] Parameterized Tests - Argument Conversion" />
     <MESSAGE value="주제 문서 업로드" />
     <MESSAGE value="initial commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="initial commit" />
+    <MESSAGE value="docusaurus 수정" />
+    <option name="LAST_COMMIT_MESSAGE" value="docusaurus 수정" />
   </component>
 </project>
