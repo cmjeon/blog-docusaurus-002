@@ -1,0 +1,485 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="dadc3de9-67e7-40e0-b3a2-05c6e1b040ce" name="Changes" comment="주제 문서 업로드" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="23e9OYadiiWKvvzfjEAB4Owx7Rr" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
+    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
+    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
+    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
+    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;reference.settingsdialog.IDE.editor.colors.Markdown&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  }
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/_posts" />
+    </key>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="dadc3de9-67e7-40e0-b3a2-05c6e1b040ce" name="Changes" comment="" />
+      <created>1642083653561</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1642083653561</updated>
+      <workItem from="1642083654646" duration="1852000" />
+      <workItem from="1642686380793" duration="4511000" />
+      <workItem from="1645839172287" duration="3042000" />
+      <workItem from="1648123178727" duration="1226000" />
+      <workItem from="1648291007545" duration="1129000" />
+      <workItem from="1652178772801" duration="15882000" />
+      <workItem from="1652487905735" duration="18000" />
+      <workItem from="1652488960206" duration="56000" />
+      <workItem from="1652489554820" duration="2000" />
+      <workItem from="1652489589920" duration="2000" />
+      <workItem from="1652489782747" duration="3983000" />
+      <workItem from="1652651799034" duration="23423000" />
+      <workItem from="1653097033597" duration="10687000" />
+      <workItem from="1655609237508" duration="12790000" />
+      <workItem from="1655760716015" duration="413000" />
+      <workItem from="1655761152708" duration="1724000" />
+      <workItem from="1656170850085" duration="1220000" />
+      <workItem from="1656740059760" duration="20225000" />
+      <workItem from="1658801973756" duration="2332000" />
+      <workItem from="1658809954211" duration="1981000" />
+      <workItem from="1658834878768" duration="2451000" />
+      <workItem from="1659858030310" duration="8473000" />
+      <workItem from="1660054824625" duration="14225000" />
+      <workItem from="1660465170323" duration="23661000" />
+      <workItem from="1660743861933" duration="176000" />
+      <workItem from="1660744153817" duration="11229000" />
+      <workItem from="1661079986126" duration="7601000" />
+      <workItem from="1663598114221" duration="3003000" />
+      <workItem from="1664024643186" duration="1405000" />
+    </task>
+    <task id="LOCAL-00041" summary="정규표현식 실습해보자">
+      <created>1655761231378</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1655761231378</updated>
+    </task>
+    <task id="LOCAL-00042" summary="정규표현식 실습해보자">
+      <created>1655768015593</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1655768015593</updated>
+    </task>
+    <task id="LOCAL-00043" summary="정규표현식 실습해보자">
+      <created>1655851748407</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1655851748407</updated>
+    </task>
+    <task id="LOCAL-00044" summary="정규표현식 실습해보자">
+      <created>1655851881904</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1655851881904</updated>
+    </task>
+    <task id="LOCAL-00045" summary="오타수정">
+      <created>1656170865108</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1656170865108</updated>
+    </task>
+    <task id="LOCAL-00046" summary="[POST] UX/UI 시작하기 001">
+      <created>1656743316769</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1656743316769</updated>
+    </task>
+    <task id="LOCAL-00047" summary="[POST] UX/UI 시작하기 001">
+      <created>1656939316701</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1656939316702</updated>
+    </task>
+    <task id="LOCAL-00048" summary="[POST] UX/UI 시작하기 001">
+      <created>1656939543297</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1656939543298</updated>
+    </task>
+    <task id="LOCAL-00049" summary="[CHORE] 들여쓰기">
+      <created>1656939821215</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1656939821215</updated>
+    </task>
+    <task id="LOCAL-00050" summary="[CHORE] 제목 고치기">
+      <created>1656940834184</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1656940834184</updated>
+    </task>
+    <task id="LOCAL-00051" summary="[CHORE] 제목 고치기">
+      <created>1656940837684</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1656940837684</updated>
+    </task>
+    <task id="LOCAL-00052" summary="[POST] UX 디자인 프로세스 따라잡기">
+      <created>1656942181049</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1656942181050</updated>
+    </task>
+    <task id="LOCAL-00053" summary="[CHORE] 제목변경">
+      <created>1656942475461</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1656942475461</updated>
+    </task>
+    <task id="LOCAL-00054" summary="[CHORE] 제목변경">
+      <created>1656942705148</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1656942705148</updated>
+    </task>
+    <task id="LOCAL-00055" summary="[POST] UX/UI 시작하기 - UX 개념 - 002">
+      <created>1656978575002</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1656978575002</updated>
+    </task>
+    <task id="LOCAL-00056" summary="[CHORE] 제목변경">
+      <created>1656978744354</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1656978744355</updated>
+    </task>
+    <task id="LOCAL-00057" summary="[CHORE] 제목변경">
+      <created>1656978858192</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1656978858193</updated>
+    </task>
+    <task id="LOCAL-00058" summary="[CHORE] config.yml">
+      <created>1656979067204</created>
+      <option name="number" value="00058" />
+      <option name="presentableId" value="LOCAL-00058" />
+      <option name="project" value="LOCAL" />
+      <updated>1656979067204</updated>
+    </task>
+    <task id="LOCAL-00059" summary="[POST] 디자인 방법론">
+      <created>1657060803013</created>
+      <option name="number" value="00059" />
+      <option name="presentableId" value="LOCAL-00059" />
+      <option name="project" value="LOCAL" />
+      <updated>1657060803013</updated>
+    </task>
+    <task id="LOCAL-00060" summary="[POST] UX 디자인 프로세스 Case Study">
+      <created>1657061931501</created>
+      <option name="number" value="00060" />
+      <option name="presentableId" value="LOCAL-00060" />
+      <option name="project" value="LOCAL" />
+      <updated>1657061931502</updated>
+    </task>
+    <task id="LOCAL-00061" summary="[POST] 10분 요약">
+      <created>1657063570176</created>
+      <option name="number" value="00061" />
+      <option name="presentableId" value="LOCAL-00061" />
+      <option name="project" value="LOCAL" />
+      <updated>1657063570177</updated>
+    </task>
+    <task id="LOCAL-00062" summary="[POST] 2021 UX 트렌트">
+      <created>1657118882794</created>
+      <option name="number" value="00062" />
+      <option name="presentableId" value="LOCAL-00062" />
+      <option name="project" value="LOCAL" />
+      <updated>1657118882795</updated>
+    </task>
+    <task id="LOCAL-00063" summary="[POST] AI 와 UX 의 상호 보완">
+      <created>1657374491584</created>
+      <option name="number" value="00063" />
+      <option name="presentableId" value="LOCAL-00063" />
+      <option name="project" value="LOCAL" />
+      <updated>1657374491584</updated>
+    </task>
+    <task id="LOCAL-00064" summary="[POST] JUnit 5 테스트 연습하기">
+      <created>1658808774548</created>
+      <option name="number" value="00064" />
+      <option name="presentableId" value="LOCAL-00064" />
+      <option name="project" value="LOCAL" />
+      <updated>1658808774549</updated>
+    </task>
+    <task id="LOCAL-00065" summary="[POST] JUnit 5 테스트 연습하기">
+      <created>1658810510303</created>
+      <option name="number" value="00065" />
+      <option name="presentableId" value="LOCAL-00065" />
+      <option name="project" value="LOCAL" />
+      <updated>1658810510303</updated>
+    </task>
+    <task id="LOCAL-00066" summary="[POST] TDD 알아보기">
+      <created>1659885226485</created>
+      <option name="number" value="00066" />
+      <option name="presentableId" value="LOCAL-00066" />
+      <option name="project" value="LOCAL" />
+      <updated>1659885226486</updated>
+    </task>
+    <task id="LOCAL-00067" summary="[POST] TDD 알아보기&#10;&#10;- Classicist, Mockist 부분 추가">
+      <created>1659886566376</created>
+      <option name="number" value="00067" />
+      <option name="presentableId" value="LOCAL-00067" />
+      <option name="project" value="LOCAL" />
+      <updated>1659886566377</updated>
+    </task>
+    <task id="LOCAL-00068" summary="[POST] TDD 알아보기&#10;&#10;- Inside-out, Outside-in">
+      <created>1659911493856</created>
+      <option name="number" value="00068" />
+      <option name="presentableId" value="LOCAL-00068" />
+      <option name="project" value="LOCAL" />
+      <updated>1659911493856</updated>
+    </task>
+    <task id="LOCAL-00069" summary="[POST] JUnit5 알아보기">
+      <created>1659912482155</created>
+      <option name="number" value="00069" />
+      <option name="presentableId" value="LOCAL-00069" />
+      <option name="project" value="LOCAL" />
+      <updated>1659912482155</updated>
+    </task>
+    <task id="LOCAL-00070" summary="[CHORE] 제목 중첩 제거">
+      <created>1659912545189</created>
+      <option name="number" value="00070" />
+      <option name="presentableId" value="LOCAL-00070" />
+      <option name="project" value="LOCAL" />
+      <updated>1659912545190</updated>
+    </task>
+    <task id="LOCAL-00071" summary="[CHORE] 테스트 관련 IntelliJ 단축키">
+      <created>1660055245678</created>
+      <option name="number" value="00071" />
+      <option name="presentableId" value="LOCAL-00071" />
+      <option name="project" value="LOCAL" />
+      <updated>1660055245678</updated>
+    </task>
+    <task id="LOCAL-00072" summary="[CHORE] Annotations">
+      <created>1660143346853</created>
+      <option name="number" value="00072" />
+      <option name="presentableId" value="LOCAL-00072" />
+      <option name="project" value="LOCAL" />
+      <updated>1660143346853</updated>
+    </task>
+    <task id="LOCAL-00073" summary="[CHORE] Annotations">
+      <created>1660143933883</created>
+      <option name="number" value="00073" />
+      <option name="presentableId" value="LOCAL-00073" />
+      <option name="project" value="LOCAL" />
+      <updated>1660143933883</updated>
+    </task>
+    <task id="LOCAL-00074" summary="[CHORE] DisplayName">
+      <created>1660320426290</created>
+      <option name="number" value="00074" />
+      <option name="presentableId" value="LOCAL-00074" />
+      <option name="project" value="LOCAL" />
+      <updated>1660320426290</updated>
+    </task>
+    <task id="LOCAL-00075" summary="[CHORE] Category 변경">
+      <created>1660320458213</created>
+      <option name="number" value="00075" />
+      <option name="presentableId" value="LOCAL-00075" />
+      <option name="project" value="LOCAL" />
+      <updated>1660320458213</updated>
+    </task>
+    <task id="LOCAL-00076" summary="[CHORE] Conditional Test Execution">
+      <created>1660472993759</created>
+      <option name="number" value="00076" />
+      <option name="presentableId" value="LOCAL-00076" />
+      <option name="project" value="LOCAL" />
+      <updated>1660472993759</updated>
+    </task>
+    <task id="LOCAL-00077" summary="[CHORE] Test Execution Order">
+      <created>1660492820032</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1660492820032</updated>
+    </task>
+    <task id="LOCAL-00078" summary="[CHORE] Test Instance Lifecycle">
+      <created>1660567559859</created>
+      <option name="number" value="00078" />
+      <option name="presentableId" value="LOCAL-00078" />
+      <option name="project" value="LOCAL" />
+      <updated>1660567559859</updated>
+    </task>
+    <task id="LOCAL-00079" summary="[CHORE] Nested Tests">
+      <created>1660571065265</created>
+      <option name="number" value="00079" />
+      <option name="presentableId" value="LOCAL-00079" />
+      <option name="project" value="LOCAL" />
+      <updated>1660571065265</updated>
+    </task>
+    <task id="LOCAL-00080" summary="[CHORE] Dependency Injection for Constructors and Methods">
+      <created>1660573715580</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1660573715580</updated>
+    </task>
+    <task id="LOCAL-00081" summary="[CHORE] Test Interfaces and Default Methods">
+      <created>1660607310596</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1660607310596</updated>
+    </task>
+    <task id="LOCAL-00082" summary="[CHORE] Repeated Tests">
+      <created>1660693817463</created>
+      <option name="number" value="00082" />
+      <option name="presentableId" value="LOCAL-00082" />
+      <option name="project" value="LOCAL" />
+      <updated>1660693817463</updated>
+    </task>
+    <task id="LOCAL-00083" summary="[CHORE] Parameterized Tests">
+      <created>1660748098014</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1660748098015</updated>
+    </task>
+    <task id="LOCAL-00084" summary="[CHORE] Parameterized Tests">
+      <created>1660838354429</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1660838354429</updated>
+    </task>
+    <task id="LOCAL-00085" summary="[CHORE] Parameterized Tests">
+      <created>1661081595949</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1661081595949</updated>
+    </task>
+    <task id="LOCAL-00086" summary="[CHORE] Parameterized Tests - CsvFileSource">
+      <created>1661081839848</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1661081839848</updated>
+    </task>
+    <task id="LOCAL-00087" summary="[CHORE] Parameterized Tests - ArgumentsSource">
+      <created>1661082047728</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1661082047728</updated>
+    </task>
+    <task id="LOCAL-00088" summary="[CHORE] Parameterized Tests - Argument Conversion">
+      <created>1661442021055</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1661442021055</updated>
+    </task>
+    <task id="LOCAL-00089" summary="주제 문서 업로드">
+      <created>1664037835247</created>
+      <option name="number" value="00089" />
+      <option name="presentableId" value="LOCAL-00089" />
+      <option name="project" value="LOCAL" />
+      <updated>1664037835248</updated>
+    </task>
+    <option name="localTasksCounter" value="90" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ID_ORDER">
+      <list>
+        <option value="Default.Root" />
+        <option value="Default.Author" />
+        <option value="Default.Date" />
+        <option value="Default.Subject" />
+      </list>
+    </option>
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="[POST] 10분 요약" />
+    <MESSAGE value="[POST] 2021 UX 트렌트" />
+    <MESSAGE value="[POST] AI 와 UX 의 상호 보완" />
+    <MESSAGE value="[POST] JUnit 5 테스트 연습하기" />
+    <MESSAGE value="[POST] TDD 알아보기" />
+    <MESSAGE value="[POST] TDD 알아보기&#10;&#10;- Classicist, Mockist 부분 추가" />
+    <MESSAGE value="[POST] TDD 알아보기&#10;&#10;- Inside-out, Outside-in" />
+    <MESSAGE value="[POST] JUnit5 알아보기" />
+    <MESSAGE value="[CHORE] 제목 중첩 제거" />
+    <MESSAGE value="[CHORE] 테스트 관련 IntelliJ 단축키" />
+    <MESSAGE value="[CHORE] Annotations" />
+    <MESSAGE value="[CHORE] DisplayName" />
+    <MESSAGE value="[CHORE] Category 변경" />
+    <MESSAGE value="[CHORE] Conditional Test Execution" />
+    <MESSAGE value="[CHORE] Test Execution Order" />
+    <MESSAGE value="[CHORE] Test Instance Lifecycle" />
+    <MESSAGE value="[CHORE] Nested Tests" />
+    <MESSAGE value="[CHORE] Dependency Injection for Constructors and Methods" />
+    <MESSAGE value="[CHORE] Test Interfaces and Default Methods" />
+    <MESSAGE value="[CHORE] Repeated Tests" />
+    <MESSAGE value="[CHORE] Parameterized Tests" />
+    <MESSAGE value="[CHORE] Parameterized Tests - CsvFileSource" />
+    <MESSAGE value="[CHORE] Parameterized Tests - ArgumentsSource" />
+    <MESSAGE value="[CHORE] Parameterized Tests - Argument Conversion" />
+    <MESSAGE value="주제 문서 업로드" />
+    <option name="LAST_COMMIT_MESSAGE" value="주제 문서 업로드" />
+  </component>
+</project>
