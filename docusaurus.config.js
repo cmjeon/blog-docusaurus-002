@@ -6,8 +6,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'My Site',
-  tagline: 'Dinosaurs are cool',
+  title: 'Today I Learned',
+  tagline: '블로그, TIL, 이력서',
   url: 'https://cmjeon.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -24,8 +24,8 @@ const config = {
   // metadata like html lang. For example, if your site is Chinese, you may want
   // to replace "en" with "zh-Hans".
   i18n: {
-    defaultLocale: 'en',
-    locales: ['en'],
+    defaultLocale: 'ko-kr',
+    locales: ['ko-kr'],
   },
 
   presets: [
@@ -38,14 +38,14 @@ const config = {
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           editUrl:
-            'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+            'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -62,18 +62,63 @@ const config = {
         logo: {
           alt: 'My Site Logo',
           src: 'img/logo.svg',
+          href: 'https://cmjeon.github.io',
+          // target: '_self',
         },
         items: [
           {
             type: 'doc',
             docId: 'intro',
             position: 'left',
-            label: 'Tutorial',
+            label: '개발',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
-            href: 'https://github.com/facebook/docusaurus',
-            label: 'GitHub',
+            to: '/blog',
+            position: 'left',
+            label: 'TIL',
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'development',
+            label: 'DEV',
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'api',
+            label: 'API',
+          },
+          {
+            to: '/docs/temp',
+            position: 'left',
+            label: '임시',
+            items: [
+              {
+                label: 'Category 1',
+                to: '/docs/temp/intro',
+              },
+              {
+                label: 'Category 1',
+                to: '...',
+              },
+            ],
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'api',
+            label: '임시2',
+          },
+          {
+            type: 'docSidebar',
+            position: 'left',
+            sidebarId: 'tutorialSidebar',
+            label: '임시3',
+          },
+          {
+            href: 'https://github.com/cmjeon/cmjeon.github.io',
+            label: 'To Repo',
             position: 'right',
           },
         ],
