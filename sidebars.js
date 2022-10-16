@@ -24,7 +24,7 @@ const sidebars = {
   tutorialSidebar: [
     'intro',
     'temp/intro',
-    'guides/creating-pages.md',
+    'guides/creating-pages',
     {
       type: 'category',
       label: 'Tutorial',
