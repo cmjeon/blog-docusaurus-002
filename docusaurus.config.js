@@ -10,7 +10,7 @@ const config = {
   tagline: '블로그, TIL, 이력서',
   url: 'https://cmjeon.github.io',
   baseUrl: '/',
-  onBrokenLinks: 'throw',
+  onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
 
