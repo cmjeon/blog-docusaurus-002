@@ -100,7 +100,7 @@ const config = {
               },
               {
                 label: 'Category 1',
-                to: '...',
+                to: '/docs/api/api-hello',
               },
             ],
           },
