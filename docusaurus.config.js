@@ -90,9 +90,9 @@ const config = {
             label: 'API',
           },
           {
-            to: '/docs/temp',
-            position: 'left',
             label: '임시',
+            to: '/docs/temp/intro',
+            position: 'left',
             items: [
               {
                 label: 'Category 1',
