@@ -2,6 +2,10 @@
 
 This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
 
+## 새로운 블로그 주소
+
+https://blog-cmjeon.vercel.app/
+
 ### Installation
 
 ```
@@ -49,3 +53,5 @@ just `$ git push`
 - [ ] navbar 에 github 아이콘이 안보임
 - [ ] navbar 검색창 만들기
 - [ ] code block vue syntax highligt 문제
+- [ ] 다른 블로그들에 새 블로그 주소 남기기
+- 
