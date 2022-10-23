@@ -40,7 +40,9 @@ const config = {
           // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
         },
         blog: {
+          routeBasePath: '/blog', // Serve the blog at the site's root
           showReadingTime: true,
+          blogSidebarCount: 10,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
@@ -75,12 +77,12 @@ const config = {
           // target: '_self',
         },
         items: [
-          // {
-          //   label: 'Posts',
-          //   type: 'docSidebar',
-          //   sidebarId: 'posts',
-          //   position: 'left',
-          // },
+          {
+            label: 'Posts',
+            type: 'docSidebar',
+            sidebarId: 'posts',
+            position: 'left',
+          },
           {
             label: '日日新 又日新',
             to: '/blog',
