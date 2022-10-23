@@ -62,7 +62,7 @@ vue.js 에서 Intersection Observer API 이용해서 pagination 처리를 해보
 
 Container.vue 와 Observer.vue 를 이용해서 쉽게 만들 수 있다.
 
-```vue{10,6-8}
+```js {10,6-8} showLineNumbers
 // Container.vue
 <template>
   <div class="hello">
@@ -117,7 +117,7 @@ export default {
 </style>
 ```
 
-```vue{12-16,19-25,27}
+```js {12-16,19-25,27} showLineNumbers
 // Observer.vue
 <template>
   <div class="aa" ref="trigger">_</div>

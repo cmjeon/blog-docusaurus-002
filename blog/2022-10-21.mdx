@@ -20,7 +20,7 @@ v-for 로 만든 자식 컴포넌트에서 사용자가 입력한 값을 부모 
 
 위의 참고한 페이지의 예시를 일부 사용하였다.
 
-```vue{2,8,19,24}
+```js {2,8,19,24} showLineNumbers
 <template>
   <q-list :key="renderKey">
     <div class="row no-wrap" v-bind:key="index" v-for="(item, index) in items">

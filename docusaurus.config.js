@@ -154,8 +154,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
-        theme: lightCodeTheme,
-        darkTheme: darkCodeTheme,
+        theme: require('prism-react-renderer/themes/dracula'),
+        additionalLanguages: ['powershell'],
       },
       tableOfContents: {
         minHeadingLevel: 2,
