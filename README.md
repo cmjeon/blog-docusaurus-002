@@ -46,6 +46,6 @@ just `$ git push`
 
 ### 남은 문제들
 
-[] navbar 에 github 아이콘이 안보임
-[] navbar 검색창 만들기
-[] code block vue syntax highligt 문제
+- [ ] navbar 에 github 아이콘이 안보임
+- [ ] navbar 검색창 만들기
+- [ ] code block vue syntax highligt 문제
