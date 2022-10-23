@@ -1,0 +1,164 @@
+---
+date: 2022-10-20
+title: '2022년 10월 20일'
+lang: ko-KR
+authors: [cmjeon]
+tags: ['심리','지식']
+---
+
+## 나를 향해 걷는 열 걸음 - 최진석
+
+[https://product.kyobobook.co.kr/detail/S000061451086](https://product.kyobobook.co.kr/detail/S000061451086)
+
+네 번째 걸음 - 헤르만 헤세의 '데미안'
+
+자기만의 행복을 생산하려는 존재가 아니라 정해진 행복에 다가가려고 애쓰는 사람들은 오히려 소외된다.
+
+행복이라고 하는 것은 이미 존재하는 관념이기 때문이다.
+
+나만의 것이 아니다.
+
+죽기 전까지 우리에게 부여된 가장 숭고한 사명을 나를 대면하는 것이다.
+
+내가 나를 찾아야 하고, 내가 원하는 내가 되어야 한다.
+
+세상을 향해 질문하고 나를 향해 걸어가야 한다.
+
+나를 향해 가는 길은 자기 자신을 이겨내고 끊임없이 숙고해야하는 일이기 때문에 어렵다.
+
+행복은 추구할 때보다 생산할 때 훨씬 어렵다.
+
+해야 하는 것이 하고 싶은 것 하는 것 보다 더 쉽다.
+
+해야 하는 것은 고민할 필요가 없지만 하고 싶은 것을 하는 것을 하는 것은 두려움이 따른다.
+
+감각적 만족과 이성적 사유를 거친 만족과는 차이가 있다.
+
+이성적 사유를 거친 만족, 인간적인 완성으로 나아가기 위해서는 외부의 지시를 그대로 따르기만 해서는 안된다.
+
+자기 생각이 없어지고, 관념으로 사는 사람이 된다.
+
+정해진 것과 정해지지 않은 것, 허용된 것과 허용되지 않은 것, 금지된 것과 금지되지 않은 것에 대해 숙고해야 한다.
+
+계속 숙고하면 자기만의 정당성, 자기만의 규율이 생기면서 나를 만든다.
+
+먹고 사는 것만으로 만족하며 살 수도 있지만 인간으로서 최소한의 각성을 한 사람들은 먹고 사는 것 이상을 꿈꾼다.
+
+생각의 발단은 불편함을 인식하는 것에서 시작된다.
+
+데미안에서도 나왔지만 자기 자신만의 길을 찾기 위해서는 성실성이 필요하다.
+
+내가 원하는 것을 가능하게 해주는 무엇인가가 내 안에 있다는 것을 믿어야 한다.
+
+바람직한 것에 맞추지 말고 바라는 것을 찾아야 한다.
+
+진짜로 산다는 것은 '나를 향해 쉼없이 걷는 것' 이다.
+
+## vue.js 에서 Intersection Observer API 이용하기
+
+[https://velog.io/@kbpark9898/Vue-intersection-observer%EB%A1%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%ED%83%90%EC%A7%80%ED%95%98%EA%B8%B0](https://velog.io/@kbpark9898/Vue-intersection-observer%EB%A1%9C-%EC%8A%A4%ED%81%AC%EB%A1%A4-%ED%83%90%EC%A7%80%ED%95%98%EA%B8%B0)
+
+vue.js 에서 Intersection Observer API 이용해서 pagination 처리를 해보았다.
+
+Container.vue 와 Observer.vue 를 이용해서 쉽게 만들 수 있다.
+
+```vue{10,6-8}
+// Container.vue
+<template>
+  <div class="hello">
+    <h1>게시물 목록</h1>
+    <ul>
+      <li class="box" v-for="item in myList" v-bind:key="item.no">
+        <span>{{ item.no }} || {{ item.name }}</span>
+      </li>
+    </ul>
+    <Observer v-on:nextPage="getNextPage"></Observer>
+  </div>
+</template>
+
+<script>
+import list from "../list.js";
+import Observer from "./Observer";
+
+export default {
+  name: "HelloWorld",
+  components: {
+    Observer,
+  },
+  props: {},
+  data() {
+    return {
+      index: 0,
+      perPage: 3,
+      myList: [],
+      originList: list,
+    };
+  },
+  mounted() {
+    this.myList = this.originList.splice(this.index, this.perPage);
+  },
+  methods: {
+    getNextPage() {
+      this.myList = this.myList.concat(
+        this.originList.splice(this.index, this.perPage)
+      );
+    },
+  },
+};
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.box {
+  padding: 100px;
+  list-style: none;
+  border: solid #000 1px;
+}
+</style>
+```
+
+```vue{12-16,19-25,27}
+// Observer.vue
+<template>
+  <div class="aa" ref="trigger">_</div>
+</template>
+<script>
+export default {
+  data() {
+    return {
+      observer: {},
+    };
+  },
+  methods: {
+    handleIntersect(target) {
+      if (target.isIntersecting) {
+        this.$emit("nextPage");
+      }
+    },
+  },
+  mounted() {
+    const options = {
+      root: null,
+      threshold: 1,
+    };
+    this.observer = new IntersectionObserver((entries) => {
+      this.handleIntersect(entries[0]);
+    }, options);
+    
+    this.observer.observe(this.$refs.trigger);
+  },
+};
+</script>
+
+<style>
+.aa {
+  background-color: red;
+}
+</style>
+```
+
+Observer 컴포넌트가 화면에 보일 때를 감지하여 myList 에 항목을 추가해주는 방식이다.
+
+Sandbox 에서 구현해보았다.
+
+[https://codesandbox.io/s/determined-leaf-yw3vf3](https://codesandbox.io/s/determined-leaf-yw3vf3)
