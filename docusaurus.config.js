@@ -7,8 +7,8 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: 'Today I Learned',
-  tagline: '블로그, TIL, 이력서',
-  url: 'https://cmjeon.github.io',
+  tagline: 'javascript, frontend, Project Management',
+  url: 'https://blog-cmjeon.vercel.app',
   baseUrl: '/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
@@ -37,15 +37,13 @@ const config = {
           sidebarPath: require.resolve('./sidebars.js'),
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
+          // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
         },
         blog: {
           showReadingTime: true,
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
+          // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -53,124 +51,113 @@ const config = {
       }),
     ],
   ],
-
+  plugins: [
+    [
+      '@docusaurus/plugin-ideal-image',
+      {
+        quality: 70,
+        max: 1030, // max resized image's size.
+        min: 640, // min resized image's size. if original is lower, use that size.
+        steps: 2, // the max number of images generated between min and max (inclusive)
+        disableInDev: false,
+      },
+    ],
+  ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
       navbar: {
-        title: 'My Site',
+        title: 'Today I Learned',
         logo: {
-          alt: 'My Site Logo',
+          alt: 'Today I Learned Logo',
           src: 'img/logo.svg',
-          href: 'https://cmjeon.github.io',
+          href: '/',
           // target: '_self',
         },
         items: [
+          // {
+          //   label: 'Posts',
+          //   type: 'docSidebar',
+          //   sidebarId: 'posts',
+          //   position: 'left',
+          // },
           {
-            type: 'doc',
-            docId: 'intro',
-            position: 'left',
-            label: '개발',
-          },
-          {
+            label: '日日新 又日新',
             to: '/blog',
             position: 'left',
-            label: 'TIL',
           },
           {
-            type: 'docSidebar',
+            label: 'RESUME',
+            type: 'doc',
+            docId: 'resume',
             position: 'left',
-            sidebarId: 'development',
-            label: 'DEV',
           },
+          // {
+          //   label: 'Portfolio',
+          //   type: 'docSidebar',
+          //   position: 'left',
+          //   sidebarId: 'portfolio',
+          // },
           {
-            type: 'docSidebar',
-            position: 'left',
-            sidebarId: 'api',
-            label: 'API',
-          },
-          {
-            label: '임시',
-            to: '/docs/temp/intro',
-            position: 'left',
-            items: [
-              {
-                label: 'Category 1',
-                to: '/docs/temp/intro',
-              },
-              {
-                label: 'Category 1',
-                to: '/docs/api/api-hello',
-              },
-            ],
-          },
-          {
-            type: 'docSidebar',
-            position: 'left',
-            sidebarId: 'api',
-            label: '임시2',
-          },
-          {
-            type: 'docSidebar',
-            position: 'left',
-            sidebarId: 'tutorialSidebar',
-            label: '임시3',
-          },
-          {
-            href: 'https://github.com/cmjeon/cmjeon.github.io',
-            label: 'To Repo',
+            className: 'header-github-link',
+            'aria-label': 'GitHub repository',
+            href: 'https://github.com/cmjeon',
             position: 'right',
           },
         ],
       },
       footer: {
         style: 'dark',
-        links: [
-          {
-            title: 'Docs',
-            items: [
-              {
-                label: 'Tutorial',
-                to: '/docs/intro',
-              },
-            ],
-          },
-          {
-            title: 'Community',
-            items: [
-              {
-                label: 'Stack Overflow',
-                href: 'https://stackoverflow.com/questions/tagged/docusaurus',
-              },
-              {
-                label: 'Discord',
-                href: 'https://discordapp.com/invite/docusaurus',
-              },
-              {
-                label: 'Twitter',
-                href: 'https://twitter.com/docusaurus',
-              },
-            ],
-          },
-          {
-            title: 'More',
-            items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
-              {
-                label: 'GitHub',
-                href: 'https://github.com/facebook/docusaurus',
-              },
-            ],
-          },
-        ],
+        // links: [
+        //   {
+        //     title: 'Docs',
+        //     items: [
+        //       {
+        //         label: 'Tutorial',
+        //         to: '/docs/intro',
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     title: 'Community',
+        //     items: [
+        //       {
+        //         label: 'Stack Overflow',
+        //         href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+        //       },
+        //       {
+        //         label: 'Discord',
+        //         href: 'https://discordapp.com/invite/docusaurus',
+        //       },
+        //       {
+        //         label: 'Twitter',
+        //         href: 'https://twitter.com/docusaurus',
+        //       },
+        //     ],
+        //   },
+        //   {
+        //     title: 'More',
+        //     items: [
+        //       {
+        //         label: 'Blog',
+        //         to: '/blog',
+        //       },
+        //       {
+        //         label: 'GitHub',
+        //         href: 'https://github.com/facebook/docusaurus',
+        //       },
+        //     ],
+        //   },
+        // ],
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
         theme: lightCodeTheme,
         darkTheme: darkCodeTheme,
+      },
+      tableOfContents: {
+        minHeadingLevel: 2,
+        maxHeadingLevel: 2,
       },
     }),
 };
