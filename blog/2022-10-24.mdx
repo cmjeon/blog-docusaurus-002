@@ -1,0 +1,33 @@
+---
+date: 2022-10-24
+title: '2022년 10월 24일'
+authors: [cmjeon]
+tags: ['지식']
+---
+
+## docusaurus v2 pwa 설정하기
+
+[https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-pwa](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-pwa)
+[https://younho9.dev/docusaurus-manage-docs-2](https://younho9.dev/docusaurus-manage-docs-2)
+
+docusaurus 에는 pwa 를 지원한다.
+
+PWA 는 Progressive Web App, 웹페이지를 앱처럼 쓸 수 있게 해주는 것이다.
+
+웹페이지를 앱처럼 쓸 수 있게 해주기 위해 제공되는 기능 중 괜찮은 것은 휴대폰의 홈에 아이콘을 만들어 준다는 것이다.
+
+플러그인이 필요하기 때문에 우선 설치를 해보았다
+
+```shell
+$ yarn add @docusaurus/plugin-pwa
+```
+
+그리고 static 폴더에 manifest.json 라는 파일이 필요하다.
+
+```shell
+$ touch static/manifest.json
+```
+
+docusaurus.config.js 에 pwa 관련 설정을 추가한다.
+
+lighthouse 에서 확인해볼 수 있다고 한다.
