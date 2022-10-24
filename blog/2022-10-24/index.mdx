@@ -5,6 +5,8 @@ authors: [cmjeon]
 tags: ['docusaurus', 'pwa']
 ---
 
+import Image from '@theme/IdealImage';
+
 ## docusaurus v2 pwa 설정하기
 
 [https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-pwa](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-pwa)
@@ -26,7 +28,7 @@ $ yarn add @docusaurus/plugin-pwa
 
 docusaurus.config.js 에 플러그인 설정을 해준다.
 
-```js title="docusaurus.config.js"
+```js title="docusaurus.config.js" {6-58}
 ...
 const config = {
   ...
@@ -171,7 +173,4 @@ $ touch static/manifest.json
 
 chrome 개발자도구 lighthouse 탭에서 확인해볼 수 있다.
 
-![lighthouse](./lighthouse.png)
-
-
-
+<Image img={require('./lighthouse.png')} />

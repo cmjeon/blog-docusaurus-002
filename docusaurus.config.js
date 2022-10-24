@@ -156,10 +156,10 @@ const config = {
           //   sidebarId: 'portfolio',
           // },
           {
-            className: 'header-github-link',
-            'aria-label': 'GitHub repository',
             href: 'https://github.com/cmjeon',
             position: 'right',
+            className: 'header-github-link',
+            'aria-label': 'GitHub repository',
           },
         ],
       },
