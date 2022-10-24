@@ -210,7 +210,7 @@ const config = {
       },
       prism: {
         theme: require('prism-react-renderer/themes/dracula'),
-        additionalLanguages: ['powershell'],
+        additionalLanguages: ['powershell','javascript'],
       },
       tableOfContents: {
         minHeadingLevel: 2,
