@@ -107,7 +107,7 @@ const config = {
           {
             tagName: 'link',
             rel: 'mask-icon',
-            href: 'img/logo.svg',
+            href: 'img/logo2.svg',
             color: 'rgb(255, 255, 255)',
           },
           {
@@ -132,7 +132,7 @@ const config = {
         title: 'Today I Learned',
         logo: {
           alt: 'Today I Learned Logo',
-          src: 'img/logo.svg',
+          src: 'img/logo2.svg',
           href: '/',
           // target: '_self',
         },
