@@ -50,16 +50,11 @@ const config = {
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
-      }),
-    ],
-    [
-      '@docusaurus/preset-classic',
-      {
-        googleAnalytics: {
+        gtag: {
           trackingID: 'G-360E4P1PB9',
           anonymizeIP: true,
         },
-      },
+      }),
     ],
   ],
   plugins: [
@@ -229,9 +224,9 @@ const config = {
       googleAdsense: {
         dataAdClient: 'ca-pub-8380472646656641',
       },
-      metadata: [
-        {name:'google-site-verification', content:'G-360E4P1PB9'}
-      ]
+      // metadata: [
+      //   {name:'google-site-verification', content:'G-360E4P1PB9'}
+      // ]
     }),
 };
 
