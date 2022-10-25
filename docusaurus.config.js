@@ -220,6 +220,9 @@ const config = {
       googleAdsense: {
         dataAdClient: 'ca-pub-8380472646656641',
       },
+      metadata: [
+        {name:'google-site-verification', content:'G-360E4P1PB9'}
+      ]
     }),
 };
 
