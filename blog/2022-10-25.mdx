@@ -12,9 +12,9 @@ tags: ['docusaurus', 'navbar', 'github', 'icon']
 docusaurus.config.js 에서 navbar 설정을 한다.
 
 ```js title="docusaurus.config.js" {17-22}
-...
+// ...
 const config = {
-  ...
+  // ...
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
@@ -27,7 +27,7 @@ const config = {
           // target: '_self',
         },
         items: [
-          ...
+          // ...
           {
             href: 'https://github.com/cmjeon',
             position: 'right',
@@ -36,7 +36,7 @@ const config = {
           },
         ],
       }
-      ...
+      // ...
     })
 };
 ```
