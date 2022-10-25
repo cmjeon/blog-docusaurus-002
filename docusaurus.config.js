@@ -218,7 +218,7 @@ const config = {
         maxHeadingLevel: 2,
       },
       googleAdsense: {
-        dataAdClient: 'pub-8380472646656641',
+        dataAdClient: 'ca-pub-8380472646656641',
       },
     }),
 };
