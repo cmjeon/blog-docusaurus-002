@@ -119,6 +119,7 @@ const config = {
         ],
       },
     ],
+    'docusaurus-plugin-google-adsense',
   ],
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
@@ -215,6 +216,9 @@ const config = {
       tableOfContents: {
         minHeadingLevel: 2,
         maxHeadingLevel: 2,
+      },
+      googleAdsense: {
+        dataAdClient: 'pub-8380472646656641',
       },
     }),
 };
