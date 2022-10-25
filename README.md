@@ -51,8 +51,8 @@ just `$ git push`
 ### 남은 문제들
 
 - [x] navbar 에 github 아이콘이 안보임
-- [ ] navbar 검색창 만들기
+- [ ] navbar algolia 검색창 만들기
 - [ ] code block 에 vuejs syntax highlight 문제
 - [ ] 다른 블로그들에 새 블로그 주소 남기기
 - [x] PWA 적용하기
-- [ ] GA 등록하기
+- [x] GA 등록하기
