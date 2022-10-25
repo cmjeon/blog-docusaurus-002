@@ -1,0 +1,75 @@
+---
+date: 2022-10-26
+title: '2022년 10월 26일'
+authors: [cmjeon]
+tags: ['docusaurus', 'google', 'adsense', 'analytics']
+---
+
+## Google Adsense 적용하기
+
+먼저 Google Adsense 에 접속해서 clientId 를 얻는다.
+
+사이트를 등록하 아래와 같은 스크립트를 제공해준다.
+
+```html
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-000000000" crossorigin="anonymous"></script>
+```
+
+플러그인을 이용하여 적용할 수 있다.
+
+```shell
+$ yarn add -D docusaurus-plugin-google-adsense
+```
+
+[https://www.npmjs.com/package/docusaurus-plugin-google-adsense](https://www.npmjs.com/package/docusaurus-plugin-google-adsense)
+
+docusaurus.config.js 파일을 수정한다.
+
+```js
+module.exports = {
+  // ...
+  themeConfig: {
+    // ...
+    googleAdsense: {
+      dataAdClient: 'ca-pub-000000000',
+    },
+  },
+  // ...
+  plugins: ['docusaurus-plugin-google-adsense'],
+};
+```
+
+광고가 나오는지 일단 기다려보자
+
+## Google Analytics 적용하기
+
+애널리틱스 사이트에서 Google Analytics 4 측정ID(`G-xxxxxxx`) 를 발급받는다.
+
+플러그인을 설치한다.
+
+```shell
+$ yarn add @docusaurus/plugin-google-analytics
+```
+
+docusaurus.config.js 파일을 수정한다.
+
+```js
+module.exports = {
+  // ...
+  presets: [
+    [
+      '@docusaurus/preset-classic',
+      {
+        googleAnalytics: {
+          trackingID: 'UA-xxxxxxx',
+          anonymizeIP: true,
+        },
+      },
+    ],
+  ],
+};
+```
+
+잠시 뒤 구글 애널리틱스 사이트에서 수집사항을 확인하면 된다.
+
+꽤나 간단하다.
