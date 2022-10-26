@@ -128,6 +128,7 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
+      metadata: [{name: 'naver-site-verification', content: '58c1378aa6cf5b0d7b3a58ba7816256bc2083b3b'}],
       navbar: {
         title: 'Today I Learned',
         logo: {
