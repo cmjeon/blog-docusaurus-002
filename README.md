@@ -56,3 +56,5 @@ just `$ git push`
 - [ ] 다른 블로그들에 새 블로그 주소 남기기
 - [x] PWA 적용하기
 - [x] GA 등록하기
+- [x] sitemap
+- [ ] robots.txt
