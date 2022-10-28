@@ -58,3 +58,5 @@ just `$ git push`
 - [x] GA 등록하기
 - [x] sitemap
 - [x] robots.txt
+- [ ] 사이트 설명 description
+- [ ] Open Graph 설명 og 태그

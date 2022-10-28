@@ -165,6 +165,11 @@ const config = {
             position: 'left',
           },
           // {
+          //   label: 'Tags',
+          //   to: '/blog/tags',
+          //   position: 'left',
+          // },
+          // {
           //   label: 'Portfolio',
           //   type: 'docSidebar',
           //   position: 'left',
