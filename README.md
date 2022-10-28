@@ -57,4 +57,4 @@ just `$ git push`
 - [x] PWA 적용하기
 - [x] GA 등록하기
 - [x] sitemap
-- [ ] robots.txt
+- [x] robots.txt

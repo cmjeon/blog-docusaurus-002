@@ -9,7 +9,7 @@ tags: ['docusaurus', 'google', 'adsense', 'analytics', 'logo color']
 
 먼저 Google Adsense 에 접속해서 clientId 를 얻는다.
 
-사이트를 등록하 아래와 같은 스크립트를 제공해준다.
+사이트를 등록하면 아래와 같은 스크립트를 제공해준다.
 
 ```html
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-000000000" crossorigin="anonymous"></script>
@@ -17,7 +17,7 @@ tags: ['docusaurus', 'google', 'adsense', 'analytics', 'logo color']
 
 <!--truncate-->
 
-플러그인을 이용하여 적용할 수 있다.
+스크립트의 `client` 값을 플러그인을 이용하여 적용할 수 있다.
 
 ```shell
 $ yarn add -D docusaurus-plugin-google-adsense
@@ -27,7 +27,7 @@ $ yarn add -D docusaurus-plugin-google-adsense
 
 docusaurus.config.js 파일을 수정한다.
 
-```js
+```js {5-7,10} title="docusaurus.config.js"
 module.exports = {
   // ...
   themeConfig: {
@@ -55,7 +55,7 @@ $ yarn add @docusaurus/plugin-google-analytics
 
 docusaurus.config.js 파일을 수정한다.
 
-```js
+```js {7-10} title="docusaurus.config.js"
 module.exports = {
   // ...
   presets: [

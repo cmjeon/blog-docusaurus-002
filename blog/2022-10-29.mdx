@@ -3,14 +3,13 @@ date: 2022-10-29
 title: '2022년 10월 29일'
 authors: [cmjeon]
 tags: ['docusaurus']
-draft: true
 ---
 
 ## docusaurus 에서 draft 문서로 남기는 법
 
-문서를 쓰다가 남기고 싶을 때는 frontmatter 에 `draft: true` 라고 남기면 된다.
+문서를 쓰다가 잠시 저장하고 싶을 때는 frontmatter 에 `draft: true` 라고 남기면 된다.
 
-```mdxjs {5} title="/blog/2022-10-29.mdx"
+```mdxjs {6} title="blog/2022-10-29.mdx"
 ---
 date: 2022-10-29
 title: '2022년 10월 29일'
@@ -24,11 +23,13 @@ draft: true
 
 이렇게 해두면 개발환경에서는 보이지만 운영환경에서는 보이지 않는 문서가 된다.
 
+<!--truncate-->
+
 ## docusaurus 생성 유튜브 영상
 
 [https://www.youtube.com/watch?v=Sey7jymZU1Q](https://www.youtube.com/watch?v=Sey7jymZU1Q)
 
-docusaurus 생성 유튜브 영상 기록이다.
+docusaurus 로 문서 작성하기 유튜브 영상 기록이다.
 
 따라한 순서로 기록
 
@@ -37,6 +38,10 @@ docusaurus 생성 유튜브 영상 기록이다.
 ```shell
 $ npx create-docusaurus@latest my-website classic
 ```
+
+node 16.14 버전 이상이 필요하다.
+
+nvm 을 이용해서 설치해주자
 
 실행하기
 
@@ -113,5 +118,5 @@ const config = {
 }
 ```
 
-
+이 영상은 도큐사우루스 영상이기 보다는 문서작성 영상에 가깝다.
 
