@@ -59,4 +59,5 @@ just `$ git push`
 - [x] sitemap
 - [x] robots.txt
 - [ ] 사이트 설명 description
-- [ ] Open Graph 설명 og 태그
+그- [x] Open Graph 설명 og:title, og:description
+- [ ] 블로그에 히어로 이미지 (SEO 고민)
