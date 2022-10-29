@@ -2,8 +2,10 @@
 date: 2022-10-29
 title: '2022년 10월 29일'
 authors: [cmjeon]
-tags: ['docusaurus']
+tags: ['docusaurus','로그인','SEO']
 ---
+
+import Image from '@theme/IdealImage';
 
 ## docusaurus 에서 draft 문서로 남기는 법
 
@@ -118,5 +120,59 @@ const config = {
 }
 ```
 
-이 영상은 도큐사우루스 영상이기 보다는 문서작성 영상에 가깝다.
+이 영상은 도큐사우루스 영상이기 보다는 문서작성 영상에 가까워 보인다.
+
+## 드림투두 로그인 기능 개편
+
+드림투두 백엔드의 로그인 기능을 개편한다.
+
+시나리오별 프론트엔드 / 백엔드 행동을 생각해보았다.
+
+시나리오1. 최초에 Token 을 발급받는 경우
+
+|-| Frontend   | Backend    |비고|
+|---|---|---|---|
+||- 로그인을 한다. |||
+|||- Access/Refresh Token 을 발급한다.<br/>- Refresh Token 과 UserAgent 를 DB 에 저장한다.<br/>- 요청을 처리하고 응답한다.||
+||- Acceess/Refresh Token 을 저장한다.|||
+||- Access Token 으로 요청한다.|||
+|||- Access Token 을 확인한다.<br/>- 요청을 처리하고 응답한다.||
+
+Refresh Token 과 UserAgent 를 DB 에 저장하는 이유는 나중에 Refresh Token 으로 요청이 왔는데, UsetAgent 가 다를 경우 유출이라고 판단하여 삭제처리 하기 위함이다.
+
+시나리오2. Access Token 만료 후 접속하는 경우
+
+|-| Frontend   | Backend    |비고|
+|---|---|---|---|
+||- 만료된 Access Token 으로 요청한다.|||
+|||- Access Token 이 만료된 토큰이라고 응답한다.||
+||- Refresh Token 으로 요청한다.|||
+|||- Refresh Token 과 UserAgent 를 확인한다.<br/>- Access/Refresh Token 을 갱신발급한다.<br/>- 요청을 처리하고 응답한다.||
+||- Acceess/Refresh Token 을 저장한다.|||
+||- Access Token 으로 요청한다.|||
+|||- Access Token 을 확인한다<br/>- 요청을 처리하고 응답한다.||
+
+Access/Refresh Token 을 갱신발급하는 이유는 만료일자를 연장시키기 위함이다.
+
+시나리오3. Refresh Token 만료 후 접속하는 경우
+
+|-| Frontend   | Backend    |비고|
+|---|---|---|---|
+||- 만료된 Access Token 으로 요청한다.|||
+|||- Access Token 이 만료된 토큰임이라고 응답한다.||
+||- Refresh Token 으로 요청한다.|||
+|||- Refresh Token 이 만료된 토큰이라고 응답한다.||
+||- 로그인을 한다.|||
+
+[https://tecoble.techcourse.co.kr/post/2021-10-20-refresh-token/](https://tecoble.techcourse.co.kr/post/2021-10-20-refresh-token/)
+
+## 네이버 사이트 간단 체크
+
+<Image img={require('./naver-site-check.png')} />
+
+아직 엉성하지만 네이버 사이트 간단 체크 결과가 개선되었다.
+
+Docusaurus Layout 컴포넌트를 이용해서 통과된 것이다.
+
+[https://docusaurus.io/ko/docs/seo](https://docusaurus.io/ko/docs/seo) 에서 SEO 에 대한 설명을 볼 수 있다.
 
