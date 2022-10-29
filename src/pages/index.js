@@ -6,12 +6,13 @@ import HomepageFeatures from '@site/src/components/HomepageFeatures';
 import {Redirect} from '@docusaurus/router';
 
 export default function Home() {
-  // return <Redirect to="/" />;
+  // return <Redirect to="/blog" />;
   const {siteConfig} = useDocusaurusContext();
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />">
+      title={`${siteConfig.title}`}
+      description={`${siteConfig.tagline}`}
+    >
       <HomepageHeader />
       <main>
         <HomepageFeatures />
