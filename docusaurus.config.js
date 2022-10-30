@@ -38,14 +38,14 @@ const config = {
       href: "https://cdnjs.cloudflare.com/ajax/libs/mermaid/6.0.0/mermaid.css"
     }
   ],
-  ssrTemplate: `
-  <!DOCTYPE html>
-    <html>
-      <head>
-        <script>mermaid.initialize({ startOnLoad: true });</script>
-      </head>
-    </html>
-  `,
+  // ssrTemplate: `
+  // <!DOCTYPE html>
+  //   <html>
+  //     <head>
+  //       <script>mermaid.initialize({ startOnLoad: true });</script>
+  //     </head>
+  //   </html>
+  // `,
   presets: [
     [
       'classic',
