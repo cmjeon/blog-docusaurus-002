@@ -27,7 +27,25 @@ const config = {
     defaultLocale: 'ko-kr',
     locales: ['ko-kr'],
   },
-
+  scripts: [
+    {
+      src: 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',
+      defer: true
+    }
+  ],
+  stylesheets: [
+    {
+      href: "https://cdnjs.cloudflare.com/ajax/libs/mermaid/6.0.0/mermaid.css"
+    }
+  ],
+  ssrTemplate: `
+  <!DOCTYPE html>
+    <html>
+      <head>
+        <script>mermaid.initialize({ startOnLoad: true });</script>
+      </head>
+    </html>
+  `,
   presets: [
     [
       'classic',
@@ -136,10 +154,12 @@ const config = {
     ({
       metadata: [{name: 'naver-site-verification', content: '58c1378aa6cf5b0d7b3a58ba7816256bc2083b3b'}],
       colorMode: {
-        defaultMode: 'light',
+        defaultMode: 'dark', // light, dark
       },
       navbar: {
         title: 'Today I Learned',
+        hideOnScroll: true,
+        style: 'dark', // primary, dark
         logo: {
           alt: 'Today I Learned Logo',
           src: 'img/logo-2.svg',
@@ -229,7 +249,8 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
-        theme: require('prism-react-renderer/themes/dracula'),
+        theme: require('prism-react-renderer/themes/github'),
+        darkTheme: require('prism-react-renderer/themes/dracula'),
         additionalLanguages: ['powershell','javascript'],
       },
       tableOfContents: {

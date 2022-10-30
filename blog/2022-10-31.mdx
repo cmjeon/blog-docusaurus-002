@@ -1,0 +1,121 @@
+---
+date: 2022-10-31
+title: '2022년 10월 31일'
+authors: [cmjeon]
+tags: ['docusaurus', 'mermaid', '토비의스프링']
+draft: true
+---
+
+## docusaurus.config.js 설정
+
+script 와 stylesheet 추가하는 방법
+
+```js {3-13} title="docusaurus.config.js"
+module.exports = {
+  // ...
+  scripts: [
+    {
+      src: 'https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js',
+      defer: true
+    }
+  ],
+  stylesheets: [
+    {
+      href: "https://cdnjs.cloudflare.com/ajax/libs/mermaid/6.0.0/mermaid.css"
+    }
+  ],
+}
+```
+
+기본 컬러모드를 설정, 스크롤 시 navbar 감추는 설정
+
+```js {4-10} title="docusaurus.config.js"
+module.exports = {
+  // ...
+  themeConfig: {
+    colorMode: {
+      defaultMode: 'dark', // light, dark
+    },
+    navbar: {
+      hideOnScroll: true,
+      style: 'dark', // primary, dark
+    }
+    // ...
+  }
+  // ...
+}
+```
+
+## mermaid.js 구동시켜보기
+
+설명되어 있는 mermaid.js 를 구동하는 법은 꽤 간단하다.
+
+```html
+<html>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+    <script>mermaid.initialize({ startOnLoad: true });</script>
+
+    Here is one mermaid diagram:
+    <div class="mermaid">
+        graph TD
+        A[Client] --> B[Load Balancer]
+        B --> C[Server1]
+        B --> D[Server2]
+    </div>
+
+    And here is another:
+    <div class="mermaid">
+        graph TD
+        A[Client] -->|tcp_123| B
+        B(Load Balancer)
+        B -->|tcp_456| C[Server1]
+        B -->|tcp_456| D[Server2]
+    </div>
+  </body>
+</html>
+```
+
+문제가 되는 부분은 `mermaid.initialize({ startOnLoad: true });` 인데, 'mermaid' 라고 선언된 tag 영역을 읽어서 랜더링해주는 부분이다.
+
+이 부분이 docusaurus.config.js 의 `scripts` 요소나 인라인으로 처리해봤더니 작동하지 않았다.
+
+mermaid 를 구동할 방법을 찾아야 한다.
+
+docusaurus.config.js 에 `ssrTemplate` 설정으로는 안된다.
+
+## 토비의스프링
+
+스프링이 지원하는 세가지 핵심 프로그래밍 모델
+
+1. IoC/DI 라고 불리는 오브젝트의 생명주기와 의존관계에 대한 프로그래밍 모델
+2. 서비스의 추상화
+3. AOP 라는 애플리케이션 코드에 산재해서 나타나는 부가적인 기능을 독립적으로 모듈화하는 프로그래밍 모델
+
+스프링을 사용한다는 것은 이 세가지 요소를 적극적으로 활용한다는 것
+
+### 1장 오브젝트와 의존관계
+
+스프링은 오브젝트에 관심을 둔다.
+
+오브젝트 설계 방법인 디자인 패턴, 구조를 개선하는 리팩토링, 검증하는데 쓰이는 테스트
+
+UserDao 사용자 정보를 DB 에 저장하고 불러올 수 있는 클래스이다.
+
+DB 를 사용하기 위해 JDBC 를 이용해야 되는데 일단 UserDao 에 구현해본다.
+
+main 메소드로 DAO 를 테스트해본다.
+
+기능과 테스트는 돌아가지만 객체지향적인 코드가 아니다.
+
+개발자가 객체를 설계할 때 가장 염두에 둬야 할 사항은 미래의 변화를 대비하는 것이다.
+
+객체지향적인 코드를 위해서는 관심사의 분리를 해야한다.
+
+현재 UserDao 의 현재 관심사항
+
+1. DB 와 연결을 위한 커넥션을 가져오기
+2. 사용자 등록을 위해 statement 를 만들고 실행하기
+3. 작업이 끝나면 statement 와 connection 오브젝트를 닫고 리소스를 돌려주기
+
+리팩토링으로 커넥션을 가져오는 중복코드를 추출하고 테스트한다.
