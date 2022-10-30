@@ -151,18 +151,18 @@ const config = {
             label: 'Posts',
             type: 'docSidebar',
             sidebarId: 'posts',
-            position: 'left',
+            position: 'right',
           },
           {
-            label: '日日新 又日新',
+            label: 'TIL',
             to: '/blog',
-            position: 'left',
+            position: 'right',
           },
           {
             label: 'RESUME',
             type: 'doc',
             docId: 'resume',
-            position: 'left',
+            position: 'right',
           },
           // {
           //   label: 'Tags',

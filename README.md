@@ -48,7 +48,7 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 just `$ git push`
 
-### 남은 문제들
+### TODO 남은 문제들
 
 - [x] navbar 에 github 아이콘이 안보임
 - [ ] navbar algolia 검색창 만들기
@@ -59,5 +59,7 @@ just `$ git push`
 - [x] sitemap
 - [x] robots.txt
 - [ ] 사이트 설명 description
-그- [x] Open Graph 설명 og:title, og:description
-- [ ] 블로그에 히어로 이미지 (SEO 고민)
+- [x] Open Graph 설명 og:title, og:description
+- [ ] 블로그에 히어로 이미지 추가하기 (SEO 고민)
+- [ ] 폰트를 바꾸기
+

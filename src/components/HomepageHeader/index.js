@@ -16,7 +16,7 @@ export default function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="/blog">
-            日日新 又日新
+            TIL
           </Link>
         </div>
       </div>
