@@ -13,9 +13,6 @@ export default function Home() {
       title={`${siteConfig.title}`}
       description={`${siteConfig.tagline}`}
     >
-      <script>
-        console.log('### HelloWorld');
-      </script>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
