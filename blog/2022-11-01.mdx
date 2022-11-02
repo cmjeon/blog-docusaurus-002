@@ -7,19 +7,99 @@ tags: ['토비의스프링']
 
 ## 토비의스프링
 
-### 1장 오브젝트와 의존관계 - 계속
+### 1장 오브젝트와 의존관계
 
-리팩토링은 기능에는 변화를 주지 않는다.
+1.2 DAO 의 분리
 
-UserDAO 에 다른 DB 커넥션 연결이 필요하다면 어떻게 해야할까?
+개발자가 객체를 설계할 때 가장 염두에 둬야 할 사항은 미래의 변화를 대비하는 것이다.
 
-일단 상속을 통한 확장을 고민해본다.
+객체지향적인 코드를 위해서는 `관심사의 분리`를 해야한다.
 
-UserDAO 의 getConnection 을 추상메소드로 만들고, UserDAO 의 자식 클래스를 만들어서 getConnection() 을 구현하도록 할 수 있다.
+현재 UserDao 의 현재 관심사항
 
-이렇게 부모클래스에 기본적인 흐름과 추상 메소드를 만들고 자식클래스에서 추상 메소드를 구현하여 사용하는 방법을 템플릿 메소드 패턴 template method pattern 이라고 한다.
+1. DB 와 연결을 위한 커넥션을 가져오기
+2. 사용자 등록을 위해 statement 를 만들고 실행하기
+3. 작업이 끝나면 statement 와 connection 오브젝트를 닫고 리소스를 돌려주기
 
-UserDAO 에서는 getConnection() 으로 Connection 타입의 객체를 사용하는 것에만 관심이 있을 수 있다.
+먼저 DB 커넥션을 가져오는 중복코드인 getConnection() 을 추출한다.
+
+```java title="UserDao.java"
+public class UserDao {
+  public void add(User user) throws ClassNotFoundException, SQLException {
+    Connection c = getConnection();
+    // ...
+  }
+
+  public User get(String id) throws ClassNotFoundException, SQLException {
+    Connection c = getConnection();
+    // ...
+    return user;
+  }
+
+  private Connection getConnection() throws ClassNotFoundException, SQLException {
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8", "spring", "book");
+    return c;
+  }
+
+  // ...
+}
+```
+
+다시 main() 메소드로 테스트한다.
+
+기능에는 변화를 주지 않으면서 이전보다 소스코드를 깔끔하게 하는 것을 리팩토링이라고 한다.
+
+메소드로 중복된 코드를 뽑아내는 것을 `메소드 추출` 기법이라고 한다.
+
+UserDao 에 다른 종류의 DB 커넥션이 필요하다면 어떻게 해야할까?
+
+상속을 통한 확장으로 문제를 해결해보자
+
+```java title="UserDao.java"
+public abstract class UserDao {
+  public void add(User user) throws ClassNotFoundException, SQLException {
+    Connection c = getConnection();
+    // ...
+  }
+
+
+  public User get(String id) throws ClassNotFoundException, SQLException {
+    Connection c = getConnection();
+    // ...
+  }
+
+  abstract protected Connection getConnection() throws ClassNotFoundException, SQLException ;
+
+  // ...
+}
+```
+
+```java title="DUserDao.java"
+public class DUserDao extends UserDao {
+  protected Connection getConnection() throws ClassNotFoundException, SQLException {
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8", "spring", "book");
+    return c;
+  }
+}
+```
+
+```java title="NUserDao.java"
+public class NUserDao extends UserDao {
+  protected Connection getConnection() throws ClassNotFoundException, SQLException {
+    Class.forName("com.mysql.jdbc.Driver");
+    Connection c = DriverManager.getConnection("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8", "spring", "book");
+    return c;
+  }
+}
+```
+
+UserDao 의 getConnection 을 추상메소드로 만들고, UserDAO 의 자식 클래스를 만들어서 getConnection() 을 구현하도록 할 수 있다.
+
+부모클래스에 기본적인 흐름과 추상 메소드를 만들고 자식클래스에서 추상 메소드를 구현하여 사용하는 방법을 템플릿 메소드 패턴 template method pattern 이라고 한다.
+
+UserDao 에서는 getConnection() 으로 Connection 타입의 객체를 사용하는 것에만 관심이 있을 수 있다.
 
 그렇게 되면 getConnection() 으로 실제 Connection 객체를 생성하는 것은 자식클래스의 관심사항이다.
 
@@ -27,17 +107,15 @@ UserDAO 에서는 getConnection() 으로 Connection 타입의 객체를 사용�
 
 상속구조를 통해 성격이 다른 관심사항을 분리한 코드를 만들었고, 서로 영향을 덜 주도록 했다.
 
-> 서브클래스에서 오브젝트 생성 방법과 클래스를 결정할 수 있도록 미리 정의해둔 메소드를 팩토리 메소드라고 하고,
+> 서브클래스에서 오브젝트 생성 방법과 클래스를 결정할 수 있도록 미리 정의해둔 메소드를 팩토리 메소드라고 한다.
+>
 > 오브젝트 생성 방법을 나머지 로직이 있는 부모클래스로부터 독립시키는 방법을 팩토리 메소드 패턴이라고 한다.
 
-팩토리 메소드와 팩토리 메소드 패턴의 팩토리 메소드는 의미가 다르다?
+하지만 상속은 많은 한계점이 있다.
 
-상속은 많은 한계점이 있다.
-
-자바는 클래스의 다중상속을 허용하지 않는다.
+자바는 클래스의 다중상속을 허용하지 않기 때문에 상속을 적용한 부모 클래스는 다른 상속을 적용자지 못한다.
 
 상속관계는 두 가지 다른 관심사에 대한 긴밀한 결합을 허용하고, 자식클래스에서 부모클래스의 기능을 직접 사용할 수 있다.
 
-UserDAO 외에 DAOa 클래스가 만들어질 때마다 getConnection() 의 구현 코드가 매 DAO 클래스마다 중복되서 나타나는 심각한 문제가 발생한다.
-
+UserDao 외에 Dao 클래스가 만들어질 때마다 getConnection() 의 구현 코드가 매 Dao 클래스마다 중복되서 나타나는 심각한 문제가 발생한다.
 
