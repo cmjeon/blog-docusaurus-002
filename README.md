@@ -58,7 +58,7 @@ just `$ git push`
 - [x] GA 등록하기
 - [x] sitemap
 - [x] robots.txt
-- [ ] 사이트 설명 description
+- [x] 사이트 설명 description
 - [x] Open Graph 설명 og:title, og:description
 - [ ] 블로그에 히어로 이미지 추가하기 (SEO 고민)
 - [ ] 폰트 바꾸기
