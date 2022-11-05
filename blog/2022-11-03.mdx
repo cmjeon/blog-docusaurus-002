@@ -15,6 +15,7 @@ UserDaoTest 가 하던 UserDao 에 ConnectionMaker 을 등록하는 일을 맡�
 
 ```java title="UserDaoFactory.java"
 public class UserDaoFactory {
+
   public UserDao userDao() {
     UserDao dao = new UserDao(connectionMaker());
     return dao;
@@ -24,6 +25,7 @@ public class UserDaoFactory {
     ConnectionMaker connectionMaker = new DConnectionMaker();
     return connectionMaker;
   }
+
 }
 ```
 
@@ -31,17 +33,18 @@ public class UserDaoFactory {
 
 이제 UserDaoTest 에서는 UserDao 를 사용하기만 하면 된다.
 
-```java
+```java title="UserDaoTest.java"
 public class UserDaoTest {
+
   public static void main(String[] args) throws ClassNotFoundException, SQLException {
     UserDao dao = new UserDaoFactory().userDao();
-
     // ...
   }
+
 }
 ```
 
-UserDao 와 ConnectionMaker 는 데이터로직와 기술로직을 담당하게 된다.
+UserDao 와 ConnectionMaker 는 각각 데이터로직와 기술로직을 담당하게 된다.
 
 UserDaoFactory 는 오브젝트간의 구조와 관계를 정의하는 역할을 맡게 된다.
 
@@ -65,8 +68,9 @@ public class DaoFactory {
 
 ConnectionMaker 를 생성하는 코드를 추출한다.
 
-```java {3,6,9,11-13} title="DaoFactory.java"
+```java {12-14} title="DaoFactory.java"
 public class DaoFactory {
+
 	public UserDao userDaoO {
 		return new UserDao(connectionMaker());
 	}
@@ -79,10 +83,11 @@ public class DaoFactory {
 	public ConnectionMaker connectionMaker() {
 		return new DConnectionMaker();
 	}
+
 )
 ```
 
-제어의 역전이라는 개념을 알아보자.
+이제 제어의 역전이라는 개념을 알아보자.
 
 일반적인 프로그램의 흐름은 프로그램 시작점에서 다음에 사용할 오브젝트를 결정하고, 생성하고, 사용한다.
 

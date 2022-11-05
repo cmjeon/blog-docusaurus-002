@@ -17,11 +17,11 @@ import Image from '@theme/IdealImage';
 
 이 두가지는 앞에서 만든 DaoFactory 를 일반화 한 것이다.
 
-스프링에서는 스프링이 제어권을 가지고 직접 만들고 관계를 부여하는 오브젝트를 Bean 이라고 부른다.
+스프링에서는 스프링이 제어권을 가지고 직접 만들고 관계를 부여하는 오브젝트를 빈 Bean 이라고 부른다.
 
 <!--truncate-->
 
-동시에 스프링 컨테이너가 생성, 관계설정, 사용 등을 제어해주는 제어의 역전이 적용된 오브젝트를 가리킨다.
+동시에 스프링 컨테이너가 생성, 관계 설정, 사용 등을 제어해주는 제어의 역전이 적용된 오브젝트를 가리킨다.
 
 스프링에서 제어의 역전을 담당하는 IoC 오브젝트를 빈 팩토리 bean factory 라고 부른다.
 
@@ -51,14 +51,16 @@ public class DaoFactory {
 
 UserDaoTest 에서 DaoFactory 를 이용하여 애플리케이션 컨텍스트를 생성한다.
 
-```java {3-4} title="UserDaoTest.java"
+```java {4-5} title="UserDaoTest.java"
 public class UserDaoTest {
+
 	public static void main(String[] args) throws ClassNotFoundException, SQLException {
 		AnnotationConfigApplicationContext context = new AnnotationConfigApplicationContext(DaoFactory.class);
 		UserDao dao = context.getBean("userDao", UserDao.class);
 
 		// ...
 	}
+
 }
 ```
 
@@ -78,7 +80,7 @@ getBean() 메소드의 첫번째 파라미터는 오브젝트를 리턴하는 �
 
 <Image img={require('./application-context-work.png')} />
 
-DaoFactory 를 오브젝트 팩토리로 직접 사용하는 것보다 애플리케이션 컨텍스트를 사용하면 몇가지 장점이 있다.
+DaoFactory 를 오브젝트 팩토리로 직접 사용하는 것보다 애플리케이션 컨텍스트를 사용하면 몇 가지 장점이 있다.
 
 1. 클라이언트가 구체적인 팩토리 클래스를 알 필요가 없다.
 1. 종합 IoC 서비스를 제공해준다.
