@@ -52,34 +52,41 @@ UserDaoFactory 를 만듦으로써 애플리케이션의 구성요소 역할을 
 
 만약 DaoFactory 에 다른 Dao 가 추가된다면 ConnectionMaker 를 생성하는 코드가 반복된다.
 
-```java {3,6,9} title="DaoFactory.java"
+```java {4,8,12} title="DaoFactory.java"
 public class DaoFactory {
+
 	public UserDao userDaoO {
 		return new UserDao(new DConnectionMaker());
 	}
+
 	public AccountDao accountDaoO {
 		return new AccountDao(new DConnectionMaker());
 	}
+
 	public MessageDao messageDaoO {
 		return new MessageDao(new DConnectionMaker());
 	}
+
 }
 ```
 
 ConnectionMaker 를 생성하는 코드를 추출한다.
 
-```java {12-14} title="DaoFactory.java"
+```java {15-17} title="DaoFactory.java"
 public class DaoFactory {
 
 	public UserDao userDaoO {
 		return new UserDao(connectionMaker());
 	}
+
 	public AccountDao accountDaoO {
 		return new AccountDao(connectionMaker());
 	}
+
 	public MessageDao messageDaoO {
 		return new MessageDao(connectionMaker());
 	}
+
 	public ConnectionMaker connectionMaker() {
 		return new DConnectionMaker();
 	}
