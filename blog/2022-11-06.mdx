@@ -269,6 +269,8 @@ public class UserDao {
     this.connectionMaker = connectionMaker;
   }
 
+  // ...
+
 }
 ```
 
@@ -277,12 +279,16 @@ UserDao 메소드가 변경되었기 때문에 DI 를 적용하는 DaoFactory �
 ```java {3-8} title="DaoFactory.java"
 public class DaoFactory {
 
+  // ...
+
   @Bean
   public UserDao userDao() {
     UserDao userDao = new UserDaoO;
     userDao.setConnectionMaker(connectionMakerO);
     return userDao;
   }
+
+  // ...
 
 }
 ```
