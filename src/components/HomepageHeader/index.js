@@ -15,8 +15,18 @@ export default function HomepageHeader() {
         <div className={styles.buttons}>
           <Link
             className="button button--secondary button--lg"
+            to="/docs/category/docusaurus-블로그-만들기">
+            Posts
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
             to="/blog">
             TIL
+          </Link>
+          <Link
+            className="button button--secondary button--lg"
+            to="docs/resume">
+            RESUME
           </Link>
         </div>
       </div>

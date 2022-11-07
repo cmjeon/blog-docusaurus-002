@@ -48,3 +48,7 @@
   no-repeat;
 }
 /* navbar github icon */
+
+.button--secondary {
+  margin: 0rem 0.5rem;
+}
