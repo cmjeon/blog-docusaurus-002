@@ -255,7 +255,7 @@ const config = {
       },
       tableOfContents: {
         minHeadingLevel: 2,
-        maxHeadingLevel: 4,
+        maxHeadingLevel: 3,
       },
       googleAdsense: {
         dataAdClient: 'ca-pub-8380472646656641',
