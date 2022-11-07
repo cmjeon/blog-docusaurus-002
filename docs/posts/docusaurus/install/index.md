@@ -1,9 +1,9 @@
 ---
-title: Docusaurus 설치하기
+title: 설치하기
 sidebar_position: 1
 last_update: 
   date: 2022-11-04
-description: Docusaurus 설치하기
+description: Docusaurus 설치하고, 로컬에서 구동해 봅니다.
 tags: ['docusaurus']
 keywords: ['docusaurus']
 ---
