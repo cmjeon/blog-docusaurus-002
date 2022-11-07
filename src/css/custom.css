@@ -52,3 +52,11 @@
 .button--secondary {
   margin: 0rem 0.5rem;
 }
+
+@media screen and (max-width: 996px) {
+  .button--secondary {
+    margin: 0rem 0.2rem;
+    padding: calc(0.8 * var(--ifm-button-padding-vertical) * var(--ifm-button-size-multiplier) ) calc( 0.8 * var(--ifm-button-padding-horizontal) * var(--ifm-button-size-multiplier));
+    font-size: calc(0.8rem * var(--ifm-button-size-multiplier));
+  }
+}
