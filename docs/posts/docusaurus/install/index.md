@@ -10,8 +10,6 @@ keywords: ['docusaurus']
 
 import Image from '@theme/IdealImage';
 
-[//]: # (import DocCardList from '@theme/DocCardList';)
-
 ## Docusaurus 알아보기
 
 > 도튜사우루스 홈페이지: [https://docusaurus.io/ko/](https://docusaurus.io/ko/)

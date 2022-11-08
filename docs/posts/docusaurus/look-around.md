@@ -9,5 +9,51 @@ keywords: ['docusaurus']
 draft: true
 ---
 
+## 둘러보기
 
-ㅇㅇㅇ
+도큐사우루스는 문서화를 도와주는 도구입니다.
+
+크게 블로그형태, 문서형태, 정적사이트 형태인 3가지 종류의 문서를 게시할 수 있습니다.
+
+## Docusaurus 구조
+
+classic 템플릿으로 도큐사우루스를 구성했다면 프로젝트 구조는 대략 아래처럼 보이게 됩니다.
+
+```
+my-website-root
+|- blog
+|  |- 2019-05-29-hello-world.md
+|  `- 2020-05-30-welcome.md
+|- docs
+|  |- doc1.md
+|  `- mdx.md
+|- src
+|  |- css
+|  |  |- custom.css
+|  `- pages
+|     |- styles.module.css
+|     `- index.js
+|- static
+|  `- img
+|- docusaurus.config.js
+|- package.json
+|- README.md
+|- sidebars.js
+`- yarn.lock
+```
+
+- /blog/
+  - 블로그를 게시할 때 사용하는 md 파일이 있는 디렉토리입니다.
+- /docs/
+  - 문서를 게시할 때 사용하는 md 파일이 있는 디렉토리입니다.
+- /src/
+  - md 파일이 아닌 파일들, 즉 페이지나 리액트 컴포넌트들이 있는 디렉토리입니다.
+- /src/pages/
+  - 웹사이트 페이지로 변환할 파일들 (jsx, tsx, mdx) 이 있는 디렉토리입니다.
+- /static/
+  - dd
+- /docusaurus.config.js
+  - dd
+- /sidebars.js
+  - dd
+
