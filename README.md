@@ -62,4 +62,5 @@ just `$ git push`
 - [x] Open Graph 설명 og:title, og:description
 - [ ] 블로그에 히어로 이미지 추가하기 (SEO 고민)
 - [ ] 폰트 바꾸기
+- [ ] utterances 댓글기능 달기
 
