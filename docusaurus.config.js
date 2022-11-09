@@ -60,7 +60,7 @@ const config = {
         blog: {
           routeBasePath: '/blog', // Serve the blog at the site's root
           showReadingTime: true,
-          blogSidebarCount: 15,
+          blogSidebarCount: 'ALL',
           // Please change this to your repo.
           // Remove this to remove the "edit this page" links.
           // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
