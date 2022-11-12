@@ -167,6 +167,26 @@ const config = {
           // target: '_self',
         },
         items: [
+          // 특정 문서뭉치 표시 예시
+          // {
+          //   label: 'Docusaurus',
+          //   type: 'docSidebar',
+          //   sidebarId: 'docusaurus',
+          //   position: 'right',
+          // },
+          // dropdown 예시
+          // {
+          //   label: 'Posts - dd',
+          //   type: 'dropdown',
+          //   position: 'right',
+          //   items: [
+          //     {
+          //       label: 'Docusaurus',
+          //       type: 'docSidebar',
+          //       sidebarId: 'docusaurus',
+          //     }
+          //   ]
+          // },
           {
             label: 'Posts',
             type: 'docSidebar',
@@ -259,6 +279,29 @@ const config = {
       },
       googleAdsense: {
         dataAdClient: 'ca-pub-8380472646656641',
+      },
+      algolia: {
+        // 알골리아에서 제공한 appId를 사용하세요.
+        appId: 'R7GTGR03M5',
+
+        // 공개 API 키: 커밋해도 문제가 생기지 않습니다.
+        apiKey: '80886e84b6dd8c2081a89fbfb5e01951',
+
+        indexName: 'YOUR_INDEX_NAME',
+
+        // 옵션: 아래 문서를 참고
+        contextualSearch: true,
+
+        // 옵션: history.push 대신 window.location을 통해 탐색해야 하는 도메인을 지정합니다. 여러 문서 사이트를 크롤링하고 window.location.href를 사용하여 해당 사이트로 이동하려는 경우에 유용한 알골리아 설정입니다.
+        externalUrlRegex: 'external\\.com|domain\\.com',
+
+        // 옵션: 알골리아 검색 파라미터
+        searchParameters: {},
+
+        // 옵션: 기본적으로 활성화된 검색 페이지 경로(비활성화하려면 `false`로 설정)
+        searchPagePath: 'search',
+
+        //... 다른 알골리아 파라미터
       },
       // metadata: [
       //   {name:'google-site-verification', content:'G-360E4P1PB9'}
