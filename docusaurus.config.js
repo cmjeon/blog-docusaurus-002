@@ -153,7 +153,9 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      metadata: [{name: 'naver-site-verification', content: '58c1378aa6cf5b0d7b3a58ba7816256bc2083b3b'}],
+      metadata: [
+        {name: 'naver-site-verification', content: '58c1378aa6cf5b0d7b3a58ba7816256bc2083b3b'}
+      ],
       colorMode: {
         defaultMode: 'dark', // light, dark
       },
@@ -283,10 +285,10 @@ const config = {
       },
       algolia: {
         // 알골리아에서 제공한 appId를 사용하세요.
-        appId: 'R7GTGR03M5',
+        appId: process.env.algoliaAppId,
 
         // 공개 API 키: 커밋해도 문제가 생기지 않습니다.
-        apiKey: '80886e84b6dd8c2081a89fbfb5e01951',
+        apiKey: process.env.algoliaApiKey,
 
         indexName: 'YOUR_INDEX_NAME',
 
