@@ -2,6 +2,8 @@
 lang: ko-KR
 permalink: /docs/resume
 title: Resume
+toc_min_heading_level: 2
+toc_max_heading_level: 2
 ---
 
 ## 안녕하세요!
@@ -17,20 +19,20 @@ title: Resume
 ### Contact
 
 e-mail : <chmin82@gmail.com>   
-blog : [cmjeon.github.io](cmjeon.github.io)   
-github : [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)
+blog :  [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)   
+github : [https://github.com/cmjeon](https://github.com/cmjeon)
 
 ### 소개
 
-11년차 웹개발자이자 프로젝트 관리자입니다.
+12년차 웹개발자이자 프로젝트 관리자입니다.
 
 프론트엔드에 관심이 있어 `vue.js` 를 학습하였고 `프로젝트에 적용`하였습니다.
 
-풀스택 웹개발자로 `관리자 서비스` 유지운영 업무를 수행하였습니다.
+웹개발자로 `관리자 서비스` 유지운영 업무를 수행하였습니다.
 
-프로젝트 수행할 때 `고객의 핵심고민을 파악`하고 집중하여 해결합니다.
+프로젝트 관리자로 프로젝트 수행 시 `고객의 핵심고민을 파악`하고 집중하여 해결합니다.
 
-`팀워크를 중요시`하며, 특히 팀원간 소통과 업무능력 표준화를 위한 노력으로 MediaWiki, 표준 개발 템플릿, Confluence 도입하며 팀에 기여해 왔습니다.
+`팀워크를 중요하게 생각`하며, 팀원간 소통과 업무능력 표준화를 위해 오픈소스 위키(MediaWiki), 표준 개발 템플릿, Confluence 도입하며 팀에 기여해 왔습니다.
 
 ## 기술
 
@@ -164,9 +166,11 @@ github : [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)
 
 [역할]
 - 패션커머스앱 PL로 요구사항 협의부터 업무조율 수행
+- 
 
 [성과]
-- GA 코드 추가, 로딩속도 개선 등 수행
+- GTM 코드 추가, 페이지 로딩속도 개선 수행
+-  
 
 ### 증권솔루션 고도화 개발 (20.04 ~ 21.03)
 
@@ -216,8 +220,8 @@ github : [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)
 - 개발자로 테이블 설계, 백엔드(Spring), 프론트엔드(`jQuery, ajax`) 개발
 
 [성과]
-- 홈페이지 콘텐츠 속성의 유연성을 향상
-- 관리자페이지 에 `비동기처리`를 도입하여 사용성 향상
+- 홈페이지 전시 콘텐츠 속성의 유연성을 향상
+- 관리자페이지에 `비동기처리` 를 도입하여 사용성 개선
 
 ### 정부통합전산센터 자원통합 사업 (13.08 ~ 14.04)
 
@@ -227,7 +231,7 @@ github : [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)
 
 [성과]
 - 정부통합전산센터 서버자원의 이전/통합을 수행
-- 센터, 부처, 파트너사간의 의사소통으로 요구사항을 분리하여 작업
+- 센터, 부처, 파트너사간의 의사소통으로 요구사항을 조율하여 수행
 
 ### 좀비PC 탐지/제거 사업 (12.09 ~ 13.02)
 
@@ -239,10 +243,10 @@ github : [https://blog-cmjeon.vercel.app](https://blog-cmjeon.vercel.app)
 
 ## 자격증
 
-- 2018.10.08 DAsP
+- 2018.10.08 데이터아키텍처 준전문가 (DAsP, Data Architecture Semi-Professional) 
 - 2017.12.15 웹디자인기능사
-- 2016.07.19 PMP
-- 2011.03.05 OCJP(1.6)
+- 2016.07.19 프로젝트 관리 전문가 (PMP, Project Management Professional)
+- 2011.03.05 오라클 인증 자바 프로그래머 1.6 (OCJP, Oracle Certified Java Programmer)
 - 2009.06.01 정보처리기사
 
 ## 학력
