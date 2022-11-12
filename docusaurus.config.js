@@ -3,6 +3,7 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+require('dotenv').config()
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -69,7 +70,7 @@ const config = {
           customCss: require.resolve('./src/css/custom.css'),
         },
         gtag: {
-          trackingID: 'G-360E4P1PB9',
+          trackingID: process.env.gtagTrackingId,
           anonymizeIP: true,
         },
         sitemap: {
@@ -191,18 +192,18 @@ const config = {
             label: 'Posts',
             type: 'docSidebar',
             sidebarId: 'posts',
-            position: 'right',
+            position: 'left',
           },
           {
             label: 'TIL',
             to: '/blog',
-            position: 'right',
+            position: 'left',
           },
           {
-            label: 'RESUME',
+            label: 'Resume',
             type: 'doc',
             docId: 'resume',
-            position: 'right',
+            position: 'left',
           },
           // {
           //   label: 'Tags',
@@ -278,7 +279,7 @@ const config = {
         maxHeadingLevel: 3,
       },
       googleAdsense: {
-        dataAdClient: 'ca-pub-8380472646656641',
+        dataAdClient: process.env.googleAdsenseDataAdClient,
       },
       algolia: {
         // 알골리아에서 제공한 appId를 사용하세요.
