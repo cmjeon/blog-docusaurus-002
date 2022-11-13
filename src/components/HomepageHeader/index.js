@@ -26,7 +26,7 @@ export default function HomepageHeader() {
           <Link
             className="button button--secondary button--lg"
             to="docs/resume">
-            RESUME
+            Resume
           </Link>
         </div>
       </div>

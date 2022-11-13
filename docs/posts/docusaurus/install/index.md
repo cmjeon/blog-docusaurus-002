@@ -14,8 +14,6 @@ import Image from '@theme/IdealImage';
 
 > 도튜사우루스 홈페이지: [https://docusaurus.io/ko/](https://docusaurus.io/ko/)
 
----
-
 도큐사우루스는 리액트 기반의 문서 생성 도구입니다.
 
 2022년 8월에 2.0 이 출시되어 많은 관심을 받고 있습니다.

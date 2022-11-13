@@ -6,7 +6,6 @@ last_update:
 description: Docusaurus 둘러보고 대략적인 구조를 파악합니다. 
 tags: ['docusaurus']
 keywords: ['docusaurus']
-draft: true
 ---
 
 ## 둘러보기
@@ -51,9 +50,8 @@ my-website-root
 - /src/pages/
   - 웹사이트 페이지로 변환할 파일들 (jsx, tsx, mdx) 이 있는 디렉토리입니다.
 - /static/
-  - dd
+  - image 등 정적 파일이 저장되는 곳입니다.
 - /docusaurus.config.js
-  - dd
+  - 도큐사우루스 설정을 관리하는 곳입니다. 도큐사우르스에 필요한 설정은 거의 대부분 이 파일을 수정하면서 진행됩니다.
 - /sidebars.js
-  - dd
-
+  - 도큐사우루스의 문서중에서는 왼쪽 사이드바가 필요한 경우가 있습니다. 이 경우 사용되는 파일입니다.
