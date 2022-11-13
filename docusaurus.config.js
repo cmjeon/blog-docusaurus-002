@@ -61,12 +61,16 @@ const config = {
           // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
         },
         blog: {
-          routeBasePath: '/blog', // Serve the blog at the site's root
-          showReadingTime: true,
+          blogTitle: 'TIL',
+          blogDescription: 'cmjeon Today I Learned',
           blogSidebarCount: 'ALL',
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/blog',
+          routeBasePath: '/blog', // Serve the blog at the site's root
+          postsPerPage: 5,
+          blogListComponent: '@theme/BlogListPage',
+          blogPostComponent: '@theme/BlogPostPage',
+          blogTagsListComponent: '@theme/BlogTagsListPage',
+          blogTagsPostsComponent: '@theme/BlogTagsPostsPage',
+          showReadingTime: true,
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

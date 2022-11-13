@@ -20,6 +20,8 @@ import Image from '@theme/IdealImage';
 
 ---
 
+## react.js
+
 react.js 에 관심이 생겨 저번주에 react 2022 개정판을 보았다.
 
 [https://opentutorials.org/course/4900](https://opentutorials.org/course/4900)
@@ -32,3 +34,10 @@ CRUD 를 해보면서 리액트의 특징들을 배워볼 수 있는 강좌이�
 
 강좌를 이해하는데 전문적인 지식을 요구하지 않는다.
 
+react.js 를 보고 상태관리툴, MUI 를 공부해서 웹서비스를 하나 만들어 보자.
+
+---
+
+## docusaurus 포스팅
+
+docusaurus 블로그 쓰기 포스팅을 하였다.
