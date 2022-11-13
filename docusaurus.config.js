@@ -274,9 +274,22 @@ const config = {
         copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
       },
       prism: {
+        defaultLanguage: 'javascript',
         theme: require('prism-react-renderer/themes/github'),
         darkTheme: require('prism-react-renderer/themes/dracula'),
-        additionalLanguages: ['powershell','javascript','java'],
+        additionalLanguages: ['powershell','javascript','java','css','jsx','tsx','json','markup','regex'],
+        magicComments: [
+          // 기본 highlight 클래스 이름을 확장하는 것을 잊지 마세요!
+          {
+            className: 'theme-code-block-highlighted-line',
+            line: 'highlight-next-line',
+            block: {start: 'highlight-start', end: 'highlight-end'},
+          },
+          {
+            className: 'code-block-error-line',
+            line: 'This will error',
+          },
+        ],
       },
       tableOfContents: {
         minHeadingLevel: 2,
