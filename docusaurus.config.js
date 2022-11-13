@@ -305,7 +305,7 @@ const config = {
         // 공개 API 키: 커밋해도 문제가 생기지 않습니다.
         apiKey: process.env.algoliaApiKey,
 
-        indexName: 'YOUR_INDEX_NAME',
+        indexName: 'blog-docusaurus-index',
 
         // 옵션: 아래 문서를 참고
         contextualSearch: true,
