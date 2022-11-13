@@ -18,7 +18,7 @@ keywords: ['docusaurus']
 
 classic 템플릿으로 도큐사우루스를 구성했다면 프로젝트 구조는 대략 아래처럼 보이게 됩니다.
 
-```
+```text
 my-website-root
 |- blog
 |  |- 2019-05-29-hello-world.md

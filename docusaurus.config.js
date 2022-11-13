@@ -198,6 +198,18 @@ const config = {
             sidebarId: 'posts',
             position: 'left',
           },
+          // {
+          //   label: 'Books',
+          //   type: 'docSidebar',
+          //   sidebarId: 'books',
+          //   position: 'left',
+          // },
+          // {
+          //   label: 'Portfolio',
+          //   type: 'docSidebar',
+          //   position: 'left',
+          //   sidebarId: 'portfolio',
+          // },
           {
             label: 'TIL',
             to: '/blog',
@@ -213,12 +225,6 @@ const config = {
           //   label: 'Tags',
           //   to: '/blog/tags',
           //   position: 'left',
-          // },
-          // {
-          //   label: 'Portfolio',
-          //   type: 'docSidebar',
-          //   position: 'left',
-          //   sidebarId: 'portfolio',
           // },
           {
             href: 'https://github.com/cmjeon',
