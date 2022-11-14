@@ -2,8 +2,7 @@
 date: 2022-11-14
 title: '2022년 11월 14일'
 authors: [cmjeon]
-tags: ['서말']
-draft: true
+tags: ['서말','react.js']
 ---
 
 import Image from '@theme/IdealImage';
@@ -18,7 +17,7 @@ import Image from '@theme/IdealImage';
 
 생활코딩과 관련 있는 사이트로 보이는데, 연관된 학습을 할 수 있도록 도와주는 사이트이다.
 
----
+<!--truncate-->
 
 ## react.js
 
@@ -36,8 +35,8 @@ CRUD 를 해보면서 리액트의 특징들을 배워볼 수 있는 강좌이�
 
 react.js 를 보고 상태관리툴, MUI 를 공부해서 웹서비스를 하나 만들어 보자.
 
----
-
 ## docusaurus 포스팅
 
 docusaurus 블로그 쓰기 포스팅을 하였다.
+
+docusaurus 블로그 설정과 프론트 매터, 마크다운에 대해 작성하였다.
