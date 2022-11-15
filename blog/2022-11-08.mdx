@@ -40,7 +40,7 @@ public class UserDaoTest {
     user.setPassword("married");
     dao.add(user);
 
-    System, out. println(user.getId() + " 등록 성공”);
+    System.out.println(user.getId() + " 등록 성공”);
 
     User user2 = dao.get(user.getId());
     System.out.println(user2.getName());
@@ -53,8 +53,8 @@ public class UserDaoTest {
 
 UserDaoTest 내용을 정리해보면 아래와 같다.
 
-- 자바에서 가장 손쉽게 실행 가능한 mainO 메소드를 이용한다.
-- 테스트할 대상인 UserDao의 오브젝트를 가져와 메소드를 호출한다.
+- 자바에서 가장 손쉽게 실행 가능한 main() 메소드를 이용한다.
+- 테스트할 대상인 UserDao 의 오브젝트를 가져와 메소드를 호출한다.
 - 테스트에 사용할 입력 값(User 오브젝트)을 직접 코드에서 만들어 넣어준다.
 - 테스트의 결과를 콘솔에 출력해준다.
 - 각 단계의 작업이 에러 없이 끝나면 콘솔에 성공 메시지로 출력해준다.
