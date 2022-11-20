@@ -202,12 +202,12 @@ const config = {
             sidebarId: 'posts',
             position: 'left',
           },
-          // {
-          //   label: 'Books',
-          //   type: 'docSidebar',
-          //   sidebarId: 'books',
-          //   position: 'left',
-          // },
+          {
+            label: 'Books',
+            type: 'docSidebar',
+            sidebarId: 'books',
+            position: 'left',
+          },
           // {
           //   label: 'Portfolio',
           //   type: 'docSidebar',

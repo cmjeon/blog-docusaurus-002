@@ -3,4 +3,4 @@ title: Intro
 sidebar_position: 1
 ---
 
-책들입니다.
+독후감입니다.
