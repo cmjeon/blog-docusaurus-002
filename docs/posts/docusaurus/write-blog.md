@@ -1,14 +1,15 @@
 ---
-title: 블로그 쓰기
+title: 블로그 작성하기
 sidebar_position: 3
 last_update:
+  author: cm jeon
   date: 2022-11-14
-description: Docusaurus 에 블로그를 써봅니다.
+description: Docusaurus 에 블로그를 작성해 봅니다.
 tags: ['docusaurus']
 keywords: ['docusaurus']
 ---
 
-## 블로그 쓰기
+## 블로그 작성하기
 
 도큐사우르스에서 `/blog/` 디렉토리에 마크다운파일을 생성하여 글을 쓰면 블로그글로 인식합니다.
 
@@ -22,7 +23,7 @@ keywords: ['docusaurus']
 
 docusaurus.config.js 의 presets 배열에 설정을 추가할 수 있습니다.
 
-```js
+```js title="docusaurus.config.js"
 module.exports = {
   // ...
   presets: [
@@ -66,7 +67,7 @@ module.exports = {
 
 마크다운 문서의 가장 상단에 --- 로 감싸고 있는 영역을 프론트매터라고 합니다.
 
-프론트매터는 문서의 일종의 설정값입니다.
+프론트매터는 문서의 설정값입니다.
 
 ```markdown
 ---
@@ -90,7 +91,7 @@ draft: true
 
 [https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#markdown-front-matter](https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#markdown-front-matter)
 
-## 마크다운으로 블로그 쓰기
+## 마크다운으로 블로그 작성하기
 
 블로그는 마크다운으로 작성할 수 있습니다.
 
@@ -101,3 +102,7 @@ draft: true
 마크다운은 기호 등을 이용해 문장에 서식을 정해주는 방식으로 작동합니다.
 
 파일을 .md 확장자로 생성하여 마크다운 문법에 따라 작성합니다. 
+
+## 참고
+
+[https://docusaurus.io/ko/docs/blog](https://docusaurus.io/ko/docs/blog)
