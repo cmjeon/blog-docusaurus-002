@@ -1,7 +1,8 @@
 ---
 title: 설치하기
 sidebar_position: 1
-last_update: 
+last_update:
+  author: cm jeon
   date: 2022-11-04
 description: Docusaurus 설치하고, 로컬에서 구동해 봅니다.
 tags: ['docusaurus']
@@ -26,7 +27,7 @@ import Image from '@theme/IdealImage';
 
 도큐사우루스는 node.js 버전이 최소 16.14 이상이어야 합니다.
 
-일단 node.js 버전을 확인합니다.
+때문에 먼저 node.js 버전을 확인합니다.
 
 ```shell
 $ node -v
@@ -59,9 +60,13 @@ export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || pr
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
 ```
 
+:::info
+
 vi 에디터 사용법을 참고해서 작성할 수 있습니다.
 
 [https://withcoding.com/112](https://withcoding.com/112)
+
+:::
 
 이제 nvm 을 통해 node.js 16의 최신버전을 설치합니다.
 

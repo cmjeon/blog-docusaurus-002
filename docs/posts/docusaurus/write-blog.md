@@ -59,9 +59,13 @@ module.exports = {
 - postsPerPage: 목록에 블로그가 표시되는 최대 글 수
 - showReadingTime: 블로그에 읽는 시간 표시
 
+:::info
+
 모든 설정에 대한 설명은 아래 링크에 있습니다.
 
 [https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#configuration](https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#configuration)
+
+:::
 
 ## 마크다운 프론트매터
 
@@ -87,9 +91,13 @@ draft: true
 - tags: 포스트와 관련된 태그
 - draft: 초안인 경우 해당 요소를 true 로 지정하면 development 상태에서만 볼 수 있음
 
+:::info
+
 프론트매터의 모든 설정에 대한 설명은 아래 링크에 있습니다.
 
 [https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#markdown-front-matter](https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-blog#markdown-front-matter)
+
+:::
 
 ## 마크다운으로 블로그 작성하기
 

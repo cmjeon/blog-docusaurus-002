@@ -7,7 +7,6 @@ last_update:
 description: Docusaurus 에 문서를 작성해 봅니다.
 tags: ['docusaurus']
 keywords: ['docusaurus']
-draft: true
 ---
 
 ## 문서 작성하기
@@ -56,9 +55,13 @@ module.exports = {
 - showLastUpdateTime: 최종버전이 업데이트된 시점을 표시할지 결정합니다.
 - breadcrumbs: 문서의 위치를 표시할지 결정합니다.
 
+:::info
+
 모든 설정에 대한 설명은 아래 링크에 있습니다.
 
 [https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-docs#configuration](https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-docs#configuration)
+
+:::
 
 ## 마크다운 프론트매터
 
@@ -94,15 +97,19 @@ keywords: ['docusaurus']
 - toc_min_heading_level: 문서에 있는 헤딩영역 중 콘텐츠 테이블에 표현되어야 하는 최소 레벨
 - toc_max_heading_level: 문서에 있는 헤딩영역 중 콘텐츠 테이블에 표현되어야 하는 최대 레벨
 
-:::info
+:::note
 
 toc 는 Table Of Content 의 약자입니다.
 
 :::
 
+:::info
+
 프론트매터의 모든 설정에 대한 설명은 아래 링크에 있습니다.
 
 [https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter](https://docusaurus.io/ko/docs/api/plugins/@docusaurus/plugin-content-docs#markdown-front-matter)
+
+:::
 
 ## 마크다운으로 문서 작성하기
 
