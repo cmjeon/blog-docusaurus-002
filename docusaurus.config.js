@@ -56,9 +56,12 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          // editUrl: 'https://github.com/cmjeon/cmjeon.github.io/tree/main/docs',
+          sidebarCollapsed: true,
+          sidebarCollapsible: true,
+          showLastUpdateAuthor: true,
+          showLastUpdateTime: true,
+          breadcrumbs: true,
+
         },
         blog: {
           blogTitle: 'TIL',
@@ -281,7 +284,7 @@ const config = {
         //     ],
         //   },
         // ],
-        copyright: `Copyright © ${new Date().getFullYear()} My Project, Inc. Built with Docusaurus.`,
+        copyright: `Copyright © ${new Date().getFullYear()} TIL, Inc. Built with Docusaurus.`,
       },
       prism: {
         defaultLanguage: 'javascript',
