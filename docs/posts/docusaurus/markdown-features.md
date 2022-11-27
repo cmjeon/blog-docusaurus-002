@@ -7,6 +7,7 @@ last_update:
 description: Docusaurus 에서 마크다운 블로그/문서 작성 시 사용할 수 있는 기능을 살펴봅니다.
 tags: ['docusaurus']
 keywords: ['docusaurus']
+draft: true
 ---
 
 ## 마크다운 기능 살펴보기
