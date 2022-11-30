@@ -77,7 +77,7 @@ github : [https://github.com/cmjeon](https://github.com/cmjeon)
 
 ### 온라인서비스개발팀 (21.10 ~ 현재)
 
-- 결제담당
+- 결제 고도화 수행
 
 ### 이커머스운영팀 (21.04 ~ 21.09)
 
