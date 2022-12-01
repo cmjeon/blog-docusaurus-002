@@ -297,8 +297,125 @@ public Integer calcMultiply(string filepath) throws IOException {
 
 #### 템플릿/콜백의 재설계
 
-calcSum() 메소드와 calcMultiply() 메소드는 비슷한 부분이 많다.
+calcSum() 메소드와 calcMultiply() 메소드 역시 비슷한 부분이 많다.
+
+같은 부분은 변수를 초기화 하고 BufferedReader 를 이용해 파일을 라인으로 읽고, 읽은 내용을 변수에 계산하고, 결과를 리턴하는 것이다.
+
+다른 부분은 라인을 더하거나 곱하는 부분이다.
 
 템플릿과 콜백을 찾아낼 때는 변하는 코드의 경계를 찾고 그 경계를 사이에 두고 주고받는 일정한 정보가 있는지 확인하면 된다.
 
+같은 부분은 템플릿으로 만들고, 다른 부분은 콜백으로 만든다.
 
+먼저 callback 인터페이스를 만든다.
+
+```java
+public interface LineCallback {
+  Integer doSomethingWithLine(String line, Integer value);
+}
+```
+
+BufferedReader 로 파일을 읽는 부분을 템플릿으로 만든다.
+
+```java
+public Integer lineReadTemplate(String filepath, LineCallback callback, int intVal) throws IOException {
+  BufferedReader br = null;
+  try {
+    br = new BufferedReader(new FileReader(filepaht));
+    Integer res = initVal;
+    String line = null;
+    while(line = br.readLine() != null) {
+      // highlight-start 
+      res = callback.doSomethingWithLine(line, res);
+      // highlight-end
+    }
+  } catch(IOException e) {
+  } finally { ... }
+}
+```
+
+calcSum(), calcMultiply() 메소드에 템플릿을 적용한다.
+
+```java
+public Integer calcSum(string filepath) throws IOException {
+  LineCallback sumCallback = new LineCallback() {
+    public Integer doSomethingWithLine(String line, Integer value) {
+      // highlight-next-line
+      return value + Inter.valueOf(line);
+    }
+  };
+  // highlight-next-line
+  return lineReadTemplate(filepath, sumCallback, 0);
+}
+
+public Integer calcMultiply(string filepath) throws IOException {
+  LineCallback multiplyCallback = new LineCallback() {
+    public Integer doSomethingWithLine(String line, Integer value) {
+      // highlight-next-line
+      return value * Inter.valueOf(line);
+    }
+  };
+  // highlight-next-line
+  return lineReadTemplate(filepath, multiplyCallback, 0);
+}
+```
+
+코드의 특성이 바뀌는 경계를 잘 살피고 그것을 인터페이스를 사용해 분리한다는, 가장 기본적인 객체지향 원칙에 충실하면 어렵지 않게 템플릿/콜백 패턴을 만들어 활용할 수 있다.
+
+#### 제네릭스를 이용한 콜백 인터페이스
+
+만약 파일을 라인 단위로 처리해서 만드는 결과의 타입을 다양하게 가져가고 싶다면, 제네릭스를 이용하면 된다.
+
+:::info
+제네릭스는 자바 언어에 타입 파라미터라는 개념을 도입한 것이다.
+
+제네릭스를 이용하면 다양한 오브젝트 타입을 지원하는 인터페이스나 메소드를 정의할 수 있다.
+:::
+
+각 라인의 값을 문자열로 리턴해주도록 변경하기 위해 인터페이스를 수정한다.
+
+```java
+public interface LineCallback<T> {
+  T doSomethingWithLine(String line, T value);
+}
+```
+
+템플릿에도 타입 파라미터를 추가한다.
+
+```java
+// highlight-next-line
+public <T> lineReadTemplate(String filepath, LineCallback<T> callback, T initVal) throws IOException {
+  BufferedReader br = null;
+  try {
+    br = new BufferedReader(new FileReader(filepaht));
+    // highlight-next-line
+    T res = initVal;
+    String line = null;
+    while(line = br.readLine() != null) {
+      res = callback.doSomethingWithLine(line, res);
+    }
+  } catch(IOException e) {
+  } finally { ... }
+}
+```
+
+이제 LineCallback 과 lineReadTemplate() 템플릿은 파일의 라인을 처리해서 T 타입의 결과를 만들어내는 범용 템플릿/콜백이 되었다.
+
+이제 문자열을 받아 연결하는 concatenate() 메소드를 만들어본다.
+
+```java
+public String concatenate(String filepath) throws IOException {
+  LineCallback<String> concatenateCallback = new LineCallback<String>() {
+    public String doSomethingWithLine(String line, String value) {
+      return value + line;
+    }
+  };
+  return lineReadTemplate(filepath, concatenateCallback, "");
+}
+```
+
+기존의 calcSum(), calcMultiply() 도 Integer 타입 파라미터를 가진 인터페이스로 정의해주면 된다.
+
+```java
+LineCallback<Integer> sumCallback = new LineCallback<Integer>() { ... };
+```
