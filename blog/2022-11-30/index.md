@@ -3,7 +3,6 @@ date: 2022-11-30
 title: '2022년 11월 30일'
 authors: [cmjeon]
 tags: ['토비의스프링']
-draft: true
 ---
 
 import Image from '@theme/IdealImage';
