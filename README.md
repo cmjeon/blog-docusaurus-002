@@ -8,13 +8,13 @@ https://blog-cmjeon.vercel.app/
 
 ### Installation
 
-```
+```shell
 $ yarn
 ```
 
 ### Local Development
 
-```
+```shell
 $ yarn start
 ```
 
@@ -22,7 +22,7 @@ This command starts a local development server and opens up a browser window. Mo
 
 ### Build
 
-```
+```shell
 $ yarn build
 ```
 
@@ -32,13 +32,13 @@ This command generates static content into the `build` directory and can be serv
 
 Using SSH:
 
-```
+```shell
 $ USE_SSH=true yarn deploy
 ```
 
 Not using SSH:
 
-```
+```shell
 $ GIT_USER=<Your GitHub username> yarn deploy
 ```
 
@@ -46,7 +46,15 @@ If you are using GitHub pages for hosting, this command is a convenient way to b
 
 ### Vercel Deployment
 
-just `$ git push`
+```shell
+$ git push
+```
+
+### DocSearch crawling
+
+```shell
+$ docker run -it --env-file=.env -e "CONFIG=$(cat ./config.json | jq -r tostring)" algolia/docsearch-scraper
+```
 
 ### TODO 남은 문제들
 
