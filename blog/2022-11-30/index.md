@@ -269,7 +269,7 @@ public class CalcSumTest {
   
   @Test
   public void multiplyOfNumbers() throws IOException {
-    assertThat(calculator.calcMultiply(this.numFilepath), is(10));
+    assertThat(calculator.calcMultiply(this.numFilepath), is(24));
   }
 }
 ```
@@ -340,7 +340,7 @@ public Integer calcSum(string filepath) throws IOException {
   LineCallback sumCallback = new LineCallback() {
     public Integer doSomethingWithLine(String line, Integer value) {
       // highlight-next-line
-      return value + Inter.valueOf(line);
+      return value + Integer.valueOf(line);
     }
   };
   // highlight-next-line
@@ -351,7 +351,7 @@ public Integer calcMultiply(string filepath) throws IOException {
   LineCallback multiplyCallback = new LineCallback() {
     public Integer doSomethingWithLine(String line, Integer value) {
       // highlight-next-line
-      return value * Inter.valueOf(line);
+      return value * Integer.valueOf(line);
     }
   };
   // highlight-next-line
