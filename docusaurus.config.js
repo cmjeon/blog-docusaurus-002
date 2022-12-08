@@ -107,7 +107,6 @@ const config = {
       {
         debug: false,
         // offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString'],
-        offlineModeActivationStrategies: ['queryString'],
         pwaHead: [
           {
             tagName: 'link',
