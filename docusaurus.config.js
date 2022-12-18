@@ -9,6 +9,7 @@ console.log('### env', process.env.gtagTrackingId)
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
+  pwa: false,
   title: 'Today I Learned',
   tagline: 'javascript, frontend, Project Management',
   url: 'https://blog-cmjeon.vercel.app',
@@ -107,6 +108,7 @@ const config = {
       {
         debug: false,
         // offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString'],
+        offlineModeActivationStrategies: ['queryString'],
         pwaHead: [
           {
             tagName: 'link',
