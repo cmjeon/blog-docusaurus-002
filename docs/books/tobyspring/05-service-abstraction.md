@@ -7,7 +7,6 @@ last_update:
 description: "DAO 에 트랜잭션을 적용해보면서 스프링이 어떻게 성격이 비슷한 여러 기술을 추상화하고, 일관된 방법으로 사용할 수 있도록 지원하는지 알아봅니다."
 tags: ["Toby's Spring"]
 keywords: ['서비스 추상화']
-draft: true
 ---
 
 import Image from '@theme/IdealImage';
@@ -1156,7 +1155,6 @@ public class UserServiceTest {
 		testUserService.setUserDao(this.userDao);
 		// highlight-next-line
 		testUserService.setTransactionManager(this.transactionManager);
-		testUserService.setMailSender(this.mailSender);
 		 
 		userDao.deleteAll();			  
 		for(User user : users) userDao.add(user);
@@ -1176,32 +1174,258 @@ public class UserServiceTest {
 
 ### 수직, 수평 계층구조와 의존관계
 
+추상화 기법을 이용해서 특정 기술환경에 종속되지 않는 코드를 만들 수 있습니다.
+
+UserService, UserDao 를 관심사에 따라 어플리케이션 비즈니스 로직을 분리한 것을 수평적인 분리라고 합니다.
+
+트랜잭션의 추상화는 트랜잭션 기술이라는 어플리케이션 비즈니스 로직 하위계층의 특징을 비즈니스 로직과 수직적으로 분리한 것 입니다.
+
+애플리케이션 로직의 종류에 따른 구분이든, 로직과 기술의 수직적인 구분이든 자유롭게 확장할 수 있는 구조를 만드는데는 스프링 DI 가 중요한 역할을 합니다.
+
 ### 단일 책임 원칙
 
+적절한 분리가 가져오는 특징은 단일 책임 원칙 Single Responsibility Principle 로 설명할 수 있습니다.
+
+단일 책임 원칙은 하나의 모듈은 한 가지 책임을 가져야 한다는 뜻입니다.
+
+UserService 에서 사용자 레벨을 관리하는 것과 트랜잭션을 관리하는 두가지 책임을 갖고 있었습니다.
+
+트랜잭션 추상화 방식을 도입하고 DI 를 통해 외부에서 제어하도록 변경하므로써 UserService 의 책임을 한가지로 줄였습니다.
+
 ### 단일 책임 원칙의 장점
+
+단일 책임 원칙을 잘 지키고 있다면, 어떤 변경이 필요할 때 수정 대상이 명확해 집니다.
+
+객체지향 설계와 프로그래밍의 원칙은 서로 긴민한 관계가 있습니다.
+
+단일 책임 원칙을 잘 지키는 코드를 만들려고 인터페이스를 도입하고 이를 DI 로 연결하고, 개방 폐쇄 원칙도 잘 따르게 만들면 그 결과로 높은 응집도의 코드로 만들어집니다.
+
+이런 과정에서 디자인 패턴들이 자연스럽게 적용되기도 합니다.
+
+객체 지향 설계 원칙을 잘 지켜서 만든 코드는 테스트하기도 편리합니다.
+
+스프링의 의존관계 주입 기술인 DI 는 모든 스프링 기술의 기반이 되는 핵심 엔진이자 원리입니다.
 
 ## 5.4 메일 서비스 추상화
 
 ### 5.4.1 JavaMail을 이용한 메일 발송 기능
 
+레벨이 업그레이드 되는 사용자에게 안내 메일을 발송하는 기능을 만들어보겠습니다.
+
+먼저 email 필드를 추가하고 테스트를 해 봅니다.
+
+1. User 테이블에 email 필드를 추가
+2. User 클래스에 email 프로퍼티 추가
+3. 테스트 코드 수정
+4. 테스트 수행
+
 #### JavaMail 메일 발송
+
+자바에서 메일을 발송할 때는 표준 기술인 JavaMail 을 사용합니다.
+
+```java title="UserService.java"
+// ...
+
+public class UserService {
+	
+	// ...
+	
+	protected void upgradeLevel(User user) {
+		user.upgradeLevel();
+		userDao.update(user);
+		// highlight-next-line
+		sendUpgradeEMail(user);
+	}
+	
+	private void sendUpgradeEMail(User user) {
+		Properties props = new Properties();
+		props.put("mail.smtp.host", "mail.ksug.org");
+		Session s = Session.getlnstance(props, null);
+    
+    MimeMessage message = new MimeMessage(s); 
+    try {
+      message.setFrom(new InternetAddress("useradmin@ksug.org"));
+      message.addRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail())); message.setSubject("Upgrade 안내");
+      message.setText("사용자님의 등급이 " + user.getLevel().name() + “로 업그레이드되었습니다");
+      
+      Transport.send(message);
+    } catch (AddressException e) {
+      throw new RuntimeException(e); 
+    } catch (MessagingException e) {
+      throw new RuntimeException(e);
+    } catch (UnsupportedEncodingException e) {
+      throw new RuntimeException(e);
+	  }
+  }
+}
+```
 
 ### 5.4.2 JavaMail이 포함된 코드의 테스트
 
+sendUpgradeEMail() 메소드에 대한 테스트는 메일 서버가 준비되지 않은 환경에서도 테스트는 동작하여야 합니다.
+
+UserService 에 테스트용 JavaMail 을 연결해서 요청하는 방식으로 변경해 봅니다.
+
 ### 5.4.3 테스트를 위한 서비스 추상화
+
+테스트에서 사용할 JavaMail 과 같은 인터페이스를 가지는 오브젝트를 만들어서 테스트에 사용하면 됩니다.
 
 #### JavaMail을 이용한 테스트의 문제점
 
+그런데 JavaMail 의 API 는 이 방법을 적용할 수 없습니다.
+
+JavaMail 에서는 Session, Transport 를 이용해서 메일 메시지를 생성할 수 있습니다.
+
+그런데 Session 은 클래스이고 스태틱 팩토리 메소드를 이용해 오브젝트를 만드는 방법밖에 없습니다.
+
+다행히도 스프링에서는 MailSender 라는 인터페이스를 제공하고 있습니다. 
+
+그렇기 때문에 JavaMail 같이 테스트하기 힘든 구조 역시 서비스 추상화를 적용하여 테스트 해볼 수 있습니다.
+
 #### 메일 발송 기능 추상화
+
+MailSender 에 SimpleMailMessage 인터페이스를 구현한 JavaMailSender 구현 클래스를 이용하여 메일 발송용 코드를 만듭니다.
+
+```java title="UserService.java"
+private void sendUpgradeEMail(User user) {
+  JavaMailSenderlmpl mailSender = new JavaMailSenderlmpl();
+  mailSender.setHost("mail. server. com");
+
+  SimpleMailMessage mailMessage = new SimpleMailMessage();
+  mailMessage.setTo(user.getEmail());
+  mailMessage.setFrom("useradmin@ksug.org");
+  mailMessage.setSubject("Upgrade 안내");
+  mailMessage.setText("사용자님의 등급이 " + user.getLevel().name());
+  
+  mailSender.send(mailMessage);
+}
+```
+
+이에 mailSender 를 DI 해 봅니다.
+
+```java title="UserService.java"
+// ...
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+public class UserService {
+
+  // ...
+	private MailSender mailSender;
+	
+	// ...
+	
+	public void setMailSender(MailSender mailSender) {
+		this.mailSender = mailSender;
+	}
+
+  // ...
+	
+	private void sendUpgradeEMail(User user) {
+		SimpleMailMessage mailMessage = new SimpleMailMessage();
+		mailMessage.setTo(user.getEmail());
+		mailMessage.setFrom("useradmin@ksug.org");
+		mailMessage.setSubject("Upgrade 안내");
+    mailMessage.setText("사용자님의 등급이 " + user.getLevel().name());
+		
+		this.mailSender.send(mailMessage);
+	}
+	
+}
+```
 
 #### 테스트용 메일 발송 오브젝트
 
+테스트를 위해 MailSender 인터페이스의 구현 클래스 DummyMailSender 를 생성합니다.
+
+그리고 테스트 설정파일에서 DummyMailSender 을 DI 하도록 설정합니다.
+
+이렇게 하면 UserServiceTest 의 upgradeAllOrNothing() 테스트가 통과됩니다.
+
 #### 테스트와 서비스 추상화
+
+서비스 추상화를 이용하여 트랜잭션과 같이 기능에 대한 추상 인터페이스를 만들 수도 있고, JavaMail 처럼 테스트가 어려운 API 를 사용할 때도 유용하게 쓸 수 있습니다.
+
+JavaMail 이 아닌 다른 API 를 사용해도 그에 맞는 MailSender 구현 클래스를 만들어서 DI 해주면 됩니다.
+
+어떤 경우에도 UserService 와 같은 애플리케이션 계층의 코드는 메일 발송을 요청한다는 기능에 맞게 작성되면 됩니다.
+
+외부의 리소스와 연동하는 부분의 작업은 서비스 추상화의 대상이 될 수 있습니다.
 
 ### 5.4.4 테스트 대역
 
 #### 의존 오브젝트의 변경을 통한 테스트 방법
 
+테스트 대상이 되는 오브젝트가 또 다른 오브젝트에 의존하는 일은 매우 흔합니다.
+
+트랜잭션과 메일의 사례에서도 확인하였지만 스프링 DI 를 통해 테스트용 오브젝트로 변경하는 것이 가능합니다. 
+
 #### 테스트 대역의 종류와 특징
 
+테스트용으로 사용되는 특별한 오브젝트들을 테스트 대역 test double 이라고 합니다.
+
+대표적인 테스트 대역은 테스트 스텁 test stub 입니다.
+
+테스트 스텁이 결과를 반환해야 하는 경우도 있습니다.
+
+이런 경우에는 목 오브젝트 mock object 를 사용합니다.
+
 #### Mock 오브젝트를 이용한 테스트
+
+UserServiceTest 에 목 오브젝트를 적용해 봅니다.
+
+```java title="MockMailSender.java"
+static class MockMailSender implements MailSender {
+  private List<String> requests = new ArrayList<String>();
+  public List<String> getRequests() { 
+    return requests;
+  }
+  
+  public void send(SimpleMailMessage mailMessage) throws MailException {
+    requests.add(mailMessage.getTo()[0]);
+  }
+
+  public void send(SimpleMailMessage[] mailMessage) throws MailException {
+  }
+}
+```
+
+MockMailSender 클래스는 UserService 가 send() 메소드를 통해 자신을 호출하면 관련 정보를 목록에 저장해둡니다.
+
+그리고 테스트에서 읽어갈 수 있도록 getRequests() 메소드를 만들어서 목록을 제공합니다.
+
+```java title="UserServiceTest.java"
+public class UserServiceTest {
+  @Test
+  // highlight-next-line 
+  @DirtiesContext
+	public void upgradeLevels() {
+		userDao.deleteAll();
+		for(User user : users) userDao.add(user);
+		
+		// highlight-start
+		MockMailSender mockMailSender = new MockMailSender();  
+		userService.setMailSender(mockMailSender);
+		// highlight-end  
+		
+		userService.upgradeLevels();
+		
+		checkLevelUpgraded(users.get(0), false);
+		checkLevelUpgraded(users.get(1), true);
+		checkLevelUpgraded(users.get(2), false);
+		checkLevelUpgraded(users.get(3), true);
+		checkLevelUpgraded(users.get(4), false);
+		
+		List<String> request = mockMailSender.getRequests();  
+		assertThat(request.size(), is(2));  
+		assertThat(request.get(0), is(users.get(1).getEmail()));  
+		assertThat(request.get(1), is(users.get(3).getEmail()));  
+	}
+}
+```
+
+목 오브젝트를 이용한 테스트는 상당히 막강합니다.
+
+테스트 대상 오브젝트의 내부에서 일어나는 일이나 다른 오브젝트 사이에서 주고받는 정보까지 검증하는 일을 손쉽게 해줍니다.
+
+테스트가 수행될 수 있도록 의존 오브젝트에 간접적으로 입력 값을 제공해주는 스텁 오브젝트와 간접적인 출력 값까지 확인이 가능한 목 오브젝트, 이 두 가지는 테스트 대역의 가장 대표적인 방법이며 효과적인 테스트 코드를 작성하는 데 빠질 수 없는 중요한 도구입니다.
