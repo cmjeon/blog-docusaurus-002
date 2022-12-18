@@ -102,62 +102,62 @@ const config = {
         disableInDev: false,
       },
     ],
-    // [
-    //   '@docusaurus/plugin-pwa',
-    //   {
-    //     debug: false,
-    //     // offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString'],
-    //     offlineModeActivationStrategies: ['queryString'],
-    //     pwaHead: [
-    //       {
-    //         tagName: 'link',
-    //         rel: 'icon',
-    //         href: '/img/logo.png',
-    //       },
-    //       {
-    //         tagName: 'link',
-    //         rel: 'manifest',
-    //         href: 'manifest.json', // your PWA manifest
-    //       },
-    //       {
-    //         tagName: 'meta',
-    //         name: 'theme-color',
-    //         content: 'rgb(84, 104, 255)',
-    //       },
-    //       {
-    //         tagName: 'meta',
-    //         name: 'apple-mobile-web-app-capable',
-    //         content: 'yes',
-    //       },
-    //       {
-    //         tagName: 'meta',
-    //         name: 'apple-mobile-web-app-status-bar-style',
-    //         content: '#000',
-    //       },
-    //       {
-    //         tagName: 'link',
-    //         rel: 'apple-touch-icon',
-    //         href: 'img/logo.png',
-    //       },
-    //       {
-    //         tagName: 'link',
-    //         rel: 'mask-icon',
-    //         href: 'img/logo-2.svg',
-    //         color: 'rgb(255, 255, 255)',
-    //       },
-    //       {
-    //         tagName: 'meta',
-    //         name: 'msapplication-TileImage',
-    //         content: 'img/logo.png',
-    //       },
-    //       {
-    //         tagName: 'meta',
-    //         name: 'msapplication-TileColor',
-    //         content: '#000',
-    //       },
-    //     ],
-    //   },
-    // ],
+    [
+      '@docusaurus/plugin-pwa',
+      {
+        debug: false,
+        // offlineModeActivationStrategies: ['appInstalled', 'standalone', 'queryString'],
+        offlineModeActivationStrategies: ['queryString'],
+        pwaHead: [
+          {
+            tagName: 'link',
+            rel: 'icon',
+            href: '/img/logo.png',
+          },
+          {
+            tagName: 'link',
+            rel: 'manifest',
+            href: 'manifest.json', // your PWA manifest
+          },
+          {
+            tagName: 'meta',
+            name: 'theme-color',
+            content: 'rgb(84, 104, 255)',
+          },
+          {
+            tagName: 'meta',
+            name: 'apple-mobile-web-app-capable',
+            content: 'yes',
+          },
+          {
+            tagName: 'meta',
+            name: 'apple-mobile-web-app-status-bar-style',
+            content: '#000',
+          },
+          {
+            tagName: 'link',
+            rel: 'apple-touch-icon',
+            href: 'img/logo.png',
+          },
+          {
+            tagName: 'link',
+            rel: 'mask-icon',
+            href: 'img/logo-2.svg',
+            color: 'rgb(255, 255, 255)',
+          },
+          {
+            tagName: 'meta',
+            name: 'msapplication-TileImage',
+            content: 'img/logo.png',
+          },
+          {
+            tagName: 'meta',
+            name: 'msapplication-TileColor',
+            content: '#000',
+          },
+        ],
+      },
+    ],
     'docusaurus-plugin-google-adsense',
   ],
   themeConfig:
