@@ -31,44 +31,44 @@ UserDao 에 비즈니스 로직을 추가해 봅니다.
 
 User 테이블에 레벨을 저장할 필드가 필요합니다.
 
-필드에는 문자보다는 레벨을 코드화해서 숫자로 넣는 것이 좋습니다.
+DB 의 필드에는 문자보다는 레벨을 코드화해서 숫자로 넣는 것이 좋습니다.
 
-반대로 코드에서는 숫자로 보는 것 보다는 이늄을 사용하는 것이 좋습니다.
+반대로 소스코드에서는 숫자로 쓰는 것 보다는 문자가 좋은데, 이럴 때 이늄을 사용하는 것이 좋습니다.
 
-코드에서 숫자로 레벨을 받으면 엉뚱한 값을 레벨로 넣는다거나 범위를 벗어나는 값을 넣을 우려가 있기 때문입니다.
+소스코드에서 숫자로 레벨을 받게하면 엉뚱한 값을 레벨로 넣는다거나 범위를 벗어나는 값을 넣을 우려가 있기 때문입니다.
 
 ```java title="Level.java"
 public enum Level {
-	BASIC(1), 
-	SILVER(2), 
-	GOLD(3);
+  BASIC(1), 
+  SILVER(2), 
+  GOLD(3);
 
-	private final int value;
+  private final int value;
 		
-	Level(int value) {
-		this.value = value;
-	}
+  Level(int value) {
+    this.value = value;
+  }
 
   // 오브젝트 -> 값
-	public int intValue() {
-		return value;
-	}
+  public int intValue() {
+    return value;
+  }
 	
-	// 값 -> 오브젝트
-	public static Level valueOf(int value) {
-		switch(value) {
-		case 1: return BASIC;
-		case 2: return SILVER;
-		case 3: return GOLD;
-		default: throw new AssertionError("Unknown value: " + value);
-		}
-	}
+  // 값 -> 오브젝트
+  public static Level valueOf(int value) {
+    switch(value) {
+      case 1: return BASIC;
+      case 2: return SILVER;
+      case 3: return GOLD;
+      default: throw new AssertionError("Unknown value: " + value);
+    }
+  }
 }
 ```
 
 이늄은 오브젝트를 가지고 있으면서, DB 에 저장할 코드숫자도 가지고 있습니다.
 
-따라서 엉뚱한 값이나 범위를 벗어나는 값을 넣으면 컴파일 오류가 발생하게 됩니다.
+따라서 소스코드에서 엉뚱한 값이나 범위를 벗어나는 값을 넣으면 컴파일 오류가 발생하게 됩니다.
 
 #### User 필드 추가
 
@@ -77,48 +77,48 @@ User 클래스에도 Level 을 추가해 줍니다.
 ```java title="User.java"
 public class User {
 	
-	// ...
+  // ...
 	
-	Level level; // 현재 레벨
-	int login; // 로그인 횟수
-	int recommend; // 추천 횟수
+  Level level; // 현재 레벨
+  int login; // 로그인 횟수
+  int recommend; // 추천 횟수
 	
-	public User(String id, String name, String password, Level level, int login, int recommend) {
-		this.id = id;
-		this.name = name;
-		this.password = password;
-		// highlight-start
-		this.level = level;
-		this.login = login;
-		this.recommend = recommend;
-		// highlight-end
-	}
+  public User(String id, String name, String password, Level level, int login, int recommend) {
+    this.id = id;
+    this.name = name;
+    this.password = password;
+    // highlight-start
+    this.level = level;
+    this.login = login;
+    this.recommend = recommend;
+    // highlight-end
+  }
 
-	// ...
+  // ...
 
-	public Level getLevel() {
-		return level;
-	}
+  public Level getLevel() {
+    return level;
+  }
 
-	public void setLevel(Level level) {
-		this.level = level;
-	}
+  public void setLevel(Level level) {
+    this.level = level;
+  }
 	
-	public int getLogin() {
-		return login;
-	}
+  public int getLogin() {
+    return login;
+  }
 
-	public void setLogin(int login) {
-		this.login = login;
-	}
+  public void setLogin(int login) {
+    this.login = login;
+  }
 
-	public int getRecommend() {
-		return recommend;
-	}
+  public int getRecommend() {
+    return recommend;
+  }
 
-	public void setRecommend(int recommend) {
-		this.recommend = recommend;
-	}
+  public void setRecommend(int recommend) {
+    this.recommend = recommend;
+  }
 
 }
 ```
@@ -132,34 +132,37 @@ UserDaoTest.java 도 수정해줍니다.
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserDaoTest {
 
-	@Autowired UserDao dao; 
-	@Autowired DataSource dataSource;
+  @Autowired 
+  UserDao dao; 
+  
+  @Autowired 
+  DataSource dataSource;
 	
-	private User user1;
-	private User user2;
-	private User user3; 
+  private User user1;
+  private User user2;
+  private User user3; 
 	
-	@Before
-	public void setUp() {
-	  // highlight-start
-		this.user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
-		this.user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
-		this.user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
-		// highlight-end
-	}
+  @Before
+  public void setUp() {
+    // highlight-start
+    this.user1 = new User("gyumee", "박성철", "springno1", Level.BASIC, 1, 0);
+    this.user2 = new User("leegw700", "이길원", "springno2", Level.SILVER, 55, 10);
+    this.user3 = new User("bumjin", "박범진", "springno3", Level.GOLD, 100, 40);
+    // highlight-end
+  }
 	
-	// ...
+  // ...
 	
-	private void checkSameUser(User user1, User user2) {
-		assertThat(user1.getId(), is(user2.getId()));
-		assertThat(user1.getName(), is(user2.getName()));
-		assertThat(user1.getPassword(), is(user2.getPassword()));
-		// highlight-start
-		assertThat(user1.getLevel(), is(user2.getLevel()));
-		assertThat(user1.getLogin(), is(user2.getLogin()));
-		assertThat(user1.getRecommend(), is(user2.getRecommend()));
-		// highlight-end
-	}
+  private void checkSameUser(User user1, User user2) {
+    assertThat(user1.getId(), is(user2.getId()));
+    assertThat(user1.getName(), is(user2.getName()));
+    assertThat(user1.getPassword(), is(user2.getPassword()));
+    // highlight-start
+    assertThat(user1.getLevel(), is(user2.getLevel()));
+    assertThat(user1.getLogin(), is(user2.getLogin()));
+    assertThat(user1.getRecommend(), is(user2.getRecommend()));
+    // highlight-end
+  }
 	
 }
 ```
@@ -168,7 +171,7 @@ public class UserDaoTest {
 
 UserDaoJdbc.java 도 수정합니다.
 
-```java title="UserDaoJdbc.java
+```java title="UserDaoJdbc.java"
 private RowMapper<User> userMapper = new RowMapper<User>() {
   public User mapRow(ResultSet rs, int rowNum) throws SQLException {
     User user = new User();
@@ -185,15 +188,15 @@ private RowMapper<User> userMapper = new RowMapper<User>() {
 };
 
 public void add(User user) {
-  this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values(?, ?, ?, ?, ?, ?)", 
-      user.getId(), 
-      user.getName(), 
-      user.getPassword(),
-      // highlight-start 
-      user.getLevel().intValue(), 
-      user.getLogin(), 
-      user.getRecommend()
-      // highlight-end
+  this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)", 
+    user.getId(), 
+    user.getName(), 
+    user.getPassword(),
+    // highlight-start 
+    user.getLevel().intValue(), 
+    user.getLogin(), 
+    user.getRecommend()
+    // highlight-end
   );
 }
 ```
@@ -239,20 +242,23 @@ UserDao 를 구현한 UserDaoJdbc 에도 update() 메소드가 필요합니다.
 
 ```java title="UserDaoJdbc.java"
 public void update(User user) {
-  this.jdbcTemplate.update(
-      "update users set name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? where id = ? ", 
-      user.getName(), 
-      user.getPassword(), 
-      user.getEmail(), 
-      user.getLevel().intValue(), 
-      user.getLogin(), 
-      user.getRecommend(),
-      user.getId()
+  this.jdbcTemplate.update("update users set name = ?, password = ?, email = ?, level = ?, login = ?, recommend = ? where id = ? ", 
+    user.getName(), 
+    user.getPassword(), 
+    user.getEmail(), 
+    user.getLevel().intValue(), 
+    user.getLogin(), 
+    user.getRecommend(),
+    user.getId()
   );
 }
 ```
 
 #### 수정 테스트 보완
+
+SQL 문에서는 종종 테스트로는 검증하지 못하는 오류가 발생할 수도 있습니다.
+
+바로 UPDATE 문에서 WHERE 절을 빼먹는 경우입니다.
 
 테스트 코드를 보완하여 UPDATE 문의 실수를 발견할 수 있도록 해봅니다.
 
@@ -275,29 +281,35 @@ public void update() {
   
   User user1update = dao.get(user1.getId());
   checkSameUser(user1, user1update);
+  // highlight-start
   User user2same = dao.get(user2.getId());
   checkSameUser(user2, user2same);
+  // highlight-end
 }
 ```
 
+사용자를 두 명 등록해놓고, 그 중 하나만 수정한 뒤에 수정된 사용자와 수정하지 않은 사용자의 정보를 모두 확인하면 됩니다.
+
 ### 5.1.3 UserService.upgradeLevels()
 
-비즈니스 로직을 Dao 에 두는 것은 적당하지 않습니다.
+레벨을 변경하는 비즈니스 로직이 추가되어야 합니다.
 
-Dao 는 데이터를 다루는 영역이기 때문입니다.
+Dao 는 데이터를 다루는 영역이기 때문에 비즈니스 로직을 Dao 에 두는 것은 적당하지 않습니다. 
 
-대신에 사용자 관리 로직을 추가할 UserService 를 생성합니다.
+대신에 사용자 관리 로직을 추가할 UserService 클래스를 생성합니다.
+
+UserService 는 UserDao 인터페이스 타입으로 userDao 빈을 DI 받아 사용합니다.
 
 #### UserService 클래스와 빈 등록
 
 ```java title="UserService.java"
 public class UserService {
-  
-	private UserDao userDao;
+  // highlight-next-line
+  private UserDao userDao;
 
-	public void setUserDao(UserDao userDao) {
-		this.userDao = userDao;
-	}
+  public void setUserDao(UserDao userDao) {
+    this.userDao = userDao;
+  }
 
 }
 ```
@@ -311,9 +323,9 @@ public class UserService {
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserServiceTest {
 
-	@Autowired UserService userService;	
+  @Autowired UserService userService;	
 	
-	@Test
+  @Test
   public void bean() {
     assertThat(this.userService, is(notNullValue()));
   }
@@ -323,28 +335,32 @@ public class UserServiceTest {
 
 #### upgradeLevels() 메소드
 
-UserService 에 upgradeLevels() 메소드를 추가합니다.
+UserService 에 비즈니스 로직을 담을 upgradeLevels() 메소드를 추가합니다.
 
 ```java title="UserService.java"
 public class UserService {
   
-	// ...
+  // ...
 	
-	public void upgradeLevels() {
+  public void upgradeLevels() {
     List<User> users = userDao.getAll();  
     for(User user : users) {  
       Boolean changed = null;
       if (user.getLevel() == Level.BASIC && user.getLogin() >= 50) {
         user.setLevel(Level .SILVER);
         changed = true;
-      }
-      else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
+      } else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
         user.setLevel(Level .GOLD);
         changed = true;
+      } else if (user.getLevel() == Level.GOLD) {
+        changed = false; 
+      } else { 
+        changed = false; 
       }
-      else if (user.getLevel() == Level.GOLD) { changed = false; } 
-      else { changed = false; }
-      if (changed) { userDao.update(user); }
+      
+      if (changed) { 
+        userDao.update(user); 
+      }
     }
   }
   
@@ -355,16 +371,22 @@ public class UserService {
 
 테스트 픽스처를 등록합니다.
 
-```java title="UserServiceTest.java
-@Before
-public void setUp() {
-  users = Arrays.asList(
+```java title="UserServiceTest.java"
+public class UserServiceTest {
+  
+  // ...
+  
+  @Before
+  public void setUp() {
+    users = Arrays.asList(
       new User("bumjin", "박범진", "p1", Level.BASIC, 49, 0),
       new User("joytouch", "강명성", "p2", Level.BASIC, 50, 0),
-      new User("erwins", "신승한", "p3", Level.SILVER, 60,29),
+      new User("erwins", "신승한", "p3", Level.SILVER, 60, 29),
       new User("madnite1", "이상호", "p4", Level.SILVER, 60, 30),
       new User("green", "오민규", "p5", Level.GOLD, 100, 100)
-  );
+    );
+  }
+  
 }
 ```
 
@@ -400,9 +422,9 @@ private void checkLevel(User user, boolean expectedLevel) {
 
 처음 가입하는 사용자는 기본적으로 BASIC 레벨이어야 합니다.
 
-이 비즈니스 로직은 사용자 관리에 대한 비즈니스 로직을 담고 있는 UserService 에 이 로직을 담는 것이 좋습니다.
+이 비즈니스 로직도 사용자 관리에 대한 비즈니스 로직을 담고 있는 UserService 에 이 로직을 담는 것이 좋습니다.
 
-```java title="UserServiceTest.java
+```java title="UserServiceTest.java"
 @Test 
 public void add() {
   userDao.deleteAll();
@@ -411,8 +433,10 @@ public void add() {
   User userWithoutLevel = users.get(0);  
   userWithoutLevel.setLevel(null);
   
+  // highlight-start
   userService.add(userWithLevel);	  
   userService.add(userWithoutLevel);
+  // highlight-end
   
   User userWithLevelRead = userDao.get(userWithLevel.getId());
   User userWithoutLevelRead = userDao.get(userWithoutLevel.getId());
@@ -426,7 +450,7 @@ public void add() {
 
 테스트케이스는 2가지를 테스트합니다.
 
-level 이 비어있는 경우는 BASIC 을 부여해주고, 이미 설정된 level 이 있다면 그대로 두는 것입니다. 
+level 이 비어있는 경우는 BASIC 을 부여해주고, 이미 설정된 Level 이 있다면 그대로 놔두는 것입니다. 
 
 이제 UserService 에 add() 메소드를 추가합니다.
 
@@ -436,6 +460,8 @@ public void add(User user) {
   userDao.add(user);
 }
 ```
+
+테스트는 통과합니다.
 
 ### 5.1.5 코드 개선
 
@@ -453,23 +479,27 @@ upgrageLevels() 메소드를 다시 살펴봅니다.
 ```java title="UserService.java"
 public class UserService {
   
-	// ...
+  // ...
 	
-	public void upgradeLevels() {
+  public void upgradeLevels() {
     List<User> users = userDao.getAll();  
     for(User user : users) {  
       Boolean changed = null;
       if (user.getLevel() == Level.BASIC && user.getLogin() >= 50) {
         user.setLevel(Level .SILVER);
         changed = true;
-      }
-      else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
+      } else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
         user.setLevel(Level .GOLD);
         changed = true;
+      } else if (user.getLevel() == Level.GOLD) { 
+        changed = false; 
+      } else { 
+        changed = false; 
       }
-      else if (user.getLevel() == Level.GOLD) { changed = false; } 
-      else { changed = false; }
-      if (changed) { userDao.update(user); }
+      
+      if (changed) { 
+        userDao.update(user); 
+      }
     }
   }
   
@@ -480,7 +510,7 @@ updateLevels() 메소드에는 아래와 같은 문제점이 있습니다.
 
 - 새로운 레벨이 추가되면 Level 이늄이 수정되어야 하고, upgradeLevels() 의 if 조건식이 추가되어야 한다.
 - 업그레이드 조건이 복잡해질수록 메소드가 길어진다.
-- 조건이 기존 레벨을 확인하고 각 레벨별로 조건을 판단하는 식으로 코드가 복잡해 질 수 있다.
+- 조건으로 기존 레벨을 확인하고 각 레벨별로 조건을 판단하는 식으로 코드가 복잡해 질 수 있다. (if 중첩)
 
 #### upgradeLevels() 리팩토링
 
@@ -509,7 +539,7 @@ public void upgradeLevels() {
 
 구체적인 내용은 각 메소드에서 구현합니다.
 
-canUpgradeLevel() 메소드를 구현해봅니다.
+먼저 canUpgradeLevel() 메소드를 구현해봅니다.
 
 여기서는 레벨별로 업그레이드 조건을 확인합니다.
 
@@ -528,10 +558,15 @@ private boolean canUpgradeLevel(User user) {
 업그레이드 조건이 확인되면 updateLevel() 메소드로 업그레이드 작업을 진행합니다.
 
 ```java title="UserService.java"
-private void upgradeLevel(User user) {
-  if (user.getLevel() == level.BASIC) user.setLevel(Level.SILVER);
-  else if (user.getLevel() == level.SILBER) user.setLevel(Level.GOLD);
-  userDao.update(user);
+public class UserService {
+
+  // ...
+  
+  private void upgradeLevel(User user) {
+    if (user.getLevel() == level.BASIC) user.setLevel(Level.SILVER);
+    else if (user.getLevel() == level.SILBER) user.setLevel(Level.GOLD);
+    userDao.update(user);
+  }
 }
 ```
 
@@ -543,27 +578,27 @@ upgradeLevel() 메소드는 레벨간의 관계가 노골적으로 드러난다�
 public enum Level {
 
   // highlight-start
-	GOLD(3, null), 
-	SILVER(2, GOLD), 
-	BASIC(1, SILVER); 
-	// highlight-end 
+  GOLD(3, null), 
+  SILVER(2, GOLD), 
+  BASIC(1, SILVER); 
+  // highlight-end 
 	
-	private final int value;
-	// highlight-next-line
-	private final Level next; 
+  private final int value;
+  // highlight-next-line
+  private final Level next; 
 	
-	Level(int value, Level next) {  
-		this.value = value;
-		this.next = next; 
-	}
+  Level(int value, Level next) {  
+    this.value = value;
+    this.next = next; 
+  }
 	
   // ...
 	
-	public Level nextLevel() { 
-		return this.next;
-	}
+  public Level nextLevel() { 
+    return this.next;
+  }
 	
-	// ...
+  // ...
 	
 }
 ```
@@ -577,14 +612,21 @@ public enum Level {
 :::
 
 ```java title="User.java"
-public void upgradeLevel() {
-  Level nextLevel = this.level.nextLevel();	
-  if (nextLevel == null) { 								
-    throw new IllegalStateException(this.level + "은  업그레이드가 불가능합니다");
+public class User {
+
+  // ...
+  
+  // highlight-start
+  public void upgradeLevel() {
+    Level nextLevel = this.level.nextLevel();	
+    if (nextLevel == null) { 								
+      throw new IllegalStateException(this.level + "은  업그레이드가 불가능합니다");
+    } else {
+      this.level = nextLevel;
+    }
   }
-  else {
-    this.level = nextLevel;
-  }	
+  // highlight-end
+  	
 }
 ```
 
@@ -593,28 +635,34 @@ upgradeLevel() 메소드를 잘못 사용하는 코드가 있을 수 있으니 �
 리팩토링 후 UserService 는 다음과 같이 변경됩니다.
 
 ```java title="UserService.java"
-public void upgradeLevels() {
-  List<User> users = userDao.getAll(); 
-  for(User user : users) {
-    if (canUpgradeLevel(user)) { 
-      upgradeLevel(user);
+public class UserService {
+
+  // ...
+  
+  public void upgradeLevels() {
+    List<User> users = userDao.getAll(); 
+    for(User user : users) {
+      if (canUpgradeLevel(user)) { 
+        upgradeLevel(user);
+      }
     }
   }
-}
-
-private boolean canUpgradeLevel(User user) {
-  Level currentLevel = user.getLevel();
-  switch(currentLevel) {
-    case BASIC: return (user.getLogin() >= 50); 
-    case SILVER: return (user.getRecommend() >= 30);
-    case GOLD: return false;
-    default: throw new IllegalArgumentException("Unknown Level: " + currentLevel); 
+  
+  private boolean canUpgradeLevel(User user) {
+    Level currentLevel = user.getLevel();
+    switch(currentLevel) {
+      case BASIC: return (user.getLogin() >= 50); 
+      case SILVER: return (user.getRecommend() >= 30);
+      case GOLD: return false;
+      default: throw new IllegalArgumentException("Unknown Level: " + currentLevel); 
+    }
   }
-}
+  
+  private void upgradeLevel(User user) {
+    user.upgradeLevel();
+    userDao.update(user);
+  }
 
-private void upgradeLevel(User user) {
-  user.upgradeLevel();
-  userDao.update(user);
 }
 ```
 
@@ -632,35 +680,36 @@ UserService, User, Level 이 각자의 내부 정보를 다루는 자신의 책�
 
 User 에 대한 테스트도 만들어 봅니다.
 
-```java title="UserTest.java
+```java title="UserTest.java"
 public class UserTest {
-	User user;
+
+  User user;
 	
-	@Before
-	public void setUp() {
-		user = new User();
-	}
+  @Before
+  public void setUp() {
+    user = new User();
+  }
 	
-	@Test()
-	public void upgradeLevel() {
-		Level[] levels = Level.values();
-		for(Level level : levels) {
-			if (level.nextLevel() == null) continue;
-			user.setLevel(level);
-			user.upgradeLevel();
-			assertThat(user.getLevel(), is(level.nextLevel()));
-		}
-	}
+  @Test
+  public void upgradeLevel() {
+    Level[] levels = Level.values();
+    for(Level level : levels) {
+      if (level.nextLevel() == null) continue;
+      user.setLevel(level);
+      user.upgradeLevel();
+      assertThat(user.getLevel(), is(level.nextLevel()));
+    }
+  }
 	
-	@Test(expected=IllegalStateException.class)
-	public void cannotUpgradeLevel() {
-		Level[] levels = Level.values();
-		for(Level level : levels) {
-			if (level.nextLevel() != null) continue;
-			user.setLevel(level);
-			user.upgradeLevel();
-		}
-	}
+  @Test(expected=IllegalStateException.class)
+  public void cannotUpgradeLevel() {
+    Level[] levels = Level.values();
+    for(Level level : levels) {
+      if (level.nextLevel() != null) continue;
+      user.setLevel(level);
+      user.upgradeLevel();
+    }
+  }
 
 }
 ```
@@ -675,18 +724,22 @@ public void upgradeLevels() {
   
   userService.upgradeLevels();
   
+  // highlight-start
   checkLevelUpgraded(users.get(0), false);
   checkLevelUpgraded(users.get(1), true);
   checkLevelUpgraded(users.get(2), false);
   checkLevelUpgraded(users.get(3), true);
   checkLevelUpgraded(users.get(4), false);
+  // highlight-end
 }
 
 private void checkLevelUpgraded(User user, boolean upgraded) {
   User userUpdate = userDao.get(user.getId());
   if (upgraded) {
+    // highlight-next-line
     assertThat(userUpdate.getLevel(), is(user.getLevel().nextLevel()));
   } else {
+    // highlight-next-line
     assertThat(userUpdate.getLevel(), is(user.getLevel()));
   }
 }
@@ -705,25 +758,25 @@ checkLevel() 메소드 호출 시 파라미터로 전달하는 Level 이늄은 �
 ```json title="UserService.java"
 public class UserService {
   // highlight-start
-	public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
-	public static final int MIN_RECCOMEND_FOR_GOLD = 30;
+  public static final int MIN_LOGCOUNT_FOR_SILVER = 50;
+  public static final int MIN_RECCOMEND_FOR_GOLD = 30;
 	// highlight-end
 
   // ...
 
-	private boolean canUpgradeLevel(User user) {
-		Level currentLevel = user.getLevel(); 
-		switch(currentLevel) {
-		  // highlight-start                                   
+  private boolean canUpgradeLevel(User user) {
+    Level currentLevel = user.getLevel(); 
+    switch(currentLevel) {
+      // highlight-start                                   
       case BASIC: return (user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER); 
       case SILVER: return (user.getRecommend() >= MIN_RECCOMEND_FOR_GOLD);
       // highlight-end
       case GOLD: return false;
       default: throw new IllegalArgumentException("Unknown Level: " + currentLevel); 
-		}
-	}
+    }
+  }
 
-	// ...
+  // ...
 
 }
 ```
@@ -742,29 +795,29 @@ public class UserServiceTest {
   
   // ...
 	
-	@Before
-	public void setUp() {
-		users = Arrays.asList(
+  @Before
+  public void setUp() {
+    users = Arrays.asList(
       new User("bumjin", "박범진", "p1", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER-1, 0),
       new User("joytouch", "강명성", "p2", Level.BASIC, MIN_LOGCOUNT_FOR_SILVER, 0),
       new User("erwins", "신승한", "p3", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD-1),
       new User("madnite1", "이상호", "p4", Level.SILVER, 60, MIN_RECCOMEND_FOR_GOLD),
       new User("green", "오민규", "p5", Level.GOLD, 100, Integer.MAX_VALUE)
     );
-	}
+  }
 
-	// ...
+  // ...
 	
 }
 ```
 
 마지막으로 레벨을 업그레이드 하는 정책을 UserService 에서 분리하는 방법을 고려할 수도 있습니다.
 
-UserLevelUpgradePolicy 인터페이스를 만들고 UserService 에 주입하도록 만드는 방법입니다.
+UserLevelUpgradePolicy 인터페이스를 만들고 그 구현클래스를 UserService 에 주입하도록 만드는 방법입니다.
 
 ## 5.2 트랜잭션 서비스 추상화
 
-사용자 레벨 조정 작업 중간에 문제가 발생하면 그때까지 진행되었던 모든 변경 작업을 모두 취소시키도록 합니다.
+사용자 레벨 조정 작업 중간에 문제가 발생하면 그때까지 진행되었던 모든 변경 작업을 모두 취소시키도록 합는 기능을 추가합니다.
 
 ### 5.2.1 모 아니면 도
 
@@ -772,30 +825,35 @@ UserLevelUpgradePolicy 인터페이스를 만들고 UserService 에 주입하도
 
 #### 테스트용 UserService 대역
 
-UserService 의 서브클래스를 테스트용으로 만듭니다.
+테스트를 위해 UserService 의 서브클래스를 만듭니다.
 
-테스트용 UserService 서브클래스는 UserService 의 일부를 특정 시점에 강제로 예외를 발생하도록 합니다.
+테스트용 UserService 서브클래스는 UserService 의 일부 메소드를 특정 시점에 강제로 예외를 발생하도록 구현합니다.
 
 테스트용이기 때문에 테스트클래스 내부에서 static 클래스로 만듭니다.
 
 테스트하려는 UserService 의 upgradeLevel() 메소드의 접근권한을 `protected` 로 변경하고, 서브클래스에서 오버라이딩 합니다.
 
 ```java title="UserServiceTest.java"
-static class TestUserService extends UserService {
-  private String id;
+public class UserServiceTest {
+
+  // ...
   
-  private TestUserService(String id) {  
-    this.id = id;
+  static class TestUserService extends UserService {
+    private String id;
+    
+    private TestUserService(String id) {  
+      this.id = id;
+    }
+  
+    // highlight-next-line
+    protected void upgradeLevel(User user) {
+      if (user.getId().equals(this.id)) throw new TestUserServiceException();  
+      super.upgradeLevel(user);  
+    }
   }
-
-  // highlight-next-line
-  protected void upgradeLevel(User user) {
-    if (user.getId().equals(this.id)) throw new TestUserServiceException();  
-    super.upgradeLevel(user);  
+  
+  static class TestUserServiceException extends RuntimeException {
   }
-}
-
-static class TestUserServiceException extends RuntimeException {
 }
 ```
 
@@ -837,7 +895,7 @@ public class UserServiceTest {
 
 #### 테스트 실패의 원인
 
-upgradeLevels() 메소드가 아직 트랜잭션으로 처리되지 않기 때문입니다.
+upgradeLevels() 메소드가 아직 트랜잭션으로 처리되지 않았기 때문에 중간에 예외가 발생하더라도 기존의 변경이 취소되지 않습니다.
 
 ### 5.2.2 트랜잭션 경계설정
 
@@ -916,6 +974,8 @@ UserService 에서 만든 Connection 객체를 특별한(?) 저장소에 보관�
 
 #### 트랜잭션 동기화 적용
 
+멀티스레드 환경에서도 안전한 트랜잭션 동기화 방법을 구현하는 일은 간단하지 않습니다.
+
 스프링에서는 트랜잭션 동기화 기능을 지원하는 유틸리티 메소드를 제공합니다.
 
 ```java title="UserService.java"
@@ -925,47 +985,53 @@ import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
 
 public class UserService {
+
+  // highlight-next-line
   private DataSource dataSource;
   
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+  public void setDataSource(DataSource dataSource) {
+    this.dataSource = dataSource;
+  }
 	
-	public void upgradeLevels() throws Exception {
+  public void upgradeLevels() throws Exception {
 	  // highlight-start
-		TransactionSynchronizationManager.initSynchronization();  
-		Connection c = DataSourceUtils.getConnection(dataSource); 
-		c.setAutoCommit(false);
+    TransactionSynchronizationManager.initSynchronization();  
+    Connection c = DataSourceUtils.getConnection(dataSource); 
+    c.setAutoCommit(false);
 		// highlight-end
 		
-		try {									   
-			List<User> users = userDao.getAll();
-			for (User user : users) {
-				if (canUpgradeLevel(user)) {
-					upgradeLevel(user);
-				}
-			}
-			c.commit();
-		// highlight-start  
-		} catch (Exception e) {    
-			c.rollback();
-			throw e;
-    // highlight-end
-		} finally {
-			DataSourceUtils.releaseConnection(c, dataSource);
-			// highlight-start	
-			TransactionSynchronizationManager.unbindResource(this.dataSource);  
-			TransactionSynchronizationManager.clearSynchronization();
+    try {									   
+      List<User> users = userDao.getAll();
+      for (User user : users) {
+        if (canUpgradeLevel(user)) {
+          upgradeLevel(user);
+        }
+      }
+      // highlight-next-line
+      c.commit();
+    } catch (Exception e) {
+      // highlight-next-line    
+      c.rollback();
+      throw e;
+    } finally {
+      DataSourceUtils.releaseConnection(c, dataSource);
+      // highlight-start	
+      TransactionSynchronizationManager.unbindResource(this.dataSource);  
+      TransactionSynchronizationManager.clearSynchronization();
 			// highlight-end  
-		}
-	}
+    }
+  }
 	
-	// ...
+  // ...
 	
 }
 ```
 
+Connection 을 생성할 때 사용할 DataSource 를 DI 받습니다.
+
 스프링이 제공하는 트랜잭션 동기화 관리 클래스는 TransactionSynchronizationManager 입니다.
+
+먼저 트랜잭션 동기화 작업을 초기화하고, DataSourUtils 를 통해 DB 커넥션을 생성합니다.
 
 DataSourceUtils 의 getConnection() 메소드를 사용하는 이유는 Connection 객체를 생성해주기도 하지만 트랜잭션 동기화에 사용하도록 저장소에 바인딩해주기 때문입니다.
 
@@ -980,8 +1046,11 @@ UserServiceTest 의 upgradeAllOrNothing() 테스트 메소드에 dataSource 빈�
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
 public class UserServiceTest {
-  // highlight-next-line
-	@Autowired DataSource dataSource;
+
+  // highlight-start
+  @Autowired 
+  DataSource dataSource;
+  // highlight-end
 
   @Test
   public void upgradeAllOrNothing() throws Exception {
@@ -1027,11 +1096,12 @@ public class UserServiceTest {
 
 자바는 글로벌 트랜잭션을 지원하는 트랜잭션 매니저를 지원하기 위한 API 인 JTA Java Transaction API 를 제공하고 있습니다.
 
-아래는 JTA 를 이용한 트랜잭션 처리 코드의 전형적인 구조입니다.
+아래는 JTA 를 이용한 트랜잭션 처리 코드의 전형적인 구조를 보여줍니다.
 
 ```java
 InitialContext ctx = new InitialContext();
 UserTransaction tx = (UserTransaction) ctx.lookup(USER_TX_JNDI_NAME);
+
 tx.begin();
 Connection c = dataSource.getConnection();
 try {
@@ -1052,11 +1122,21 @@ UserService 의 입장에서는 자신의 로직말고 기술환경이 바뀌었
 
 원래 UserService 는 UserDao 인터페이스에만 의존하고 있었기 때문에 구현 클래스의 변경에 영향을 받지 않았습니다.
 
-DB 에서 제공하는 클라이언트 라이브러리와 API 는 서로 전혀 호환되지 않지만 SQL 을 이용한다는 공통의 방식이 있습니다.
+하지만 UserService 에서 트랜잭션의 경계설정을 해야 할 필요가 생기면서 다시 특정 데이터 액세스 기술에 종속되는 구조가 되었습니다.
+
+다행히 트랜잭션의 경계설정을 담당하는 코드는 일정한 패턴을 갖는 구조이기 때문에 추상화가 가능합니다.
+
+:::info
+추상화란 하위 시스템의 공통점을 뽑아내서 분리시키는 것을 말합니다.
+
+추상화를 하면 하위 시스템이 어떤 것인지 알지 못해도 일관된 방법으로 접근할 수 있습니다.
+:::
+
+각 DB 에서 제공하는 클라이언트 라이브러리와 API 는 서로 전혀 호환되지 않지만 SQL 을 이용한다는 공통의 방식이 있습니다.
 
 이 공통 방식을 추상화 한 것이 JDBC 입니다.
 
-트랜잭션 처리 코드에도 추상화를 도입하여 트랜잭션 경계설정 코드를 만들 수 있을 것 입니다.
+이 방식을 이용하면 트랜잭션 처리 코드에도 추상화를 도입하여 트랜잭션 경계설정 코드를 만들 수 있을 것 입니다.
 
 #### 스프링의 트랜잭션 서비스 추상화
 
@@ -1069,7 +1149,7 @@ DB 에서 제공하는 클라이언트 라이브러리와 API 는 서로 전혀 
 ```java title="UserService.java"
 public void upgradeLevels() {
   // highlight-start
-  PlatformTransactionManager transactionManager = new DataSourceTranseactionManager(dataSource);
+  PlatformTransactionManager transactionManager = new DataSourceTransactionManager(dataSource);
   TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
   // highlight-end
   
@@ -1096,20 +1176,28 @@ JDBC 를 이용할 때는 먼저 Connection 을 생성하고 트랜잭션을 시
 
 #### 트랜잭션 기술 설정의 분리
 
-UserService 코드를 JTA 를 이용하는 글로벌 크랜잭션으로 변경하려면 DataSourceTranseactionManager 구현 클래스를 JPATransactionManager 로 바꿔주면 됩니다.
+UserService 코드를 JTA 를 이용하는 글로벌 트랜잭션으로 변경하려면 DataSourceTranseactionManager 구현 클래스를 JPATransactionManager 로 바꿔주면 됩니다.
 
 모두 PlatformTransactionManager 인터페이스를 구현하였기 때문에 트랜잭션 경계설정을 위한 getTransaction(), commit(), rollback() 메소드를 수정할 필요가 없습니다.
 
-이제 UserService 가 트랜잭션 매니저를 DI 를 통해 주입받도록 바꾸면 됩니다.
+하지만 트랜잭션 구현 클래스에 대해 UserService 가 알고 있는 것은 DI 원칙 위배입니다.
+
+따라서 UserService 가 트랜잭션 매니저를 DI 를 통해 주입받도록 합니다.
+
+:::info
+어떤 클래스든 스프링의 빈으로 등록할 때 먼저 검토해야 할 것은 싱글톤으로 만들어져 여러 스레드에서 동시에 사용해도 괜찮은가 하는 점입니다.
+
+상태를 갖고 있는 등, 멀티스레드 환경에서 안전하지 않은 클래스를 빈으로 등록해서는 안됩니다.
+:::
 
 ```java title="UserService.java"
 public class UserService {
 
   // ...
 	
-	// highlight-start
 	private PlatformTransactionManager transactionManager;
-
+	
+  // highlight-start
 	public void setTransactionManager(PlatformTransactionManager transactionManager) {
 		this.transactionManager = transactionManager;
 	}
