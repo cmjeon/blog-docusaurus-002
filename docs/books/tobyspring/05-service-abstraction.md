@@ -1219,30 +1219,30 @@ public class UserService {
 
   // ...
 	
-	private PlatformTransactionManager transactionManager;
+  private PlatformTransactionManager transactionManager;
 	
   // highlight-start
-	public void setTransactionManager(PlatformTransactionManager transactionManager) {
-		this.transactionManager = transactionManager;
-	}
+  public void setTransactionManager(PlatformTransactionManager transactionManager) {
+    this.transactionManager = transactionManager;
+  }
 	// highlight-end
 
-	public void upgradeLevels() {
-	  // highlight-next-line
-		TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
-		try {
-			List<User> users = userDao.getAll();
-			for (User user : users) {
-				if (canUpgradeLevel(user)) {
-					upgradeLevel(user);
-				}
-			}
-			this.transactionManager.commit(status);
-		} catch (RuntimeException e) {
-			this.transactionManager.rollback(status);
-			throw e;
-		}
-	}
+  public void upgradeLevels() {
+    // highlight-next-line
+    TransactionStatus status = this.transactionManager.getTransaction(new DefaultTransactionDefinition());
+    try {
+      List<User> users = userDao.getAll();
+      for (User user : users) {
+        if (canUpgradeLevel(user)) {
+          upgradeLevel(user);
+        }
+      }
+      this.transactionManager.commit(status);
+    } catch (RuntimeException e) {
+      this.transactionManager.rollback(status);
+      throw e;
+    }
+  }
 	
 }
 ```
@@ -1256,10 +1256,10 @@ public class UserServiceTest {
 
   // ...
   
-  // // highlight-start
+  // highlight-start
   @Autowired
   PlatformTransactionManager transactionManager;
-  // // highlight-end
+  // highlight-end
   
   @Test
 	public void upgradeAllOrNothing() {
