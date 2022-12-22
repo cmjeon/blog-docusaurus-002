@@ -35,12 +35,6 @@ DB 의 필드에는 문자보다는 레벨을 코드화해서 숫자로 넣는 �
 
 반대로 소스코드에서는 숫자로 쓰는 것 보다는 문자가 좋은데, 이럴 때 이늄을 사용하는 것이 좋습니다.
 
-:::info
-코드는 이늄으로 관리되어야 합니다.
-
-소스코드에서 코드를 문자나 숫자로 받게하면 엉뚱한 값이나 범위를 벗어나는 값을 넣게 될 수도 있습니다.
-:::
-
 ```java title="Level.java"
 public enum Level {
   BASIC(1), 
@@ -53,12 +47,12 @@ public enum Level {
     this.value = value;
   }
 
-  // 오브젝트 -> 값
+  // 오브젝트 -> 코드
   public int intValue() {
     return value;
   }
 	
-  // 값 -> 오브젝트
+  // 코드 -> 오브젝트
   public static Level valueOf(int value) {
     switch(value) {
       case 1: return BASIC;
@@ -70,9 +64,13 @@ public enum Level {
 }
 ```
 
-이늄은 오브젝트를 가지고 있으면서, DB 에 저장할 코드숫자도 가지고 있습니다.
+이늄은 겉으로는 타입을 가지고 있지만 내부에는 DB 에 저장할 코드숫자를 가지고 있습니다.
 
-따라서 소스코드에서 엉뚱한 값이나 범위를 벗어나는 값을 넣으면 컴파일 오류가 발생하게 됩니다.
+:::info
+코드는 이늄으로 관리되어야 합니다.
+
+소스코드에서 코드를 문자나 숫자로 받게하면 엉뚱한 값이나 범위를 벗어나는 값을 넣게 될 수도 있습니다.
+:::
 
 #### User 필드 추가
 
@@ -192,7 +190,7 @@ private RowMapper<User> userMapper = new RowMapper<User>() {
 };
 
 public void add(User user) {
-  this.jdbcTemplate.update("insert into users(id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)", 
+  this.jdbcTemplate.update("insert into users (id, name, password, level, login, recommend) values (?, ?, ?, ?, ?, ?)", 
     user.getId(), 
     user.getName(), 
     user.getPassword(),
@@ -231,6 +229,7 @@ public void update() {
   user1.setLogin(1000);
   user1.setRecommend(999);
   
+  // highlight-next-line
   dao.update(user1);
   
   User user1update = dao.get(user1.getId());
@@ -262,7 +261,7 @@ public void update(User user) {
 
 SQL 문에서는 종종 테스트로는 검증하지 못하는 오류가 발생할 수도 있습니다.
 
-바로 UPDATE 문에서 WHERE 절을 빼먹는 경우입니다.
+예컨데  UPDATE 문에서 WHERE 절을 빼먹는 경우입니다.
 
 테스트 코드를 보완하여 UPDATE 문의 실수를 발견할 수 있도록 해봅니다.
 
@@ -292,15 +291,15 @@ public void update() {
 }
 ```
 
-사용자를 두 명 등록해놓고, 그 중 하나만 수정한 뒤에 수정된 사용자와 수정하지 않은 사용자의 정보를 모두 확인하면 됩니다.
+사용자를 두 명 등록해놓고, 그 중 하나만 수정한 뒤에 수정된 사용자와 수정하지 않은 사용자의 정보를 확인하는 식으로 테스트를 보완합니다.
 
 ### 5.1.3 UserService.upgradeLevels()
 
-레벨을 변경하는 비즈니스 로직이 추가되어야 합니다.
+이제 레벨을 변경하는 비즈니스 로직을 추가해 봅니다.
 
 Dao 는 데이터를 다루는 영역이기 때문에 비즈니스 로직을 Dao 에 두는 것은 적당하지 않습니다. 
 
-대신에 사용자 관리 로직을 추가할 UserService 클래스를 생성합니다.
+사용자 관리 로직을 추가할 UserService 클래스를 생성합니다.
 
 UserService 는 UserDao 인터페이스 타입으로 userDao 빈을 DI 받아 사용합니다.
 
@@ -308,12 +307,15 @@ UserService 는 UserDao 인터페이스 타입으로 userDao 빈을 DI 받아 �
 
 ```java title="UserService.java"
 public class UserService {
+
   // highlight-next-line
   private UserDao userDao;
 
   public void setUserDao(UserDao userDao) {
     this.userDao = userDao;
   }
+  
+  // ...
 
 }
 ```
@@ -331,6 +333,7 @@ public class UserServiceTest {
 	
   @Test
   public void bean() {
+    // highlight-next-line
     assertThat(this.userService, is(notNullValue()));
   }
   
@@ -339,7 +342,7 @@ public class UserServiceTest {
 
 #### upgradeLevels() 메소드
 
-UserService 에 비즈니스 로직을 담을 upgradeLevels() 메소드를 추가합니다.
+이제 UserService 에 upgradeLevels() 메소드를 추가하고 레벨을 변경하는 비즈니르 로직을 추가합니다.
 
 ```java title="UserService.java"
 public class UserService {
@@ -350,12 +353,15 @@ public class UserService {
     List<User> users = userDao.getAll();  
     for(User user : users) {  
       Boolean changed = null;
+      // highlight-next-line
       if (user.getLevel() == Level.BASIC && user.getLogin() >= 50) {
         user.setLevel(Level .SILVER);
         changed = true;
+      // highlight-next-line
       } else if (user.getLevel() == Level.SILVER && user.getRecommend() >= 30) {
         user.setLevel(Level .GOLD);
         changed = true;
+      // highlight-next-line
       } else if (user.getLevel() == Level.GOLD) {
         changed = false; 
       } else { 
@@ -396,6 +402,8 @@ public class UserServiceTest {
 
 테스트를 할 때는 데이터의 경계가 되는 값의 전후로 테스트 하는 것이 좋습니다.
 
+여기서는 로그인 수 50 과 추천수 30 이 경계가 되는 값 입니다.
+
 ```java title="UserServiceTest.java"
 @Test
 public void upgradeLevels() {
@@ -412,10 +420,12 @@ public void upgradeLevels() {
   checkLevel(users.get(4), Level.GOLD);
 }
 
+// highlight-start
 private void checkLevel(User user, boolean expectedLevel) {
   User userUpdate = userDao.get(user.getId());
   assertThat(userUpdate.getLevel(), is(expectedLevel));
 }
+// highlight-end
 ```
 
 사용자 정보를 저장한 후 upgradeLevels() 메소드를 실행합니다.
@@ -452,7 +462,7 @@ public void add() {
 }
 ```
 
-테스트케이스는 2가지를 테스트합니다.
+위 테스트케이스는 2가지를 테스트합니다.
 
 Level 이 비어있는 경우는 BASIC 을 부여해주고, 이미 설정된 Level 이 있다면 그대로 놔두는 것입니다. 
 
@@ -541,7 +551,7 @@ public void upgradeLevels() {
 
 추상적인 기본 흐름은 `사용자 정보를 가져와 한 명씩 순회하면서 업그레이드 가능여부를 확인하고, 가능하면 업그레이드 한다.` 입니다.
 
-구체적인 내용은 각 메소드에서 구현합니다.
+이제 각 메소드에서 구체적인 내용을 구현합니다.
 
 먼저 canUpgradeLevel() 메소드를 구현해봅니다.
 
@@ -559,7 +569,7 @@ private boolean canUpgradeLevel(User user) {
 }
 ```
 
-업그레이드 조건이 확인되면 updateLevel() 메소드로 업그레이드 작업을 진행합니다.
+만약 업그레이드 조건이 확인되면 upgradeLevel() 메소드로 업그레이드 작업을 진행합니다.
 
 ```java title="UserService.java"
 public class UserService {
@@ -574,9 +584,11 @@ public class UserService {
 }
 ```
 
-upgradeLevel() 메소드는 레벨간의 관계가 노골적으로 드러난다는 것, 레벨이 늘어나면 if 문이 점점 길어지는 것, 예외상황에 대한 처리가 없다는 문제가 있습니다.
+upgradeLevel() 메소드는 약간 문제가 있습니다.
 
-레벨간의 관계는 Level 이늄으로 이동시킵니다.
+레벨간의 관계가 노골적으로 드러난다는 것, 레벨이 늘어나면 if 문이 점점 길어질 것이라는 것, 예외상황에 대한 처리가 없다는 것이 있습니다.
+
+먼저 레벨간의 관계는 Level 이늄으로 이동시킵니다.
 
 ```java Level.java
 public enum Level {
@@ -607,9 +619,9 @@ public enum Level {
 }
 ```
 
-이렇게 하면 비즈니스 로직에서 조건식으로 다음 레벨을 지정할 필요가 없습니다.
+이렇게 하면 UserService 가 비즈니스 로직에서 일일이 조건식으로 다음 레벨을 지정할 필요가 없습니다.
 
-사용자의 레벨이 바뀌는 부분도 UserService 보다 User 에서 처리하도록 합니다.
+사용자의 레벨이 바뀌는 로직도 UserService 보다 User 에서 처리하도록 합니다.
 
 :::info
 객체의 내부 정보가 변경되는 것은 객체 스스로 다루는 것이 적절합니다.
@@ -663,6 +675,7 @@ public class UserService {
   }
   
   private void upgradeLevel(User user) {
+    // highlight-next-line
     user.upgradeLevel();
     userDao.update(user);
   }
@@ -670,7 +683,7 @@ public class UserService {
 }
 ```
 
-UserService, User, Level 이 각자의 내부 정보를 다루는 자신의 책임에 충실한 기능을 가지고 있으면서 필요한 일이 생기면 수행을 요청하는 구조를 가지고 있습니다.
+이제 UserService, User, Level 이 각자의 내부 정보를 다루는 자신의 책임에 충실한 기능을 가지고 있으면서 필요한 일이 생기면 수행을 요청하는 구조를 가지고 있습니다.
 
 코드 간결하기 때문에 변경이 필요할 때 수정할 지점을 쉽게 찾을 수 있습니다.
 
@@ -678,11 +691,15 @@ UserService, User, Level 이 각자의 내부 정보를 다루는 자신의 책�
 
 :::info
 객체지향적 코드는 다른 객체의 데이터를 가져와서 작업하지 않고 그 객체에 작업을 해달라고 요청합니다.
+
+오브젝트에게 데이터를 요구하지 말고 작업을 요청하라는 것이 객체지향 프로그래밍의 가장 기본이 되는 원리입니다.
 :::
 
 #### User 테스트
 
 User 에 대한 테스트도 만들어 봅니다.
+
+앞으로 계속 새로운 기능과 로직이 추가될 가능성이 있으니 테스트를 만들어두면 도움이 될 것 입니다.
 
 ```java title="UserTest.java"
 public class UserTest {
@@ -720,6 +737,8 @@ public class UserTest {
 
 #### UserServiceTest 개선
 
+기존의 테스트 코드에서는 무엇을 테스트하는지 잘 보이지 않았던 문제가 있었기에 조금 수정을 합니다.
+
 ```java title="UserServiceTest.java"
 @Test
 public void upgradeLevels() {
@@ -749,9 +768,7 @@ private void checkLevelUpgraded(User user, boolean upgraded) {
 }
 ```
 
-기존 테스트 코드에서 무엇을 테스트하는지 잘 보이지 않았던 문제가 있었습니다.
-
-checkLevel() 메소드 호출 시 파라미터로 전달하는 Level 이늄은 어떻게 테스트하는 것인지 알 수가 없습니다.
+checkLevel() 메소드 호출 시 파라미터로 전달하는 Level 이늄은 어떻게 테스트하는 것인지 알 수가 없었습니다.
 
 반면에 checkLevelUpgraded() 메소드의 true/false 는 레벨 업그레이드 여부를 확인하려는 의도가 드러납니다.
 
@@ -771,7 +788,7 @@ public class UserService {
   private boolean canUpgradeLevel(User user) {
     Level currentLevel = user.getLevel(); 
     switch(currentLevel) {
-      // highlight-start                                   
+      // highlight-start
       case BASIC: return (user.getLogin() >= MIN_LOGCOUNT_FOR_SILVER); 
       case SILVER: return (user.getRecommend() >= MIN_RECCOMEND_FOR_GOLD);
       // highlight-end
@@ -790,8 +807,10 @@ UserServiceTest 도 변경합니다.
 ```java title="UserServiceTest.java"
 // ...
 
+// highlight-start
 import static springbook.user.service.UserService.MIN_LOGCOUNT_FOR_SILVER;
 import static springbook.user.service.UserService.MIN_RECCOMEND_FOR_GOLD;
+// highlight-end
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations="/test-applicationContext.xml")
@@ -815,7 +834,7 @@ public class UserServiceTest {
 }
 ```
 
-마지막으로 레벨을 업그레이드 하는 정책을 UserService 에서 분리하는 방법을 고려할 수도 있습니다.
+레벨을 업그레이드 하는 정책을 유연하게 변경할 수 있도록 UserService 에서 분리하는 방법을 고려할 수도 있습니다.
 
 UserLevelUpgradePolicy 인터페이스를 만들고 그 구현클래스를 UserService 에 주입하도록 만드는 방법입니다.
 
@@ -1031,7 +1050,7 @@ public class UserService {
 }
 ```
 
-Connection 을 생성할 때 사용할 DataSource 를 DI 받습니다.
+먼저 Connection 을 생성할 때 사용할 DataSource 를 DI 받습니다.
 
 스프링이 제공하는 트랜잭션 동기화 관리 클래스는 TransactionSynchronizationManager 입니다.
 
@@ -1078,7 +1097,7 @@ public class UserServiceTest {
 }
 ```
 
-레벨 업그레이드 작업에 트랜잭션이 적용됩니다.
+이제 레벨 업그레이드 작업에 트랜잭션이 적용됩니다.
 
 사용자의 레벨 업그레이드 작업을 완료하지 못하면 이미 변경된 사용자의 레벨도 롤백됩니다.
 
@@ -1107,6 +1126,7 @@ InitialContext ctx = new InitialContext();
 UserTransaction tx = (UserTransaction) ctx.lookup(USER_TX_JNDI_NAME);
 
 tx.begin();
+// highlight-next-line
 Connection c = dataSource.getConnection();
 try {
   tx.commit();
@@ -1140,7 +1160,7 @@ UserService 의 입장에서는 자신의 로직말고 기술환경이 바뀌었
 
 이 공통 방식을 추상화 한 것이 JDBC 입니다.
 
-이 방식을 이용하면 트랜잭션 처리 코드에도 추상화를 도입하여 트랜잭션 경계설정 코드를 만들 수 있을 것 입니다.
+이 추상화 방식을 응용하면 트랜잭션 처리 코드에도 추상화를 도입하여 트랜잭션 경계설정 코드를 만들 수 있습니다.
 
 #### 스프링의 트랜잭션 서비스 추상화
 
