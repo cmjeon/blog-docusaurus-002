@@ -344,7 +344,7 @@ public class UserServiceTest {
 
 #### upgradeLevels() 메소드
 
-이제 UserService 에 upgradeLevels() 메소드를 추가하고 레벨을 변경하는 비즈니르 로직을 추가합니다.
+이제 UserService 에 upgradeLevels() 메소드를 추가하고 레벨을 변경하는 비즈니스 로직을 추가합니다.
 
 ```java title="UserService.java"
 public class UserService {
@@ -530,13 +530,15 @@ updateLevels() 메소드에는 아래와 같은 문제점이 있습니다.
 
 #### upgradeLevels() 리팩토링
 
+코드를 리팩토링을 하기 위해서 추상적인 레벨에서부터 로직을 작성해 봅니다.
+
 기존의 upgradeLevels() 메소드는 자주 변경될 가능성이 있는 구체적인 내용이 추상적인 로직의 흐름과 함께 섞여 있습니다.
+
+upgradeLevels() 메소드를 리팩토링하기 위해서 레벨을 업그레이드하는 기본 흐름을 만들어 봅니다.
 
 :::info
 비즈니스 로직을 추상적인 것과 구체적인 것으로 나눌 수 있는 기준은 구현의 변경가능성입니다.
 :::
-
-upgradeLevels() 메소드를 리팩토링하기 위해서 레벨을 업그레이드하는 기본 흐름만을 만들어 봅니다.
 
 ```java title="UserService.java"
 public void upgradeLevels() {
@@ -551,9 +553,9 @@ public void upgradeLevels() {
 }
 ```
 
-추상적인 기본 흐름은 `사용자 정보를 가져와 한 명씩 순회하면서 업그레이드 가능여부를 확인하고, 가능하면 업그레이드 한다.` 입니다.
+추상적인 기본 흐름은 '사용자 정보를 가져와 한 명씩 순회하면서 업그레이드 가능여부를 확인하고, 가능하면 업그레이드 한다.' 입니다.
 
-이제 각 메소드에서 구체적인 내용을 구현합니다.
+구체적인 내용은 각 메소드에서 구현합니다.
 
 먼저 canUpgradeLevel() 메소드를 구현해봅니다.
 
@@ -588,7 +590,9 @@ public class UserService {
 
 upgradeLevel() 메소드는 약간 문제가 있습니다.
 
-레벨간의 관계가 노골적으로 드러난다는 것, 레벨이 늘어나면 if 문이 점점 길어질 것이라는 것, 예외상황에 대한 처리가 없다는 것이 있습니다.
+- 레벨간의 관계가 노골적으로 드러난다는 것
+- 레벨이 늘어나면 if 문이 점점 길어진다는 것
+- 예외상황에 대한 처리가 없다는 것
 
 먼저 레벨간의 관계는 Level 이늄으로 이동시킵니다.
 
@@ -770,7 +774,7 @@ private void checkLevelUpgraded(User user, boolean upgraded) {
 }
 ```
 
-checkLevel() 메소드 호출 시 파라미터로 전달하는 Level 이늄은 어떻게 테스트하는 것인지 알 수가 없었습니다.
+기존의 checkLevel() 메소드 호출 시 파라미터로 전달하는 Level 이늄은 어떻게 테스트하는 것인지 알 수가 없었습니다.
 
 반면에 checkLevelUpgraded() 메소드의 true/false 는 레벨 업그레이드 여부를 확인하려는 의도가 드러납니다.
 
@@ -836,9 +840,9 @@ public class UserServiceTest {
 }
 ```
 
-레벨을 업그레이드 하는 정책을 유연하게 변경할 수 있도록 UserService 에서 분리하는 방법을 고려할 수도 있습니다.
+만약 레벨을 업그레이드 하는 정책을 유연하게 변경할 수 있도록 하고 싶다면 업그레이드 정책을 UserService 에서 분리하는 방법을 고려할 수 있습니다.
 
-UserLevelUpgradePolicy 인터페이스를 만들고 그 구현클래스를 UserService 에 주입하도록 만드는 방법입니다.
+UserLevelUpgradePolicy 인터페이스를 만들고 그 구현 클래스를 UserService 에 주입하도록 만드는 방법입니다.
 
 ## 5.2 트랜잭션 서비스 추상화
 
@@ -856,13 +860,14 @@ UserLevelUpgradePolicy 인터페이스를 만들고 그 구현클래스를 UserS
 
 테스트용이기 때문에 테스트클래스 내부에서 static 클래스로 만듭니다.
 
-테스트하려는 UserService 의 upgradeLevel() 메소드의 접근권한을 `protected` 로 변경하고, 서브클래스에서 오버라이딩 합니다.
+테스트하려는 UserService 의 upgradeLevel() 메소드의 접근권한을 'protected' 로 변경하고, 서브클래스에서 오버라이딩 합니다.
 
 ```java title="UserServiceTest.java"
 public class UserServiceTest {
 
   // ...
   
+  // highlight-next-line
   static class TestUserService extends UserService {
     private String id;
     
@@ -886,6 +891,8 @@ public class UserServiceTest {
 
 UserServiceTest 에 테스트케이스를 만듭니다.
 
+fail() 메소드는 만약 upgradeLevels() 메소드가 정상종료되면 강제로 실패하게 만드는 메소드입니다.
+
 ```java title="UserServiceTest.java"
 import static org.junit.Assert.fail;
 
@@ -897,6 +904,7 @@ public class UserServiceTest {
   
   @Test
   public void upgradeAllOrNothing() throws Exception {
+    // highlight-next-line
     UserService testUserService = new TestUserService(users.get(3).getId());  
     testUserService.setUserDao(this.userDao); 
     testUserService.setDataSource(this.dataSource);
@@ -905,6 +913,7 @@ public class UserServiceTest {
     for(User user : users) userDao.add(user);
     
     try {
+      // highlight-next-line
       testUserService.upgradeLevels();   
       fail("TestUserServiceException expected"); 
     } catch(TestUserServiceException e) { 
@@ -932,7 +941,7 @@ upgradeLevels() 메소드가 아직 트랜잭션으로 처리되지 않았기 �
 
 트랜잭션은 시작하는 지점과 끝나는 지점이 있습니다.
 
-시작하는 방법은 한가지이지만 끝내는 방법은 무효화인 Transaction Rollback, 확정하는 Transaction Commit 이 있습니다.
+시작하는 방법은 한 가지이지만 끝내는 방법은 무효화하는 Transaction Rollback, 확정하는 Transaction Commit 이 있습니다.
 
 트랜잭션이 시작하고 끝나는 지점을 트랜잭션 경계라고 합니다.
 
@@ -944,9 +953,9 @@ setAutoCommit(false) 으로 시작하고, commit(), rollback() 을 선언하여 
 
 #### UserService 와 UserDao의 트랜잭션 문제
 
-일반적으로 트랜잭션은 Connection 보다 수명이 짧습니다.
+일반적으로 트랜잭션은 Connection 보다 수명이 짧을 수 밖에 없습니다.
 
-UserDaoJdbc 는 JdbcTemplate 을 사용하고, JdbcTemplate 메소드(ex. update())들은 DataSource 의 getConnection() 메소드를 호출하여 작업하고, 작업이 끝나면 Connection 을 닫아줍니다.
+UserDaoJdbc 오브젝트는 JdbcTemplate 을 사용하고, JdbcTemplate 메소드(ex. update())들은 DataSource 의 getConnection() 메소드를 호출하여 작업하고, 작업이 끝나면 Connection 을 닫아줍니다.
 
 결국 JdbcTemplate 메소드 호출 한번에 하나의 Connection 을 만들고 닫기 때문에, 각 메소드들은 독립적인 트랜잭션으로 실행될 수 밖에 없습니다.
 
@@ -960,10 +969,10 @@ UserService 에서 Connection 객체를 생성하고, Connection 객체를 upgra
 
 UserService 와 UserDao 에 Connection 객체를 생성하고, 전달받아 처리하는 식의 수정은 다른 문제를 발생시킵니다.
 
-1. JdbcTemplate 사용이 불가
-2. UserService 와 UserDao 에 Connection 객체가 계속 전달
-3. UserDao 의 데이터 액서스 방식이 바뀌면 UserService 도 변경
-4. 테스트코드의 변경
+1. JdbcTemplate 사용이 불가하고 JDBC API 을 직접 사용해야 함
+2. Connection 객체가 UserService 와 UserDao 에 파라미터로 추가되어야 하고 메소드마다 계속 전달
+3. Connection 파라미터가 UserDao 인터페이스 메소드에 추가되면 UserDao 는 더 이상 데이터 액세스 기술에 독립적일 수가 없음
+4. 테스트 코드에서 직접 Connection 오브젝트를 일일이 만들어서 DAO 메소드를 호출하도록 모두 변경
 
 ### 5.2.3 트랜잭션 동기화
 
@@ -999,9 +1008,9 @@ UserService 에서 만든 Connection 객체를 특별한(?) 저장소에 보관�
 
 #### 트랜잭션 동기화 적용
 
-멀티스레드 환경에서도 안전한 트랜잭션 동기화 방법을 구현하는 일은 간단하지 않습니다.
+멀티스레드 환경에서 안전한 트랜잭션 동기화 방법을 구현하는 일은 간단하지 않습니다.
 
-스프링에서는 트랜잭션 동기화 기능을 지원하는 유틸리티 메소드를 제공합니다.
+다행히 스프링에서는 트랜잭션 동기화 기능을 지원하는 유틸리티 메소드를 제공합니다.
 
 ```java title="UserService.java"
 // ...
@@ -1105,7 +1114,9 @@ public class UserServiceTest {
 
 #### JdbcTemplate 과 트랜잭션 동기화
 
-트랜잭션 동기화 저장소에 등록된 Connection 객체가 없는 경우에 JdbcTemplate 는 직접 DB 커넥션을 만들고 트랜잭션을 시작해서 JDBC 작업을 진행합니다.
+JdbcTemplate 는 영리하게 동작합니다.
+
+JdbcTemplate 는 트랜잭션 동기화 저장소에 등록된 Connection 객체가 없는 경우에 직접 DB 커넥션을 만들고 트랜잭션을 시작해서 JDBC 작업을 진행합니다.
 
 반면 upgradeLevels() 메소드처럼 트랜잭션 동기화를 시작해놓았다면 트랜잭션 동기화 저장소에 들어 있는 DB 커넥션을 가져와서 기존의 트랙잭션에 참여합니다.
 
@@ -1130,6 +1141,7 @@ UserTransaction tx = (UserTransaction) ctx.lookup(USER_TX_JNDI_NAME);
 tx.begin();
 // highlight-next-line
 Connection c = dataSource.getConnection();
+
 try {
   tx.commit();
 } catch (Exception e) {
@@ -1140,7 +1152,7 @@ try {
 }
 ```
 
-JDBC 로컬 트랜잭션을 JTA 를 이용하는 글로벌 트랜잭션으로 변경하려면 UserService 의 코드를 수정해야 합니다.
+문제는 JDBC 로컬 트랜잭션을 JTA 를 이용하는 글로벌 트랜잭션으로 변경하려면 UserService 의 코드를 수정해야 한다는 부분입니다.
 
 UserService 의 입장에서는 자신의 로직말고 기술환경이 바뀌었는데 코드가 변경이 되어 버립니다.
 
@@ -1186,15 +1198,19 @@ public void upgradeLevels() {
         upgradeLevel(user);
       }
     }
+    // highlight-next-line
     this.transactionManager.commit(status);
   } catch (RuntimeException e) {
+    // highlight-next-line
     this.transactionManager.rollback(status);
     throw e;
   }
 }
 ```
 
-JDBC 를 이용할 때는 먼저 Connection 을 생성하고 트랜잭션을 시작했지만, PlatformTransactionManager 에서는 getTransaction() 메소드를 호출하면 됩니다.
+JDBC 를 이용할 때는 먼저 Connection 을 생성하고 트랜잭션을 시작했습니다.
+
+PlatformTransactionManager 에서는 getTransaction() 메소드를 호출하면 됩니다.
 
 시작된 트랜잭션은 TransactionStatus 타입의 변수에 저장되어 있다가 PlatformTransactionManager 의 commit(), rollback() 시에 파라미터로 전달됩니다. 
 
@@ -1202,13 +1218,13 @@ JDBC 를 이용할 때는 먼저 Connection 을 생성하고 트랜잭션을 시
 
 #### 트랜잭션 기술 설정의 분리
 
-UserService 코드를 JTA 를 이용하는 글로벌 트랜잭션으로 변경하려면 DataSourceTranseactionManager 구현 클래스를 JPATransactionManager 로 바꿔주면 됩니다.
+UserService 코드를 JTA 를 이용하는 글로벌 트랜잭션으로 변경하려면 DataSourceTransactionManager 구현 클래스를 JPATransactionManager 로 바꿔주면 됩니다.
 
 모두 PlatformTransactionManager 인터페이스를 구현하였기 때문에 트랜잭션 경계설정을 위한 getTransaction(), commit(), rollback() 메소드를 수정할 필요가 없습니다.
 
 하지만 트랜잭션 구현 클래스에 대해 UserService 가 알고 있는 것은 DI 원칙 위배입니다.
 
-따라서 UserService 가 트랜잭션 매니저를 DI 를 통해 주입받도록 합니다.
+따라서 UserService 가 트랜잭션 매니저를 DI 를 통해 주입받을 수 있도록 합니다.
 
 :::info
 어떤 클래스든 스프링의 빈으로 등록할 때 먼저 검토해야 할 것은 싱글톤으로 만들어져 여러 스레드에서 동시에 사용해도 괜찮은가 하는 점입니다.
