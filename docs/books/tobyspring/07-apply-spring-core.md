@@ -194,7 +194,7 @@ public class UserDaoJdbc implements UserDao {
 
 설정정보 XML 에도 Map 프로퍼티를 추가합니다.
 
-Map 프로퍼티는 <map> 태그와 <entry> 태그를 사용하여 정의합니다.
+Map 프로퍼티는 `<map>` 태그와 `<entry>` 태그를 사용하여 정의합니다.
 
 ```xml title="test-applicationContext.xml"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -217,7 +217,7 @@ Map 프로퍼티는 <map> 태그와 <entry> 태그를 사용하여 정의합니�
 </beans>
 ```
 
-이제 새로운 SQL 이 필요하면 설정에 <entry> 를 만들고 SQL 을 추가하면 됩니다.
+이제 새로운 SQL 이 필요하면 설정에 `<entry>` 를 만들고 SQL 을 추가하면 됩니다.
 
 하지만 SQL 을 가져올 때 문자열로 된 키 값을 사용하기 때문에 오타가 있어도 발견하기 어렵다는 문제가 있습니다.
 
