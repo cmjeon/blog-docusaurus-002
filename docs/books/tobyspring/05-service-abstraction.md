@@ -3,7 +3,7 @@ title: 5장 서비스 추상화
 sidebar_position: 5
 last_update:
   author: cm jeon
-  date: 2023-01-10
+  date: 2022-12-27
 description: "DAO 에 트랜잭션을 적용해보면서 스프링이 어떻게 성격이 비슷한 여러 기술을 추상화하고, 일관된 방법으로 사용할 수 있도록 지원하는지 알아봅니다."
 tags: ["Toby's Spring"]
 keywords: ['서비스 추상화']
