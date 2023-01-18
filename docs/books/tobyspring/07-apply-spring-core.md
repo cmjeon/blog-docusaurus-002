@@ -931,25 +931,363 @@ getSql() 메소드에서는 SqlRegistry 타입의 오브젝트에게 요청해�
 
 #### 확장 가능한 기반 클래스
 
+이제 XmlSqlService 의 세가지 기능을 분리하고 DI 로 조합하여 사용하게 만들어 봅니다.
 
+기본 클래스를 BaseSqlService 로 합니다.
+
+```java title="BaseSqlService.java"
+public class BaseSqlService implements SqlService {
+  // highlight-start
+  private SqlReader sqlReader;
+  private SqlRegistry sqlRegistry;
+  // highlight-end
+    
+  public void setSqlReader(SqlReader sqlReader) {
+    this.sqlReader = sqlReader;
+  }
+
+  public void setSqlRegistry(SqlRegistry sqlRegistry) {
+    this.sqlRegistry = sqlRegistry;
+  }
+
+  @PostConstruct
+  public void loadSql() {
+    this.sqlReader.read(this.sqlRegistry);
+  }
+
+  public String getSql(String key) throws SqlRetrievalFailureException {
+    try {
+      return this.sqlRegistry.findSql(key);
+    } 
+    catch(SqlNotFoundException e) {
+      throw new SqlRetrievalFailureException(e);
+    }
+  }
+}
+```
+
+BaseSqlService 를 SqlService 빈으로 등록하고 SqlReader 와 SqlRegistry 를 구현한 클래스도 빈으로 등록하여 DI 해줍니다.
+
+HashMap 을 이용한 SqlRegistry 코드도 독립 클래스 HashMapSqlRegistry.java 로 분리합니다.
+
+```java title="HashMapSqlRegistry.java"
+public class HashMapSqlRegistry implements SqlRegistry {
+  // ...
+}
+```
+
+JAXB 를 이용한 SqlReader 코드로 독립 클래스 JaxbXmlSqlReader.java 로 분리합니다.
+
+```java title="JaxbXmlSqlReader.java"
+public class JaxbXmlSqlReader implements SqlReader {
+  // ...
+}
+```
+
+빈 설정도 변경해 줍니다.
+
+```xml title="test-applicationContext.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ... >
+  // ...
+  // highlight-start
+  <bean id="sqlService" class="springbook.user.sqlservice.BaseSqlService">
+    <property name="sqlReader" ref="sqlReader" />
+    <property name="sqlRegistry" ref="sqlRegistry" />
+  </bean>
+  
+  <bean id="sqlReader" class="springbook.user.sqlservice.JaxbXmlSqlReader">
+    <property name="sqlmapFile" value="sqlmap.xml" />
+  </bean>
+  
+  <bean id="sqlRegistry" class="springbook.user.sqlservice.HashMapSqlRegistry">
+  </bean>
+  // highlight-end
+</beans>
+```
 
 #### 디폴트 의존관계를 갖는 빈 만들기
 
+확장을 고려해 기능을 분리하고, 인터페이스와 전략 패턴을 도입하면 늘어난 클래스와 인터페이스 구현, 그리고 의존관계 설정에 대한 부담을 감수해야 합니다.
+
+특정 의존 오브젝트가 대부분의 환경에서 디폴트라면 디폴트 의존관계를 갖는 빈을 만들어 볼 수도 있습니다.
+
+:::info
+디폴트 의존관계란 외부에서 DI 받지 않는 경우 기본적으로 자동 적용되는 의존관계를 말합니다.
+:::
+
+DefaultSqlService 를 만들고 사용할 디폴트 의존 오브젝트를 스스로 DI 하는 방식을 생각해볼 수 있습니다.
+
+```java title="DefaultSqlService.java"
+public class DefaultSqlService extends BaseSqlService {
+  public DefaultSqlService() {
+    setSqlReader(new JaxbXmlSqlReader());
+    setSqlRegistry(new HashMapSqlRegistry());
+  }
+}
+```
+
+하지만 의존 오브젝트인 JaxbXmlSqlReader 에 프로퍼티인 sqlmapFile 을 주입할 수 없어서 테스트는 실패합니다.
+
+DefaultSqlService 가 sqlmapFile 을 받아서 내부적으로 JaxbXmlSqlReader 만드는 방법도 있습니다.
+
+하지만 사용여부가 불확실한 JaxbXmlSqlReader 때문에 DefaultSqlService 가 sqlmapFile 을 가지고 있는 것은 어색합니다. 
+
+> 외부 클래스의 프로퍼티로 정의해서 전달받는 방법 자체는 나쁘지 않지만 DefaultSqlService 에 적용하기에는 적절치 않다.
+> 
+> 디폴트라는 건 다른 명시적인 설정이 없는 경우에 기본적으로 사용하겠다는 의미다.
+> 
+> DefaultSqlService 는 JaxbXmlSqlReader 를 디폴트 오브젝트로 갖고 있을 뿐, 이를 사용하지 않을 수도 있다.
+> 
+> 따라서 반드시 필요하지않은 sqlmapFile 을 프로퍼티로 등록해두는 것은 바람직하지 못하다.
+> 
+> 7장_ 스프링 핵심 기술의 응용, 595.
+
+JaxbXmlSqlReader 부터 sqlmapFile 의 기본값을 가진 디폴트 오브젝트로 만들어 봅니다.
+
+```java title="JaxbXmlSqlReader.java"
+public class JaxbXmlSqlReader implements SqlReader {
+
+  // highlight-start
+  private final String DEFAULT_SQLMAP_FILE = "sqlmap.xml";
+  private String sqlmapFile = DEFAULT_SQLMAP_FILE;
+  // highlight-end
+
+  public void setSqlmapFile(String sqlmapFile) { 
+    this.sqlmapFile = sqlmapFile;
+  }
+
+  // ...
+  
+}
+```
+
+이렇게 하면 sqlmapFile 프로퍼티를 지정하면 지정된 파일이 사용되고, 아니면 디폴트로 선언된 파일이 사용됩니다.
+
+DI 를 사용한다고 해서 항상 모든 프로퍼티 값을 설정에 넣고 빈으로 지정할 필요는 없습니다.
+
+DefaultSqlService 는 SqlService 를 바로 구현한 것이 아니라 BaseSqlService 를 상속했습니다.
+
+DefaultSqlService 는 BaseSqlService 의 sqlReader 와 sqlRegistry 프로퍼티를 그대로 가지고 있고, 또한 변경할 수 있습니다.
+
+디폴트 의존 오브젝트를 사용하면 설정으로 다른 구현 오브젝트를 사용하더라도 일단 디폴트 의존 오브젝트를 만들어버린다는 단점이 있습니다.
+
+이럴 때는 @PostConstruct 초기화 메소드를 이용해서 프로퍼티가 설정되었는지 확인하고 없는 경우에만 디폴트 오브젝트를 만드른 방법을 사용하면 됩니다.
+
 ## 7.3 서비스 추상화 적용
+
+JaxbXmlSqlReader 를 개선할 부분입니다.
+
+- 필요에 따라 JAXB 외에 다른 기술로 바꿔서 사용할 수 있게 한다.
+- XML 파일을 좀 더 다양한 소스에서 가져올 수 있게 한다.
 
 ### 7.3.1 OXM 서비스추상화
 
+XML 과 자바오브젝트를 매핑해서 상호 변환해주는 기술을 OXM Object-XML Mapping 이라고 합니다.
+
+기능이 같은 여러가지 기술이 존재한다면 서비스 추상화를 고민해볼 수 있습니다.
+
+> 로우레벨의 구체적인 기술과 API 에 종속되지 않고 추상화된 레이어와 API 를 제공해서 구현 기술에 대해 독립적인 코드를 작성할 수 있게 해주는 서비스 추상화가 필요하다.
+>
+> 스프링이 제공하는 OXM 추상 계층의 API 를 이용해서 XML 문서와 오브젝트 사이의 변환을 처리하게 하면, 코드 수정 없이도 OXM 기술을 자유롭게 바꿔서 적용할 수 있다.
+> 
+> 7장_ 스프링 핵심 기술의 응용, 597.
+
 #### OXM 서비스 인터페이스
+
+스프링의 OXM 추상화 인터페이스에는 자바 오브젝트를 MXL 로 변환하는 Marshaller 와 반대인 Unmarshaller 가 있습니다.
+
+Unmarshaller 인터페이스의 unmarshal() 메소드는 XML 파일에 대한 정보를 담은 Source 타입의 오브젝트를 파라미터로 받으면 자바 오브젝트 트리로 변환하고 루트 오브젝트를 돌려줍니다.
 
 #### JAXB 구현 테스트
 
+Unmarshaller 인터페이스의 JAXB 를 사용하는 구현 클래스의 이름은 Jaxb2Marshaller 입니다.
+
+OxmTest-context.xml 을 만들고 Jaxb2Marshaller 를 빈으로 등록해줍니다.
+
+```xml title="OxmTest-context.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ... >
+
+  <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <property name="contextPath" value="springbook.user.sqlservice.jaxb" />
+  </bean>
+
+</beans>
+```
+
+unmarshaller 빈은 Unmarshaller 타입입니다.
+
+@Autowired 를 이용해서 unmarshaller 빈을 가져와서 unmarshal() 메소드를 호출해주면 됩니다.
+
+```java title="OxmTest.java"
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration
+public class OxmTest {
+
+  // highligt-start
+  @Autowired
+  Unmarshaller unmarshaller;
+  // highligt-end
+  
+  @Test 
+  public void unmarshallSqlMap() throws XmlMappingException, IOException  {
+    Source xmlSource = new StreamSource(getClass().getResourceAsStream("sqlmap.xml"));
+    // highligt-next-line
+    Sqlmap sqlmap = (Sqlmap)this.unmarshaller.unmarshal(xmlSource);
+    
+    List<SqlType> sqlList = sqlmap.getSql();    
+    assertThat(sqlList.size(), is(3));
+    assertThat(sqlList.get(0).getKey(), is("add"));
+    assertThat(sqlList.get(0).getValue(), is("insert"));
+    assertThat(sqlList.get(1).getKey(), is("get"));
+    assertThat(sqlList.get(1).getValue(), is("select"));
+    assertThat(sqlList.get(2).getKey(), is("delete"));
+    assertThat(sqlList.get(2).getValue(), is("delete"));
+  }
+}
+```
+
 #### Castor 구현 테스트
+
+Castor 이라는 OXM 기술도 있습니다.
+
+Castor 는 XML 매핑파일을 이용해서 변환할 수 있습니다.
+
+```xml title="mapping.xml"
+<?xml version="1.0"?>
+<!DOCTYPE mapping PUBLIC "-//EXOLAB/Castor Mapping DTD Version 1.0//EN" "http://castor.org/mapping.dtd">
+<mapping>
+    <class name="springbook.user.sqlservice.jaxb.Sqlmap">
+        <map-to xml="sqlmap" />
+        <field name="sql"
+               type="springbook.user.sqlservice.jaxb.SqlType"
+               required="true" collection="arraylist">
+            <bind-xml name="sql" node="element" />
+        </field>
+    </class>
+    <class name="springbook.user.sqlservice.jaxb.SqlType">
+        <map-to xml="sql" />
+        <field name="key" type="string" required="true">
+            <bind-xml name="key" node="attribute" />
+        </field>
+        <field name="value" type="string" required="true">
+            <bind-xml node="text" />
+        </field>
+    </class>
+</mapping>
+```
+
+이번에는 Castor 를 사용하도록 설정을 변경해 줍니다.
+
+```xml title="OxmTest-context.xml"
+<?xml version="1.0" encoding="UTF-8"?>
+<beans ... >
+
+  <bean id="unmarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
+    <property name="mappingLocation" value="springbook/learningtest/spring/oxm/mapping.xml" />
+  </bean>
+
+</beans>
+```
+
+이렇게 서비스 추상화는 로우레벨의 기술을 필요에 따라 변경하면서도 일관된 애플리케이션 코드를 유지할 수 있도록 해줍니다.
 
 ### 7.3.2 OXM 서비스 추상화 적용
 
+스프링의 OXM 추상화 기능을 이용하는 SqlService 를 만들어보겠습니다.
+
+OxmSqlService 라고 하고 SqlReader 는 스프링의 OXM Unmarshaller 를 이용하도록 하겠습니다.
+
 #### 멤버 클래스를 참조하는 통합 클래스
 
-#### 위임을 이용한 BaseS이Service의 재사용
+OxmSqlService 는 BaseSqlService 와 유사하게 SqlReader 타입의 의존 오브젝트를 사용하지만 스태틱 멤버 클래스로 내장하여 사용하도록 만들어보겠습니다.
+
+내장된 SqlReader 구현을 외부에서 사용하지 못하도록 제한하고 스스로 최적화된 구조로 만들기 위해서 입니다.
+
+> 유연성은 조금 손해보더라도 내부적으로 낮은 결합도를 유지한 채로 응집도가 높은 구현을 만들 때 유용하게 쓸 수 있는 방법이다.
+> 
+> , 603.
+
+SqlReader 구현을 내장하고 있는 OxmSqlService 의 구조입니다.
+
+<Image img={require('./07-7.png')} />
+
+```java title="OxmSqlService.java"
+public class OxmSqlService implements SqlService {
+
+  // highlight-next-line
+  private final OxmSqlReader oxmSqlReader = new OxmSqlReader();
+
+  private class OxmSqlReader implements SqlReader {
+    // ...
+  }
+}
+```
+
+OxmSqlReader 는 private 멤버 클래스라서 외부에서 접근하거나 사용할 수 없습니다.
+
+또한 final 로 선언하고 직접 오브젝트를 생성하기 때문에 OxmSqlReader 를 DI 하거나 변경할 수 없습니다.
+
+두 개의 클래스를 강하게 결합시키고 확장이나 변경에 제한을 주는 이유는 OXM 을 이용하는 서비스 구조로 최적화하기 위해서입니다.
+
+만약 Unmarshaller 주입할 수 있게 만든다면 SqlService 를 위해 등록할 빈이 늘어나게 됩니다.
+
+확장과 변경이 유연해지기는 하지만 이런 DI 구조가 불편하게 느껴질 수도 있습니다.
+
+설정을 단순하게 하는 방법으로 BaseSqlService 를 확장해서 디폴트 설정을 두는 방법도 있습니다.
+
+하지만 디폴트 의존 오브젝트를 만들어주는 방식의 한계는 디폴트로 내부에서 만드는 오브젝트의 프로퍼티는 외부에서 지정해주기 힘들다는 점이 있습니다.
+
+따라서 하나의 빈 설정만으로 SqlService 와 SqlReader 의 필요한 프로퍼티 설정이 모두 가능하도록 만들 필요가 있습니다.
+
+<Image img={require('./07-8.png')} />
+
+OxmSqlReader 는 OxmSqlService 에 의해서만 만들어지기 때문에 OxmSqlReader 가 DI 로 제공받아야하는 프로퍼티는 OxmSqlService 의 프로퍼티를 통해 간접적으로 DI 받아야 합니다.
+
+아래는 OxmSqlService 의 프로퍼티를 통해 OxmSqlReader 의 프로퍼티를 설정해주는 코드입니다.
+
+```java title="OxmSqlReader.java"
+public class OxmSqlService implements SqlService {
+
+  // ...
+  
+  // highlight-start
+  public void setUnmarshaller(Unmarshaller unmarshaller) {
+    this.oxmSqlReader.setUnmarshaller(unmarshaller);
+  }
+  
+  public void setSqlmapFile(String sqlmapFile) {
+    this.oxmSqlReader.setSqlmapFile(sqlmapFile);
+  }
+  // highlight-end
+  
+  // ...
+  
+  private class OxmSqlReader implements SqlReader {
+    private Unmarshaller unmarshaller;
+    private final static String DEFAULT_SQLMAP_FILE = "sqlmap.xml";
+    private String sqlmapFile = DEFAULT_SQLMAP_FILE;
+
+    // ...
+
+    // highlight-start
+    public void setUnmarshaller(Unmarshaller unmarshaller) {
+      this.unmarshaller = unmarshaller;
+    }
+    
+     public void setSqlmapFile(String sqlmapFile) {
+      this.sqlmapFile = sqlmapFile;
+    }
+    // highlight-end
+    
+    // ...
+    
+  }
+}
+```
+
+#### 위임을 이용한 BaseSqlService의 재사용
 
 ### 7.3.3 리소스추상화
 
