@@ -1708,30 +1708,30 @@ ConcurrentHashMapSqlRegistry 를 만들어봅니다.
 public class ConcurrentHashMapSqlRegistry implements UpdatableSqlRegistry {
 
   // highlight-next-line
-	private Map<String, String> sqlMap = new ConcurrentHashMap<String, String>();
+  private Map<String, String> sqlMap = new ConcurrentHashMap<String, String>();
 
-	public String findSql(String key) throws SqlNotFoundException {
-		String sql = sqlMap.get(key);
-		if (sql == null)  throw new SqlNotFoundException(key + "를 이용해서 SQL을 찾을 수 없습니다");
-		else return sql;
-	}
+  public String findSql(String key) throws SqlNotFoundException {
+    String sql = sqlMap.get(key);
+    if (sql == null)  throw new SqlNotFoundException(key + "를 이용해서 SQL을 찾을 수 없습니다");
+    else return sql;
+  }
 
-	public void registerSql(String key, String sql) { sqlMap.put(key, sql);	}
+  public void registerSql(String key, String sql) { sqlMap.put(key, sql);  }
 
-	public void updateSql(String key, String sql) throws SqlUpdateFailureException {
-		if (sqlMap.get(key) == null) {
-			throw new SqlUpdateFailureException(key + "에 해당하는 SQL을 찾을 수 없습니다");
-		}
-		
-		sqlMap.put(key, sql);
-	}
+  public void updateSql(String key, String sql) throws SqlUpdateFailureException {
+    if (sqlMap.get(key) == null) {
+      throw new SqlUpdateFailureException(key + "에 해당하는 SQL을 찾을 수 없습니다");
+    }
+    
+    sqlMap.put(key, sql);
+  }
 
-	public void updateSql(Map<String, String> sqlmap) throws SqlUpdateFailureException {
-		for(Map.Entry<String, String> entry : sqlmap.entrySet()) {
-			updateSql(entry.getKey(), entry.getValue());
-		}
-	}
-	
+  public void updateSql(Map<String, String> sqlmap) throws SqlUpdateFailureException {
+    for(Map.Entry<String, String> entry : sqlmap.entrySet()) {
+      updateSql(entry.getKey(), entry.getValue());
+    }
+  }
+  
 }
 ```
 
@@ -1743,16 +1743,16 @@ OxmSqlService 가 새로 만든 ConcurrentHashMapSqlRegistry 빈을 사용하도
 <beans xmlns="...">
 
   <bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
-		<property name="unmarshaller" ref="unmarshaller" />
-		// highlight-next-line
-		<property name="sqlRegistry" ref="sqlRegistry" />
-	</bean>
-	
-	// highlight-start
-	<bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.ConcurrentHashMapSqlRegistry">
-	</bean>
-	// highlight-end
-	
+    <property name="unmarshaller" ref="unmarshaller" />
+    // highlight-next-line
+    <property name="sqlRegistry" ref="sqlRegistry" />
+  </bean>
+  
+  // highlight-start
+  <bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.ConcurrentHashMapSqlRegistry">
+  </bean>
+  // highlight-end
+  
 </beans>
 ```
 
@@ -1778,23 +1778,385 @@ ConcurrentHashMapSqlRegistry 와 OxmSqlService 가 서로 협력하여 SqlServic
 
 #### 내장형 DB 빌더 학습 테스트
 
+스프링의 내장형 DB 지원 기능이 동작하는 방법을 보기 위해 학습테스트를 만듭니다.
+
+테이블을 생성하는 schema.sql 과 데이터를 등록하는 data.sql 을 각각 만듭니다.
+
+```text title="schema.sql"
+CREATE TABLE SQLMAP (
+  KEY_ VARCHAR(100) PRIMARY KEY,
+  SQL_ VARCHAR(100) NOT NULL
+);
+```
+
+```text title="data.sql"
+INSERT INTO SQLMAP(KEY_, SQL_) values('KEY1', 'SQL1');
+INSERT INTO SQLMAP(KEY_, SQL_) values('KEY2', 'SQL2');
+```
+
+이제 테스트를 만들어서 EmbeddedDataBuilder 가 어떻게 동작하는지 확인합니다.
+
+```java title="EmbeddedDbTest.java"
+public class EmbeddedDbTest {
+
+  EmbeddedDatabase db;
+  SimpleJdbcTemplate template;
+  
+  @Before
+  public void setUp() {
+    // highlight-start
+    db = new EmbeddedDatabaseBuilder()
+      .setType(HSQL)      
+      .addScript("classpath:/springbook/learningtest/spring/embeddeddb/schema.sql") 
+      .addScript("classpath:/springbook/learningtest/spring/embeddeddb/data.sql")
+      .build();
+    // highlight-end
+    
+    template = new SimpleJdbcTemplate(db); 
+  }
+  
+  // highlight-start
+  @After
+  public void tearDown() {
+    db.shutdown();
+  }
+  // highlight-end
+  
+  @Test
+  public void initData() {
+    assertThat(template.queryForInt("select count(*) from sqlmap"), is(2));
+    
+    List<Map<String,Object>> list = template.queryForList("select * from sqlmap order by key_");
+    assertThat((String)list.get(0).get("key_"), is("KEY1"));
+    assertThat((String)list.get(0).get("sql_"), is("SQL1"));
+    assertThat((String)list.get(1).get("key_"), is("KEY2"));
+    assertThat((String)list.get(1).get("sql_"), is("SQL2"));
+  }
+  
+  @Test
+  public void insert() {
+    template.update("insert into sqlmap(key_, sql_) values(?, ?)", "KEY3", "SQL3");
+    
+    assertThat(template.queryForInt("select count(*) from sqlmap"), is(3));
+  }
+  
+}
+```
+
 #### 내장형 DB를 이용한 SqlRegistry 만들기
+
+학습테스트에서 살펴본 것 처럼 스프링에서 내장형 DB 를 사용하려면 EmbeddedDatabaseBuilder 를 사용하면 됩니다.
+
+EmbeddedDatabaseBuilder 는 초기화 코드가 필요합니다.
+
+초기화 코드가 필요할 때는 팩토리 빈으로 만들어주면 좋습니다.
+
+EmbeddedDatabaseBuilder 를 활용해서 EmbeddedDatabase 타입의 오브젝트를 생성해주는 팩토리 빈을 만들어야 합니다.
+
+스프링에는 팩토리 빈을 만드는 작업을 대신해주는 전용 태그가 있습니다.
+
+```xml title="test-applicationContext.xml"
+<beans xmlns="..." >
+
+  // ...
+  
+  <bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
+    // highlight-next-line
+    <property name="dataSource" ref="embeddedDatabase" />
+  </bean>
+  
+  // highlight-start
+  <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
+    <jdbc:script location="classpath:schema.sql"/>
+  </jdbc:embedded-database>
+  // highlight-end
+  
+  // ...
+</beans>
+```
+
+EmbeddedDatabase 타입의 embeddedDatabase 아이디를 가진 빈이 등록됩니다.
+
+```java title="EmbeddedDbSqlRegistry.java"
+public class EmbeddedDbSqlRegistry implements UpdatableSqlRegistry {
+
+  SimpleJdbcTemplate jdbc;
+  
+  // highlight-start
+  public void setDataSource(DataSource dataSource) {
+    jdbc = new SimpleJdbcTemplate(dataSource);
+  }
+  // highlight-end
+  
+  // ...
+}
+```
+
+내장형 DB 를 사용하기 위해서 DataSource 타입의 오브젝트를 주입받은 수정자 부분을 봅니다.
+
+정의한 빈의 타입은 EmbeddedDatabase 타입인데, DataSource 타입으로 DI 받고 있습니다.
+
+물론 EmbeddedDatabase 인터페이스는 DataSource 를 상속한 인터페이스입니다.
+
+클라이언트가 자신이 필요로 하는 기능을 가진 인터페이스를 통해 의존 오브젝트를 DI 하는 것이 가장 바람직합니다. 
+
+따라서 DB 종료기능을 가진 EmbeddedDatabase 대신 DataSource 을 사용한 것입니다. 
 
 #### UpdatableSqlRegistry 테스트 코드의 재사용
 
+ConcurrentHashMapSqlRegistry 와 EmbeddedDbSqlRegistry 둘 다 UpdatableSqlRegistry 인터페이스를 구현하고 있습니다.
+
+인터페이스가 같은 구현클래스라고 하더라도 구현 방식에 따라 검증 내용이나 테스트 방법이 달라질 수 있고, 의존 오브젝트의 구성에 따라 목이나 스텁을 이용하기도 합니다.
+
+하지만 DAO 는 DB 까지 연동하는 테스트를 하는 편이 효과적이고 DataSource 를 테스트 대역을 쓰기는 어렵습니다.
+
+따라서 ConcurrentHashMapSqlRegistry 와 EmbeddedDbSqlRegistry 둘 다 테스트 방법이 동일할 것으로 보입니다.
+
+기존에 만들었던 ConcurrentHashMapSqlRegistryTest 의 테스트 코드를 EmbeddedDbSqlRegistryTest 에서 공유하는 방법을 찾아 봅니다.
+
+```java title="ConcurrentHashMapSqlRegistryTest.java"
+public class ConcurrentHashMapSqlRegistryTest {
+  
+  UpdatableSqlRegistry sqlRegistry;
+  
+  @Before
+  public void setUp() {
+    // highlight-next-line
+    sqlRegistry = new ConcurrentHashMapSqlRegistry();
+    // ...
+  }
+  
+  // ...
+  
+}
+```
+
+ConcurrentHashMapSqlRegistryTest 를 보면 UpdatableSqlRegistry 구현클래스를 생성하는 부분만 분리하면 나머지 테스트 코드 공유가 가능합니다.
+
+따라서 상속을 통해 테스트 코드를 공유하도록 만듭니다.
+
+```java title="AbstractUpdatableSqlRegistryTest.java"
+public abstract class AbstractUpdatableSqlRegistryTest {
+
+  UpdatableSqlRegistry sqlRegistry;
+  
+  @Before
+  public void setUp() {
+    // highlight-next-line
+    sqlRegistry = createUpdatableSqlRegistry();
+  }
+  
+  abstract protected UpdatableSqlRegistry createUpdatableSqlRegistry();
+  
+  // 기존의 테스트 코드들
+  // ...
+  
+}
+```
+
+추상클래스를 만들고, 상속할 수 있도록 합니다.
+
+UpdatableSqlRegistry 구현클래스는 AbstractUpdatableSqlRegistryTest 를 상속받은 클래스에서 생성하도록 합니다.
+
+```java title="ConcurrentHashMapSqlRegistryTest.java"
+public class ConcurrentHashMapSqlRegistryTest extends AbstractUpdatableSqlRegistryTest {
+
+  protected UpdatableSqlRegistry createUpdatableSqlRegistry() {
+    // highlight-next-line
+    return new ConcurrentHashMapSqlRegistry();
+  }
+  
+}
+```
+
+```java title="EmbeddedDbSqlRegistryTest.java"
+public class EmbeddedDbSqlRegistryTest extends AbstractUpdatableSqlRegistryTest {
+  EmbeddedDatabase db;
+  
+  @Override
+  protected UpdatableSqlRegistry createUpdatableSqlRegistry() {
+    // highlight-start
+    db = new EmbeddedDatabaseBuilder()
+      .setType(HSQL)
+      .addScript("classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql")
+      .build();
+    
+    EmbeddedDbSqlRegistry embeddedDbSqlRegistry = new EmbeddedDbSqlRegistry();
+    embeddedDbSqlRegistry.setDataSource(db);
+    
+    return embeddedDbSqlRegistry;
+    // highlight-end
+  }
+  
+  @After
+  public void tearDown() {
+    db.shutdown();
+  }
+}
+```
+
 #### XML 설정을 통한 내장형 DB의 생성과 적용
+
+내장형 DB 를 등록하는 방법은 jdbc 스키마의 전용 태그를 사용하는 것이 편합니다.
+
+```xml title="test-applicationContext.xml"
+<beans xmlns="...">
+  // ...
+  
+  <bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
+    // highlight-next-line
+    <property name="dataSource" ref="embeddedDatabase" />
+  </bean>
+  
+  // highlight-next-line
+  <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
+    <jdbc:script location="classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql"/>
+  </jdbc:embedded-database>
+  
+</beans>
+```
+
+`<jdbc:embedded-database>` 태그로 만들어지는 EmbeddedDatabase 타입 빈은 스프링 컨테이너가 종료될 때 자동으로 shutdown() 메소드가 호출되도록 설정되기 때문에 별도의 종료코드가 필요하지 않습니다.
 
 ### 7.5.3 트랜잭션 적용
 
+여러 개의 SQL 을 수정하는 작업은 반드시 트랜잭션 안에서 일어나야 합니다.
+
+HashMap 과 같은 컬렉션은 트랜잭션 개념을 적용하기 어렵기 때문에 내장형 DB 를 도입하였습니다.
+
+스프링에서 트랜잭션 적용을 위해 AOP 를 이용하는 것이 편리합니다.
+
+하지만 제한된 오브젝트 내에서의 간단한 트랜잭션의 경우 트랜잭션 추상화 API 를 사용하는 편이 좋습니다.
+
 #### 다중 SQL 수정에 대한 트랜잭션 테스트
+
+트랜잭션이 적용되면 성공하고 아니면 실패하는 테스트를 만듭니다.
+
+```java title="EmbeddedDbSqlRegistryTest.java"
+public class EmbeddedDbSqlRegistryTest extends AbstractUpdatableSqlRegistryTest {
+  EmbeddedDatabase db;
+  
+  // ...
+
+  @Test
+  public void transactionalUpdate() {
+    checkFind("SQL1", "SQL2", "SQL3");
+    
+    Map<String, String> sqlmap = new HashMap<String, String>();
+    sqlmap.put("KEY1", "Modified1");
+    // highlight-next-line
+    sqlmap.put("KEY9999!@#$", "Modified9999");
+    
+    try {
+       // highlight-next-line
+      sqlRegistry.updateSql(sqlmap);
+      fail();
+    }
+    catch(SqlUpdateFailureException e) {}
+    
+    checkFind("SQL1", "SQL2", "SQL3");
+  }
+
+}
+```
+
+'KEY9999!@#$' 라는 존재하지 않는 키를 지정했기 때문에 테스트는 실패합니다.
+
+실패한 경우 'KEY1' 에 적용된 'Modified1' 이 롤백되어야 하지만 롤백되지 않았기 때문입니다.
 
 #### 코드를 이용한 트랜잭션 적용
 
+코드에 TransactionTemplate 을 사용하여 트랜잭션을 적용하도록 합니다.
+
+```java title="EmbeddedDbSqlRegistry.java"
+public class EmbeddedDbSqlRegistry implements UpdatableSqlRegistry {
+
+  SimpleJdbcTemplate jdbc;
+  // highlight-next-line
+  TransactionTemplate transactionTemplate;
+  
+  public void setDataSource(DataSource dataSource) {
+    jdbc = new SimpleJdbcTemplate(dataSource);
+    // highlight-start
+    transactionTemplate = new TransactionTemplate(
+        new DataSourceTransactionManager(dataSource));
+    // highlight-end
+  }
+  
+  // ...
+
+  public void updateSql(final Map<String, String> sqlmap) throws SqlUpdateFailureException {
+    transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+      protected void doInTransactionWithoutResult(TransactionStatus status) {
+        // highlight-start
+        for(Map.Entry<String, String> entry : sqlmap.entrySet()) {
+          updateSql(entry.getKey(), entry.getValue());
+        }
+        // highlight-end
+      }
+    });
+  }
+  
+}
+```
+
+트랜잭션으로 동작할 코드를 콜백 형태로 전달하여 수행합니다.
+
 ## 7.6 스프링 3.1의 DI
+
+스프링이 처음 등장한 이후 많은 변화를 겪은 것은 사실이지만 스프링이 근본적으로 지지하는 객체지향 언어인 자바의 특징과 장점을 극대화하는 프로그래밍 스타일과 이를 지원하는 도구로서의 스프링 정체성은 변하지 않았습니다.
 
 #### 자바 언어의 변화와 스프링
 
+DI 가 적용된 코드를 작성할 때 사용되는 자바 언어가 그간 많은 변화가 있어서 스프링의 사용 방식에도 영향을 줬습니다.
+
+- 애노테이션의 메타정보 활용
+
+자바 코드의 메타정보를 이용한 프로그래밍 방식입니다.
+
+자바 코드는 실행되는 것이 아니라 다른 자바 코드에 의해 데이터처럼 취급되기도 합니다.
+
+자바 코드의 일부를 리플렉션 API 등을 이용해 어떻게 만들었는지 살펴보고 그에 때라 구현하는 방식입니다.
+
+원래 리플렉션 API 는 자바 코드나 컴포넌트를 작성하는 데 사용되는 툴을 개발할 때 이용하도록 만들어졌습니다.
+
+그러다가 점점 자바 코드의 메타정보를 데이터로 활용하는 스타일의 프로그래밍 방식에 활용되기 시작했습니다.
+
+이 방식은 애노테이션이 등장하면서 본격화되기 시작했습니다.
+
+애노테이션은 리플렉션 API 를 이용해 애노테이션의 메타정보를 조회하여 설정된 값을 가져와 참고하는 방식으로 사용됩니다.
+
+애노테이션은 프레임워크가 참조하는 메타정보로 활용되기에 유리한 점이 많았기 때문에 활용이 늘어났습니다.
+
+객체지향 프로그래밍을 적용하면 핵심 로직을 담은 오브젝트가 클라이언트에 의해 생성되고, 관계를 맺고 제어되는 구조가 됩니다.
+
+이 때 클라이언트는 일종의 IoC 프레임워크로 동작하고, 팩토리는 IoC 프레임워크가 참조하는 메타정보가 됩니다.
+
+메타정보를 편하게 작성하기 위해서 스프링 초창기부터 XML 이 프레임워크가 사용하는 DI 메타정보로 적극 활용되었습니다.
+
+애노테이션이 등장하면서 XML 같은 외부 파일이 아닌 자바 코드의 일부로 메타정보를 사용할 수 있는 방식이 가능해졌습니다.
+
+애노테이션은 정의하기에 따라 타입, 필트, 메소드, 파라미터, 생성자, 로컬 변수에 적용이 가능합니다.
+
+그리고 애노테이션을 통해 다양한 부가 정보를 얻어낼 수 있습니다.
+
+XML 과 다르게 애노테이션은 자바 코드에 존재하므로 변경할 때마다 컴파일하는 단점이 있습니다.
+
+- 정책과 관례를 이용한 프로그래밍
+
+애노테이션 같은 메타정보를 활용하는 방식은 명시적인 방식에서 관례적인 방식으로 프로그래밍 스타일을 변화시켜 왔습니다.
+
+이런 스타일의 장점은 모든 작업을 표현하는 것에 비해 작성할 내용이 줄어든다는 것입니다.
+
+스프링은 애노테이션으로 메타정보를 작성하고, 관례를 활용해서 간결한 코드에 많은 내용을 담을 수 있도록 하고 있습니다.
+
+이제 최신 DI 스타일로 변경하는 과정을 보여주고 설명합니다.
+
 ### 7.6.1 자바코드를 이용한 빈설정
+
+먼저 XML 을 없애는 작업을 합니다.
+
+지금까지 만든 XML 설정은 테스트용 DI 설정입니다.
 
 #### 테스트 컨텍스트의 변경
 
