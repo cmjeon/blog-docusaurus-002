@@ -17,6 +17,8 @@ import Image from '@theme/IdealImage';
 
 ## 7.1 SQL과 DAO의 분리
 
+SQL 에서 DAO 를 분리합니다.
+
 ```java title="UserDaoJdbc.java"
 // ...
 
