@@ -17,7 +17,13 @@ import Image from '@theme/IdealImage';
 
 ## 7.1 SQL과 DAO의 분리
 
-SQL 에서 DAO 를 분리합니다.
+데이터 액세스 로직이 바뀌지 않더라도 DB 의 테이블, 필드 이름과 SQL 문장이 바뀔 수 있습니다.
+
+현재로서는 SQL 변경이 필요한 상황이 발생하면 SQL 을 담고 있는 DAO 코드가 수정되어야 합니다.
+
+7 장에서는 DAO 에서 SQL 을 분리하도록 하겠습니다.
+
+<!--truncate-->
 
 ```java title="UserDaoJdbc.java"
 // ...
@@ -78,14 +84,6 @@ public class UserDaoJdbc implements UserDao {
 }
 ```
 
-데이터 액세스 로직이 바뀌지 않더라도 DB 의 테이블, 필드 이름과 SQL 문장이 바뀔 수 있습니다.
-
-현재로서는 SQL 변경이 필요한 상황이 발생하면 SQL 을 담고 있는 DAO 코드가 수정되어야 합니다.
-
-7 장에서는 DAO 에서 SQL 을 분리하도록 하겠습니다.
-
-<!--truncate-->
-
 ### 7.1.1 XML 설정을 이용한 분리
 
 SQL 을 스프링의 XML 설정파일로 분리할 수 있습니다.
@@ -116,13 +114,8 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate.update(
         // highlight-next-line
         this.sqlAdd, 
-        user.getId(), 
-        user.getName(), 
-        user.getPassword(), 
-        user.getEmail(), 
-        user.getLevel().intValue(), 
-        user.getLogin(), 
-        user.getRecommend());
+        // ...
+        );
   }
 
 }
@@ -182,13 +175,8 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate.update(
         // highlight-next-line
         this.sqlMap.get("add"), 
-        user.getId(), 
-        user.getName(), 
-        user.getPassword(), 
-        user.getEmail(), 
-        user.getLevel().intValue(), 
-        user.getLogin(), 
-        user.getRecommend());
+        // ...
+        );
   }
 
 }
@@ -196,7 +184,7 @@ public class UserDaoJdbc implements UserDao {
 
 설정정보 XML 에도 Map 프로퍼티를 추가합니다.
 
-Map 프로퍼티는 `<map>` 태그와 `<entry>` 태그를 사용하여 정의합니다.
+test-applicationContext.xml 에서 Map 프로퍼티는 `<map>` 태그와 `<entry>` 태그를 사용하여 정의합니다.
 
 ```xml title="test-applicationContext.xml"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -221,17 +209,17 @@ Map 프로퍼티는 `<map>` 태그와 `<entry>` 태그를 사용하여 정의합
 
 이제 새로운 SQL 이 필요하면 설정에 `<entry>` 를 만들고 SQL 을 추가하면 됩니다.
 
-하지만 SQL 을 가져올 때 문자열로 된 키 값을 사용하기 때문에 오타가 있어도 발견하기 어렵다는 문제가 있습니다.
+하지만 여기서도 문제가 있는데, SQL 을 가져올 때 문자열로 된 키 값을 사용하기 때문에 오타가 있어도 발견하기 어렵다는 것 입니다.
 
 ### 7.1.2 SQL 제공 서비스
 
-SQL 을 코드에서 분리는 하였지만 몇 가지 문제점이 있습니다.
+SQL 을 코드에서 분리했지만 몇 가지 문제점이 있습니다.
 
-데이터 액세스 로직의 일부인 SQL 문장을 애플리케이션 구성정보를 가진 설정정보와 함께 두는 건 바람직하지 못합니다.
+일단 데이터 액세스 로직의 일부인 SQL 문장을 애플리케이션 구성정보를 가진 설정정보와 함께 두는 건 바람직하지 못합니다.
 
-SQL 을 따로 분리되어야 독립적으로 SQL 리뷰나 튜닝 작업을 하기 편합니다.
+SQL 은 따로 분리되어야 독립적으로 SQL 리뷰나 튜닝작업을 하기 편합니다.
 
-스프링의 설정파일로부터 생성되는 오브젝트와 정보는 애플리케이션을 다시 시작하기전에는 변경이 매우 어렵습니다.
+스프링의 설정파일로부터 생성되는 오브젝트와 정보는 애플리케이션을 다시 시작하기 전에는 변경이 매우 어렵습니다.
 
 따라서 독립적인 SQL 제공 서비스가 필요합니다.
 
@@ -303,13 +291,8 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate.update(
         // highlight-next-line
         this.sqlService.getSql("userAdd"), 
-        user.getId(), 
-        user.getName(), 
-        user.getPassword(), 
-        user.getEmail(), 
-        user.getLevel().intValue(), 
-        user.getLogin(), 
-        user.getRecommend());
+        // ...
+        );
   }
 
   public User get(String id) {
@@ -339,13 +322,8 @@ public class UserDaoJdbc implements UserDao {
     this.jdbcTemplate.update(
         // highlight-next-line
         this.sqlService.getSql("userUpdate"),
-        user.getName(), 
-        user.getPassword(), 
-        user.getEmail(), 
-        user.getLevel().intValue(), 
-        user.getLogin(), 
-        user.getRecommend(),
-        user.getId());
+        // ...
+        );
   }
   
 }
@@ -421,17 +399,19 @@ SqlService 인터페이스 타입의 빈을 DI 받고, 그 빈이 제공해주�
 
 ### 7.2.1 XML 파일 매핑
 
-SQL 정보는 SQL 을 저장해두는 전용 포맷을 가진 독립적인 파일을 이용하는 편이 바람직합니다.
+SQL 정보는 설정정보에 있기 보다는 SQL 을 저장해두는 전용 포맷을 가진 독립적인 파일을 이용하는 편이 바람직합니다.
 
-SQL 정보를 담는 XML 문서를 만들고, 이 파일에서 SQL 을 읽어뒀다가 DAO 에 제공해주는 SQL 서비스 구현 클래스를 만들어보겠습니다.
+SQL 정보를 담는 XML 문서를 만들고, 이 파일에서 SQL 을 읽어뒀다가 DAO 에 제공해주는 SQL 서비스 구현 클래스를 만들어 보겠습니다.
 
 #### JAXB
 
-JAXB(Jav Architecture for XML Binding) 을 이용하여 파일을 읽어오도록 해보겠습니다.
+JAXB(Jav Architecture for XML Binding) 을 이용하여 파일을 읽어오도록 합니다.
 
 JAXB 는 클래스를 만들 수 있는 컴파일러를 제공해주는데, 이 컴파일러에 스키마를 이용하면 클래스를 만들 수 있습니다. 
 
 이 클래스로 XML 파일의 정보를 매핑할 오브젝트를 생성하고, 오브젝트에는 매핑정보가 애노테이션으로 담기게 됩니다.
+
+<Image img={require('./07-1.png')} />
 
 #### SQL 맵을 위한 스키마 작성과 컴파일
 
@@ -440,7 +420,8 @@ SQL 정보를 담은 XML 문서를 만듭니다.
 ```xml title="sqlmap.xml"
 <?xml version="1.0" encoding="UTF-8"?>
 <sqlmap ... >
-  <sql key="userAdd">...</sql>
+  // highlight-next-line
+  <sql key="userAdd">insert into users (...) ...</sql>
   <sql key="userGet">...</sql>
 </sqlmap>
 ```
@@ -453,12 +434,18 @@ SQL 정보를 담은 XML 문서를 만듭니다.
   <element name="sqlmap">
     <complexType>
       <sequence>
+        // highlight-next-line
         <element name="sql" maxOccurs="unbounded" type="tns:sqlType" />
       </sequence>
     </complexType>
   </element>
   <complexType name="sqlType">
-    <simpleContent> ... </simpleContent>
+    <simpleContent>
+      <extension base="string">
+        // highlight-next-line
+        <attrivute name="key" use="required" type="string" />
+      </extension>
+    </simpleContent>
   </complexType>
 </schema>
 ```
@@ -475,15 +462,42 @@ SqlType.java
 Sqlmap.java
 ```
 
-클래스를 이용해 오브젝트를 생성하면 XML 정보가 오브젝트로 전환하는 방법을 확인하게 된 것입니다.
+이 클래스를 이용해 오브젝트를 생성하면 XML 정보가 오브젝트로 전환됩니다.
 
 #### 언마샬링
 
+생성된 클래스를 이용하기 전에 JAXB API 학습테스트를 합니다.
+
 XML 문서를 읽어서 자바의 오브젝트로 변환하는 것을 JAXB 에서는 언마샬링 unmarshalling 이라고 부릅니다.
 
-반대로 오브젝트를 XML 문서로 변환하는 것을 marshalling 이라고 합니다.
+반대로 오브젝트를 XML 문서로 변환하는 것을 마샬링 marshalling 이라고 합니다.
 
 오브젝트를 바이트 스트림으로 바꾸는 것을 직렬화 serialization 이라고 부르는 것과 비슷합니다.
+
+```java title="JaxbTest.java"
+public class JaxbTest {
+
+  @Test
+  public void readSqlmap() throws JAXBException, IOException {
+    
+    String contextPath = Sqlmap.class.getPackage().getName(); 
+    JAXBContext context = JAXBContext.newInstance(contextPath);
+    Unmarshaller unmarshaller = context.createUnmarshaller();
+    
+    // sqlmap.xml 파일을 언마샬링해서 Sqlmap 의 오브젝트로 돌려준다.
+    // highlight-start
+    Sqlmap sqlmap = (Sqlmap) unmarshaller.unmarshal(
+        getClass().getResourceAsStream("sqlmap.xml"));
+    // highlight-end
+    
+    // highlight-next-line
+    List<SqlType> sqlList = sqlmap.getSql();
+
+    // assertions ...
+  }
+  
+}
+```
 
 ### 7.2.2 XML 파일을 이용하는 SQL 서비스
 
@@ -501,23 +515,24 @@ JAXB 로 XML 문서를 언마샬링하면 `<sql>` 태그 하나는 Sql 클래스
 
 그리고 DAO 의 요청에 따라 SQL 을 찾아서 반환합니다.
 
-```java title='XmlSqlService.java"
+```java title="XmlSqlService.java"
 public class XmlSqlService implements SqlService {
   
-  // SQL 을 저장하는 map
+  // SQL 을 저장하는 HashMap
   // highlight-next-line
   private Map<String, String> sqlMap = new HashMap<String, String>();
 
   public XmlSqlService() {
-    // 
+    
     // highlight-start
     String contextPath = Sqlmap.class.getPackage().getName(); 
     try {
       JAXBContext context = JAXBContext.newInstance(contextPath);
       Unmarshaller unmarshaller = context.createUnmarshaller();
       InputStream is = UserDao.class.getResourceAsStream("sqlmap.xml");
-      Sqlmap sqlmap = (Sqlmap)unmarshaller.unmarshal(is);
       // highlight-end
+      // unmarshaller 로 sqlmap 파일을 언마샬링 한다.
+      Sqlmap sqlmap = (Sqlmap)unmarshaller.unmarshal(is);
 
       for(SqlType sql : sqlmap.getSql()) {
         sqlMap.put(sql.getKey(), sql.getValue());
@@ -528,6 +543,7 @@ public class XmlSqlService implements SqlService {
   }
 
   public String getSql(String key) throws SqlRetrievalFailureException {
+    // highlight-next-line
     String sql = sqlMap.get(key);
     if (sql == null)  
       throw new SqlRetrievalFailureException(key + "를 이용해서 SQL을 찾을 수 없습니다");
@@ -537,19 +553,19 @@ public class XmlSqlService implements SqlService {
 }
 ```
 
-이렇게 SQL 문장을 스프링의 빈 설정에서도 분리하는데 성공했습니다.
+이렇게 SQL 문장을 스프링의 빈 설정정보로부터 분리하는데 성공했습니다.
 
 ### 7.2.3 빈의 초기화 작업
 
 XmlSqlService 코드를 살펴보면 몇 가지 개선점이 보입니다.
 
-생성자에서 예외가 발생할 수도 있는 복잡한 초기화 작업을 다루는 것은 좋지 않습니다.
+예외가 발생할 수도 있는 복잡한 초기화 작업을 생성자에서 다루는 것은 좋지 않습니다.
 
-초기 상태를 가진 오브젝트를 만들어놓고 별도의 초기화 메소드를 사용하는 방법이 바람직합니다.
+이럴 때는 초기 상태의 오브젝트를 만든 후, 별도의 초기화 메소드를 사용하는 것이 바람직합니다.
 
 또한 SQL 을 담은 XML 파일의 위치가 코드에 고정되는 것도 좋지 않습니다.
 
-바뀔 가능성이 있는 내용은 외부에서 DI 로 설정해줄 수 있게 만들어야 합니다.
+바뀔 가능성이 있는 내용이기 때문에 외부에서 DI 로 설정해줄 수 있게 만들어야 합니다.
 
 ```java title="XmlSqlService.java"
 public class XmlSqlService implements SqlService {
@@ -566,7 +582,7 @@ public class XmlSqlService implements SqlService {
     String contextPath = Sqlmap.class.getPackage().getName(); 
     try {
       // ...
-      // hightlight-next-line
+      // highlight-next-line
       InputStream is = UserDao.class.getResourceAsStream(this.sqlmapFile);
       // ...
     } catch (JAXBException e) {
@@ -595,11 +611,13 @@ context 네임스페이스를 사용해서 `<context:annotation-config/>` 태그
             http://www.springframework.org/schema/context/spring-context-3.0.xsd
             ...">
   
+  // 코드의 애노테이션을 이용한 빈 설정 및 초기화 작업을 해주는 빈 후처리기 등록
   // highlight-next-line          
-  <context:annotation-config /> // 코드의 애노테이션을 이용한 빈 설정 및 초기화 작업을 해주는 빈 후처리기 등록            
+  <context:annotation-config />             
             
+  // @Transactional 이 붙은 타입과 메소드에 트랜잭션 부가기능을 담은 프록시를 추가하도록 만들어주는 후처리기 등록
   // highlight-next-line
-  <tx:annotation-driven /> // @Transactional 이 붙은 타입과 메소드에 트랜잭션 부가기능을 담은 프록시를 추가하도록 만들어주는 후처리기 등록
+  <tx:annotation-driven /> 
   
 </beans>
 ```
@@ -612,6 +630,7 @@ context 네임스페이스를 사용해서 `<context:annotation-config/>` 태그
 public class XmlSqlService implements SqlService {
 
   // 초기화 메소드를 선언
+  // highlight-next-line
   @PostConstruct
   public void loadSql() {
     // ... 
@@ -640,13 +659,15 @@ public class XmlSqlService implements SqlService {
 
 아래는 스프링 컨테이너의 초기 작업 순서입니다.
 
+오브젝트 생성, 의존성 주입, 애노테이션 작업 순입니다. 
+
 <Image img={require('./07-2.png')} />
 
 ### 7.2.4 변화를 위한 준비: 인터페이스 분리
 
-현재 XmlSqlService 는 SQL 을 특정 포맷의 XML 에서 SQL 데이터를 가져오고 있습니다.
+현재 XmlSqlService 는 SQL 을 특정 포맷의 XML 에서 SQL 데이터를 가져오고, HashMap 타입 컬렉션에 저장하고 사용하고 있습니다.
 
-만약 가져온 SQL 정보를 HashMap 타입 컬렉션이 아닌 다른 방식으로 저장해두고 사용하려면 지금까지 만든 코드를 변경해야 합니다.
+만약 가져온 SQL 정보를 다른 방식으로 다루고 싶다면 지금까지 만든 코드를 변경해야 합니다.
 
 SQL 을 가져오는 것과 보관해두고 사용하는 것은 각각 독자적으로 변경가능한 독립적인 부분입니다.
 
@@ -670,30 +691,32 @@ SqlReader 가 SQL 정보를 가져와서 SqlRegistry 에 전달하는 방법을 
 
 ```java title="XmlSqlService.java"
 public class XmlSqlService implements SqlService {
+
   // ...
   
   Map<String, String> sqls = sqlReader.readSql();
   sqlRegistry.addSqls(sqls);
   
   // ...
+  
 }
 ```
 
-하지만 SqlReader 와 SqlRegistry 는 각각 SQL 정보를 읽어 가져오는 방법과 이를 저장해두는 방법의 구현으로부터 독립적인 인터페이스로 만들어져야 합니다.
+SqlReader 와 SqlRegistry 는 SQL 정보를 읽어오는 방법과 이를 저장해두는 방법의 구체적인 구현으로부터 독립적인 인터페이스로 만들어져야 합니다.
 
-따라서 이 둘 사이에서 정보를 전달하기 위해 일시적으로 Map 타입의 형식을 갖도록 만들어지는 것은 바람직하지 않습니다.
+SqlReader 에서 내부의 구현방식으로 SQL 정보를 읽어와서는 Map 으로 바꿔주고, SqlRegistry 에서도 Map 으로 읽은 정보를 다시 내부의 구현방식으로 바꿔야하는 과정이 필요하게 됩니다.
 
-SqlReader 에서 내부의 구현방식으로 SQL 정보를 읽어와서는 Map 으로 바꿔주고, SqlRegistry 에서도 Map 으로 읽은 정보를 다시 내부의 구현방식으로 바꿔야하는 과정이 필요할 것입니다.
+둘 사이에서 정보를 전달하기 위해 일시적으로 Map 타입의 형식을 갖도록 만들어지는 것은 바람직하지 않습니다.
 
 SqlReader 에게 SqlRegistry 전략을 제공해주면서 이를 이용해서 SQL 정보를 SqlRegistry 에 저장하라고 요청하는 방식을 생각해 볼 수 있습니다.
 
 ```java title="XmlSqlService.java"
 public class XmlSqlService implements SqlService {
+
   // ...
   
   sqlReader.readSql(sqlRegistry);
   
-  // ...
 }
 ```
 
@@ -719,10 +742,12 @@ SqlRegistry 는 SqlService 에 등록된 SQL 을 검색해서 돌려주는 기�
 
 ```java title="SqlRegistry.java"
 public interface SqlRegistry {
+  
+  // SQL 을 등록하는 기능
+  void registerSql(String key, String sql); 
 
-  void registerSql(String key, String sql); // SQL 을 등록하는 기능
-
-  String findSql(String key) throws SqlNotFoundException; // SQL 을 검색하는 기능
+  // SQL 을 검색하는 기능
+  String findSql(String key) throws SqlNotFoundException; 
   
 }
 ```
@@ -738,7 +763,8 @@ SQL 을 검색하는 기능은 실패할 때는 예외를 던지게 하였습니
 ```java title="SqlReader.java"
 public interface SqlReader {
 
-  void read(SqlRegistry sqlRegistry); SQL 정보를 읽는 기능
+  // SQL 정보를 읽는 기능
+  void read(SqlRegistry sqlRegistry); 
   
 }
 ```
@@ -757,7 +783,7 @@ SqlService 를 포함한 3개의 인터페이스를 구현한 클래스간의 �
 
 인터페이스에만 의존하도 만들어야 스프링의 DI 를 적용할 수 있습니다.
 
-DI 를 적용하지 않더라도 자신이 사용하는 오브젝트이 클래스가 어떤 것인지 알지 못하게 만드는 것이 좋습니다.
+DI 를 적용하지 않더라도 자신이 사용하는 오브젝트의 클래스가 어떤 것인지 알지 못하게 만드는 것이 좋습니다.
 
 그것이 구현 클래스를 바꾸고 의존 오브젝트를 변경해서 자유롭게 확장할 기회를 제공해주는 것입니다.
 
@@ -771,7 +797,7 @@ DI 를 적용하지 않더라도 자신이 사용하는 오브젝트이 클래�
 
 구현 클래스가 구현은 다르지만 같은 타입을 상속받았기 때문에 다형성을 활용할 수 있습니다.
 
-따라서 하나의 클래스가 여러 개의 인터페이스를 상속해서 여러 종류의 타입으로 존재할 수 있습니다.
+따라서 하나의 클래스가 여러 개의 인터페이스를 상속한다면 여러 종류의 타입으로 존재할 수 있습니다.
 
 <Image img={require('./07-6.png')} />
 
@@ -864,9 +890,9 @@ public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
 
 SqlReader 의 구현 코드에서 SqlRegistry 구현 코드의 내부정보에 직접 접근해서는 안됩니다.
 
-따라서 파라미터로 전달받은 SqlRegistry 의 메소드를 사용해야만 합니다.
+파라미터로 전달받은 SqlRegistry 의 registerSql() 메소드를 사용해야만 합니다.
 
-@PostConstruct 가 달린 초기화 메소드와 getFinder() 메소드가 sqlReader 와 sqlRegistry 를 사용하도록 변경합니다.
+@PostConstruct 가 달린 초기화 메소드와 getFinder() 메소드가 sqlReader 와 sqlRegistry 오브젝트를 사용하도록 변경합니다.
 
 ```java title="XmlSqlService.java"
 public class XmlSqlService implements SqlService, SqlRegistry, SqlReader {
@@ -921,13 +947,15 @@ getSql() 메소드에서는 SqlRegistry 타입의 오브젝트에게 요청해�
 
 이를 통해 sqlService 를 구현한 메소드와 초기화 메소드는 외부에서 DI 된 오브젝트라고 생각하게 됩니다.
 
-자기 자신을 참조하는 빈은 사실 흔히 쓰이는 방법은 아닙니다.
+사실 자기 자신을 참조하는 빈은 흔히 쓰이는 방법은 아닙니다.
 
 책임이 다르다면 클래스를 구분하고 각기 다른 오브젝트로 만들어지는 것이 자연스럽습니다.
 
-다만 자기참조 빈을 만들어보는 것은 책임과 관심사가 복잡하게 얽혀 있어서 확장이 힘들고 변경에 취약한 클래스를 유연한 구조로 만들려고 할 때 처음 시도해볼 수 있는 방법입니다.
+:::info
+자기참조 빈을 만들어보는 것은 책임과 관심사가 복잡하게 얽혀 있어서 확장이 힘들고 변경에 취약한 클래스를 유연한 구조로 만들려고 할 때 처음 시도해볼 수 있는 방법입니다.
 
 이를 통해 기존의 복잡하게 얽혀 있던 코드를 책임을 가진 단위로 구분해낼 수 있습니다.
+:::
 
 ### 7.2.6 디폴트의존관계
 
@@ -935,10 +963,11 @@ getSql() 메소드에서는 SqlRegistry 타입의 오브젝트에게 요청해�
 
 이제 XmlSqlService 의 세가지 기능을 분리하고 DI 로 조합하여 사용하게 만들어 봅니다.
 
-기본 클래스를 BaseSqlService 로 합니다.
+SqlService 인터페이스를 구현하는 기본 클래스를 BaseSqlService 로 합니다.
 
 ```java title="BaseSqlService.java"
 public class BaseSqlService implements SqlService {
+
   // highlight-start
   private SqlReader sqlReader;
   private SqlRegistry sqlRegistry;
@@ -1029,23 +1058,23 @@ public class DefaultSqlService extends BaseSqlService {
 }
 ```
 
-하지만 의존 오브젝트인 JaxbXmlSqlReader 에 프로퍼티인 sqlmapFile 을 주입할 수 없어서 테스트는 실패합니다.
+하지만 의존 오브젝트인 JaxbXmlSqlReader 에 필요한 프로퍼티인 sqlmapFile 을 주입할 수 없어서 테스트는 실패합니다.
 
 DefaultSqlService 가 sqlmapFile 을 받아서 내부적으로 JaxbXmlSqlReader 만드는 방법도 있습니다.
 
-하지만 사용여부가 불확실한 JaxbXmlSqlReader 때문에 DefaultSqlService 가 sqlmapFile 을 가지고 있는 것은 어색합니다. 
+하지만 사용여부가 불확실한 JaxbXmlSqlReader 때문에 DefaultSqlService 가 sqlmapFile 을 가지고 있는 것은 어색합니다.
 
-> 외부 클래스의 프로퍼티로 정의해서 전달받는 방법 자체는 나쁘지 않지만 DefaultSqlService 에 적용하기에는 적절치 않다.
-> 
-> 디폴트라는 건 다른 명시적인 설정이 없는 경우에 기본적으로 사용하겠다는 의미다.
-> 
-> DefaultSqlService 는 JaxbXmlSqlReader 를 디폴트 오브젝트로 갖고 있을 뿐, 이를 사용하지 않을 수도 있다.
-> 
-> 따라서 반드시 필요하지않은 sqlmapFile 을 프로퍼티로 등록해두는 것은 바람직하지 못하다.
-> 
-> 7장_ 스프링 핵심 기술의 응용, 595.
+:::note 7장_ 스프링 핵심 기술의 응용, 595.
+외부 클래스의 프로퍼티로 정의해서 전달받는 방법 자체는 나쁘지 않지만 DefaultSqlService 에 적용하기에는 적절치 않다. 
 
-JaxbXmlSqlReader 부터 sqlmapFile 의 기본값을 가진 디폴트 오브젝트로 만들어 봅니다.
+디폴트라는 건 다른 명시적인 설정이 없는 경우에 기본적으로 사용하겠다는 의미다.
+
+DefaultSqlService 는 JaxbXmlSqlReader 를 디폴트 오브젝트로 갖고 있을 뿐, 이를 사용하지 않을 수도 있다.
+
+따라서 반드시 필요하지않은 sqlmapFile 을 프로퍼티로 등록해두는 것은 바람직하지 못하다.
+:::
+
+JaxbXmlSqlReader 가 sqlmapFile 의 기본값을 가진 오브젝트를 만들도록 합니다..
 
 ```java title="JaxbXmlSqlReader.java"
 public class JaxbXmlSqlReader implements SqlReader {
@@ -1068,20 +1097,20 @@ public class JaxbXmlSqlReader implements SqlReader {
 
 DI 를 사용한다고 해서 항상 모든 프로퍼티 값을 설정에 넣고 빈으로 지정할 필요는 없습니다.
 
-DefaultSqlService 는 SqlService 를 바로 구현한 것이 아니라 BaseSqlService 를 상속했습니다.
+만들어진 DefaultSqlService 는 SqlService 를 바로 구현한 것이 아니라 BaseSqlService 를 상속했습니다.
 
 DefaultSqlService 는 BaseSqlService 의 sqlReader 와 sqlRegistry 프로퍼티를 그대로 가지고 있고, 또한 변경할 수 있습니다.
 
 디폴트 의존 오브젝트를 사용하면 설정으로 다른 구현 오브젝트를 사용하더라도 일단 디폴트 의존 오브젝트를 만들어버린다는 단점이 있습니다.
 
-이럴 때는 @PostConstruct 초기화 메소드를 이용해서 프로퍼티가 설정되었는지 확인하고 없는 경우에만 디폴트 오브젝트를 만드른 방법을 사용하면 됩니다.
+이럴때는 @PostConstruct 초기화 메소드를 이용해서 프로퍼티가 설정되었는지 확인하고 없는 경우에만 디폴트 오브젝트를 만드른 방법을 사용하면 됩니다.
 
 ## 7.3 서비스 추상화 적용
 
 JaxbXmlSqlReader 를 개선할 부분입니다.
 
 - 필요에 따라 JAXB 외에 다른 기술로 바꿔서 사용할 수 있게 한다.
-- XML 파일을 좀 더 다양한 소스에서 가져올 수 있게 한다.
+- XML 파일을 임의의 파일위치나 원격지 등 좀 더 다양한 소스에서 가져올 수 있게 한다.
 
 ### 7.3.1 OXM 서비스추상화
 
@@ -1089,11 +1118,11 @@ XML 과 자바오브젝트를 매핑해서 상호 변환해주는 기술을 OXM 
 
 기능이 같은 여러가지 기술이 존재한다면 서비스 추상화를 고민해볼 수 있습니다.
 
-> 로우레벨의 구체적인 기술과 API 에 종속되지 않고 추상화된 레이어와 API 를 제공해서 구현 기술에 대해 독립적인 코드를 작성할 수 있게 해주는 서비스 추상화가 필요하다.
->
-> 스프링이 제공하는 OXM 추상 계층의 API 를 이용해서 XML 문서와 오브젝트 사이의 변환을 처리하게 하면, 코드 수정 없이도 OXM 기술을 자유롭게 바꿔서 적용할 수 있다.
-> 
-> 7장_ 스프링 핵심 기술의 응용, 597.
+:::note 7장_ 스프링 핵심 기술의 응용, 597.
+로우레벨의 구체적인 기술과 API 에 종속되지 않고 추상화된 레이어와 API 를 제공해서 구현 기술에 대해 독립적인 코드를 작성할 수 있게 해주는 서비스 추상화가 필요하다.
+
+스프링이 제공하는 OXM 추상 계층의 API 를 이용해서 XML 문서와 오브젝트 사이의 변환을 처리하게 하면, 코드 수정 없이도 OXM 기술을 자유롭게 바꿔서 적용할 수 있다.
+:::
 
 #### OXM 서비스 인터페이스
 
@@ -1111,6 +1140,7 @@ OxmTest-context.xml 을 만들고 Jaxb2Marshaller 를 빈으로 등록해줍니�
 <?xml version="1.0" encoding="UTF-8"?>
 <beans ... >
 
+  // highlight-next-line
   <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
     <property name="contextPath" value="springbook.user.sqlservice.jaxb" />
   </bean>
@@ -1127,15 +1157,15 @@ unmarshaller 빈은 Unmarshaller 타입입니다.
 @ContextConfiguration
 public class OxmTest {
 
-  // highligt-start
+  // highlight-start
   @Autowired
   Unmarshaller unmarshaller;
-  // highligt-end
+  // highlight-end
   
   @Test 
   public void unmarshallSqlMap() throws XmlMappingException, IOException  {
     Source xmlSource = new StreamSource(getClass().getResourceAsStream("sqlmap.xml"));
-    // highligt-next-line
+    // highlight-next-line
     Sqlmap sqlmap = (Sqlmap)this.unmarshaller.unmarshal(xmlSource);
     
     List<SqlType> sqlList = sqlmap.getSql();    
@@ -1186,6 +1216,7 @@ Castor 는 XML 매핑파일을 이용해서 변환할 수 있습니다.
 <?xml version="1.0" encoding="UTF-8"?>
 <beans ... >
 
+  // highlight-next-line
   <bean id="unmarshaller" class="org.springframework.oxm.castor.CastorMarshaller">
     <property name="mappingLocation" value="springbook/learningtest/spring/oxm/mapping.xml" />
   </bean>
@@ -1203,13 +1234,17 @@ OxmSqlService 라고 하고 SqlReader 는 스프링의 OXM Unmarshaller 를 이�
 
 #### 멤버 클래스를 참조하는 통합 클래스
 
-OxmSqlService 는 BaseSqlService 와 유사하게 SqlReader 타입의 의존 오브젝트를 사용하지만 스태틱 멤버 클래스로 내장하여 사용하도록 만들어보겠습니다.
+OxmSqlService 는 BaseSqlService 와 유사하게 SqlReader 타입의 의존 오브젝트를 사용하지만 스태틱 멤버 클래스로 내장하여 사용하도록 만들어봅니다.
 
-내장된 SqlReader 구현을 외부에서 사용하지 못하도록 제한하고 스스로 최적화된 구조로 만들기 위해서 입니다.
+의존 오브젝트를 자신만이 사용하도록 독접하는 구조로 만드는 방법입니다.
 
-> 유연성은 조금 손해보더라도 내부적으로 낮은 결합도를 유지한 채로 응집도가 높은 구현을 만들 때 유용하게 쓸 수 있는 방법이다.
-> 
-> , 603.
+:::note 7장_ 스프링 핵심 기술의 응용, 603.
+내장된 SqlReader 구현을 외부에서 사용하지 못하도록 제한하고 스스로 최적화된 구조로 만들어 두는 것이다.
+
+밖에서 볼 때는 하나의 오브젝트로 보이지만 내부에서는 의존관계를 가진 두 개의 오브젝트가 깔끔하게 결홥돼서 사용된다.
+
+유연성은 조금 손해보더라도 내부적으로 낮은 결합도를 유지한 채로 응집도가 높은 구현을 만들 때 유용하게 쓸 수 있는 방법이다.
+:::
 
 SqlReader 구현을 내장하고 있는 OxmSqlService 의 구조입니다.
 
