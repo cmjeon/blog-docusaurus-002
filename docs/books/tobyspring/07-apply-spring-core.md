@@ -26,8 +26,6 @@ import Image from '@theme/IdealImage';
 <!--truncate-->
 
 ```java title="UserDaoJdbc.java"
-// ...
-
 public class UserDaoJdbc implements UserDao {
   
   // ...
@@ -95,8 +93,6 @@ SQL 을 스프링의 XML 설정파일로 분리할 수 있습니다.
 add() 메소드에서 사용할 SQL 을 외부에서 DI 받을 수 있게 하겠습니다.
 
 ```java title="UserDaoJdbc.java"
-// ...
-
 public class UserDaoJdbc implements UserDao {
 
   // ...
@@ -156,8 +152,6 @@ Map 을 이용하면 키 값으로 SQL 문장을 가져올 수 있습니다.
 기존의 sqlAdd 변수는 삭제합니다.
 
 ```java title="UserDaoJdbc.java"
-// ...
-
 public class UserDaoJdbc implements UserDao {
 
   // sqlAdd 변수와 수정자 삭제
@@ -272,8 +266,6 @@ public class SqlRetrievalFailureException extends RuntimeException {
 이제 UserDaoJdbc 에 SqlService 인터페이스를 정의하고, 메소드도 수정합니다.
 
 ```java title="UserDaoJdbc.java"
-// ...
-
 public class UserDaoJdbc implements UserDao {
 
   // highlight-next-line
@@ -336,8 +328,6 @@ public class UserDaoJdbc implements UserDao {
 기존 UserDaoJdbc 에서 사용한 Map 타입의 프로퍼티를 이용하여 만들어 봅니다.
 
 ```java title="SimpleSqlService.java"
-// ...
-
 public class SimpleSqlService implements SqlService {
   
   // highlight-next-line
@@ -1236,12 +1226,12 @@ OxmSqlService 라고 하고 SqlReader 는 스프링의 OXM Unmarshaller 를 이�
 
 OxmSqlService 는 BaseSqlService 와 유사하게 SqlReader 타입의 의존 오브젝트를 사용하지만 스태틱 멤버 클래스로 내장하여 사용하도록 만들어봅니다.
 
-의존 오브젝트를 자신만이 사용하도록 독접하는 구조로 만드는 방법입니다.
+이렇게 의존 오브젝트를 자신만이 사용하도록 독점하는 구조로 만들면 별도의 빈 설정없이 깔끔하게 만들 수 있습니다.
 
 :::note 7장_ 스프링 핵심 기술의 응용, 603.
 내장된 SqlReader 구현을 외부에서 사용하지 못하도록 제한하고 스스로 최적화된 구조로 만들어 두는 것이다.
 
-밖에서 볼 때는 하나의 오브젝트로 보이지만 내부에서는 의존관계를 가진 두 개의 오브젝트가 깔끔하게 결홥돼서 사용된다.
+밖에서 볼 때는 하나의 오브젝트로 보이지만 내부에서는 의존관계를 가진 두 개의 오브젝트가 깔끔하게 결합돼서 사용된다.
 
 유연성은 조금 손해보더라도 내부적으로 낮은 결합도를 유지한 채로 응집도가 높은 구현을 만들 때 유용하게 쓸 수 있는 방법이다.
 :::
@@ -1256,6 +1246,7 @@ public class OxmSqlService implements SqlService {
   // highlight-next-line
   private final OxmSqlReader oxmSqlReader = new OxmSqlReader();
 
+  // highlight-next-line
   private class OxmSqlReader implements SqlReader {
     // ...
   }
@@ -1266,21 +1257,23 @@ OxmSqlReader 는 private 멤버 클래스라서 외부에서 접근하거나 사
 
 또한 final 로 선언하고 직접 오브젝트를 생성하기 때문에 OxmSqlReader 를 DI 하거나 변경할 수 없습니다.
 
-두 개의 클래스를 강하게 결합시키고 확장이나 변경에 제한을 주는 이유는 OXM 을 이용하는 서비스 구조로 최적화하기 위해서입니다.
+두 개의 클래스를 강하게 결합시키고 확장이나 변경에 제한을 주는 이유는 OxmSqlService 를 OXM 을 이용하는 서비스 구조로 최적화하기 위해서입니다.
 
-만약 Unmarshaller 주입할 수 있게 만든다면 SqlService 를 위해 등록할 빈이 늘어나게 됩니다.
+:::note 7장_ 스프링 핵심 기술의 응용, 604.
+스프링의 OXM 서비스 추상화를 사용하면 언마샬러를 빈으로 등록해야 한다.
 
-확장과 변경이 유연해지기는 하지만 이런 DI 구조가 불편하게 느껴질 수도 있습니다.
+편리한 확장과 유연한 변경을 위해서 클래스를 분리하고 빈을 따로 등록해 DI 할 수 있도록 기본 구조를 가져간 것은 좋지만, 자꾸 늘어나는 빈의 개수와 반복되는 비슷한 DI 구조가 불편하게 느껴질 수도 있다.
+:::
 
-설정을 단순하게 하는 방법으로 BaseSqlService 를 확장해서 디폴트 설정을 두는 방법도 있습니다.
+설정을 단순하게 하는 다른 방법으로 BaseSqlService 를 확장해서 디폴트 설정을 두는 방법도 있습니다.
 
-하지만 디폴트 의존 오브젝트를 만들어주는 방식의 한계는 디폴트로 내부에서 만드는 오브젝트의 프로퍼티는 외부에서 지정해주기 힘들다는 점이 있습니다.
+하지만 디폴트 의존 오브젝트를 만들어주는 방식의 한계는 디폴트로 내부에서 만드는 오브젝트의 프로퍼티를 외부에서 지정해주기 힘들다는 점 입니다.
 
-따라서 하나의 빈 설정만으로 SqlService 와 SqlReader 의 필요한 프로퍼티 설정이 모두 가능하도록 만들 필요가 있습니다.
+그래서 디폴트 의존 오브젝트를 만들 때는 하나의 빈 설정만으로 SqlService 와 SqlReader 의 필요한 프로퍼티 설정이 모두 가능하도록 만들 필요가 있습니다.
 
 <Image img={require('./07-8.png')} />
 
-OxmSqlReader 는 OxmSqlService 에 의해서만 만들어지기 때문에 OxmSqlReader 가 DI 로 제공받아야하는 프로퍼티는 OxmSqlService 의 프로퍼티를 통해 간접적으로 DI 받아야 합니다.
+OxmSqlReader 는 OxmSqlService 에 의해서만 만들어지기 때문에 OxmSqlReader 가 DI 로 제공받아야 하는 프로퍼티는 OxmSqlService 의 프로퍼티를 통해 간접적으로 DI 받아야 합니다.
 
 아래는 OxmSqlService 의 프로퍼티를 통해 OxmSqlReader 의 프로퍼티를 설정해주는 코드입니다.
 
@@ -1295,7 +1288,9 @@ public class OxmSqlService implements SqlService {
   public void setUnmarshaller(Unmarshaller unmarshaller) {
     this.oxmSqlReader.setUnmarshaller(unmarshaller);
   }
+  // highlight-end
   
+  // highlight-start
   public void setSqlmapFile(String sqlmapFile) {
     this.oxmSqlReader.setSqlmapFile(sqlmapFile);
   }
@@ -1315,8 +1310,10 @@ public class OxmSqlService implements SqlService {
     public void setUnmarshaller(Unmarshaller unmarshaller) {
       this.unmarshaller = unmarshaller;
     }
+    // highlight-end
     
-     public void setSqlmapFile(String sqlmapFile) {
+    // highlight-start
+    public void setSqlmapFile(String sqlmapFile) {
       this.sqlmapFile = sqlmapFile;
     }
     // highlight-end
@@ -1329,45 +1326,50 @@ public class OxmSqlService implements SqlService {
 
 이 방법은 UserDaoJdbc 안에서 JdbcTemplate 을 직접 만들어 사용할 때와 유사합니다.
 
-OxmSqlService 가 UserDaoJdbc 와 다른 점은 UserDaoJdbc 에서는 setDataSource() 메소드에서 JdbcTemplate 오브젝트를 생성하고 DataSource 를 전달하였습니다.
+OxmSqlService 가 UserDaoJdbc 와 다른 점은 UserDaoJdbc 에서는 setDataSource() 메소드에서 JdbcTemplate 오브젝트의 생성과 DataSource 전달을 하였습니다.
 
-OxmSqlService 의 경우 두 개의 프로퍼티가 필요하기 때문에 미리 오브젝트를 만들어주고 각 수정자 메소드에서 DI 받은 값을 oxmSqlReader 에 전달해주어야 합니다.
+OxmSqlService 의 경우에는 두 개의 프로퍼티가 필요하기 때문에 미리 오브젝트를 만들어주고 각 수정자 메소드에서 DI 받은 값을 oxmSqlReader 에 전달해주어야 합니다.
+
+완성된 OxmSqlService 입니다.
 
 ```java title="OxmSqlService.java"
 public class OxmSqlService implements SqlService {
   
-  private final OxmSqlReader oxmSqlReader = new OxmSqlReader();
-  // highlight-next-line
-  private SqlRegistry sqlRegistry = new HashMapSqlRegistry();
-  
   // highlight-start
+  private final OxmSqlReader oxmSqlReader = new OxmSqlReader();
+  private SqlRegistry sqlRegistry = new HashMapSqlRegistry();
+  // highlight-end
+  
   public void setSqlRegistry(SqlRegistry sqlRegistry) {
     this.sqlRegistry = sqlRegistry;
   }
-  // highlight-end
   
-  // ...
-
+  public void setUnmarshaller(Unmarshaller unmarshaller) {
+    this.oxmSqlReader.setUnmarshaller(unmarshaller);
+  }
+  
   // highlight-start
   @PostConstruct
   public void loadSql() {
     this.oxmSqlReader.read(this.sqlRegistry);
   }
-
-  public String getSql(String key) throws SqlRetrievalFailureException {
-    try {
-      return this.sqlRegistry.findSql(key);
-    } catch (SqlNotFoundException e) {
-      throw new SqlRetrievalFailureException(e);
-    }  
-  }
   // highlight-end
   
+  // highlight-next-line
   private class OxmSqlReader implements SqlReader {
     
-    // ...
+    private Unmarshaller unmarshaller;
+    private final static String DEFAULT_SQLMAP_FILE = "sqlmap.xml";
+    private String sqlmapFile = DEFAULT_SQLMAP_FILE;
 
-    // highlight-start
+    public void setUnmarshaller(Unmarshaller unmarshaller) {
+      this.unmarshaller = unmarshaller;
+    }
+
+    public void setSqlmap(Resource sqlmap) {
+      this.sqlmap = sqlmap;
+    }
+
     public void read(SqlRegistry sqlRegistry) {
       try {
         Source source = new StreamSource(
@@ -1382,20 +1384,21 @@ public class OxmSqlService implements SqlService {
         throw new IllegalArgumentException(this.sqlmapFile + "을 가져올 수 없습니다", e);
       }
     }
-    // highlight-end
   }
 }
 ```
 
-SqlService 를 구현한 부분은 BaseSqlService 와 등일합니다.
+SqlService 인터페이스를 구현한 부분은 BaseSqlService 와 동일합니다.
 
 SqlReader 를 DI 받을 수 없다는 것 외에는 SqlReader 인터페이스를 이용한다는 것은 동일하기 때문입니다.
 
-OXM 을 적용했지만 빈 설정을 단순하게 유지할 수 있습니다.
+SqlReader 구현 오브젝트를 내부에서 만드는 방법을 사용하여 OXM 을 적용했지만 빈 설정은 단순하게 유지할 수 있습니다.
 
-OXM 기술을 지정하고 그에 따른 설정이 필요한 언마샬러 빈은 따로 필요한 것이고, 그 외의 SqlService 와 OXM 언마샬러를 사용하는 SqlReader 그리고 SqlRegistry 는 하나의 빈을 등록하는 것으로 충분하기 때문입니다.
+OXM 언마샬러 빈은 별도로 필요합니다.
 
-SqlRegistry 는 필요에 따라 다른 구현으로 교체할 수도 있습니다.
+SqlService 와 OXM 언마샬러를 사용하는 SqlReader 그리고 SqlRegistry 는 하나의 빈만 등록하는 것으로 충분합니다.
+
+SqlRegistry 역시 필요에 따라 다른 구현으로 교체할 수도 있습니다.
 
 ```xml title="test-applicationContext.xml"
 <?xml version="1.0" encoding="UTF-8"?>
@@ -1421,25 +1424,25 @@ SqlRegistry 는 필요에 따라 다른 구현으로 교체할 수도 있습니�
 
 OxmSqlService 의 SqlReader 를 스태틱 멤버 클래스로 고정했기 때문에 설정이 간결해지고, 의도되지 않은 방식으로 확장될 위험이 없어졌습니다.
 
-하지만 OxmSqlService 와 BaseSqlService 의 loadSql(), getSql() 메소드가 중복된다는 점이 신경쓰입니다.
+하지만 OxmSqlService 와 BaseSqlService 의 loadSql(), getSql() 메소드가 중복된다는 점이 꺼림칙합니다.
 
-loadSql(), getSql() 의 구현 로직을 BaseSqlService 에 두고 OxmSqlService 는 설정이나 구성을 변경해주기 위한 어댑터 개념으로 BaseSqlService 앞에 두는 설계가 가능합니다.
+이럴 때는 loadSql(), getSql() 의 구현 로직을 BaseSqlService 에 두고 OxmSqlService 는 설정이나 구성을 변경해주기 위한 어댑터 개념으로 BaseSqlService 앞에 두는 설계가 가능합니다.
 
 OxmSqlService 의 외형적인 틀은 유지한 채로 SqlService 의 기능 구현은 BaseSqlService 로 위임하는 것입니다.
 
-프록시를 만들 때 위임구조를 만들어 보았습니다.
+이런 구조는 보통 프록시를 만들 때 사용합니다.
 
 위임을 위해서는 두 개의 빈을 등록하고 클라이언트 요청을 직접 받는 빈이 주요한 내용은 뒤의 빈에게 전달해주는 구조로 만들어야 합니다.
 
 하지만 OxmSqlService 와 BaseSqlService 를 위임구조로 만들기 위해 두 개의 빈을 등록하는 것은 불편합니다.
 
-그래서 DI 를 포기하고 OxmSqlService 와 BaseSqlService 를 한 클래스로 묶어 봅니다.
+그래서 이런 경우는 DI 를 포기하고 OxmSqlService 와 BaseSqlService 를 한 클래스로 묶는 방법을 고려해 봅니다.
 
 <Image img={require('./07-9.png')} />
 
 OxmSqlService 는 OXM 기술에 특화된 SqlReader 를 내장하고 있습니다.
 
-실제 SqlReader 와 SqlService 를 이용해 SqlService 의 기능을 구현하는 일은 내부에 BaseSqlService 를 만들어서 위임합니다.
+실제 SqlReader 와 SqlService 를 이용해 SqlService 의 기능을 구현하는 일은 내부에서 BaseSqlService 를 만들어서 위임합니다.
 
 ```java title="OxmSqlService.java"
 public class OxmSqlService implements SqlService {
@@ -1483,13 +1486,13 @@ SqlReader 와 SqlRegistry 를 활용해 SqlService 를 제공하는 코드는 Ba
 
 #### 리소스
 
-스프링은 자바의 리소스 접근 API 를 추강화해서 Resource 라는 추상화 인터페이스를 정의했다.
+스프링은 자바의 리소스 접근 API 를 추강화해서 Resource 라는 추상화 인터페이스를 정의했습니다.
 
 스프링의 거의 모든 API 는 외부의 리소스 정보가 필요할 때 항상 이 Resource 추상화를 이용합니다.
 
 Resource 는 스프링에서 빈이 아니라 값으로 취급되기 때문에 추상화 적용 방법이 고민됩니다.
 
-빈으로 등록된다면 리소스 타입에 따라 각기 다른 Resource 인터페이스의 구현 클래스를 지정해주면 됩니다.
+만약 Resource 가 빈으로 등록된다면 리소스 타입에 따라 그에 맞는 Resource 인터페이스의 구현 클래스를 지정해주면 됩니다.
 
 하지만 Resource 는 값으로 취급되기 때문에 가능한 방법은 `<property>` 의 value 애트리뷰트에 넣는 방법밖에 없습니다.
 
@@ -1519,7 +1522,9 @@ ResourceLoader 의 대표적인 예는 스프링의 애플리케이션 컨텍스
 
 빈으로 등록 가능한 클래스에 파일을 지정해주는 프로퍼티가 존재한다면 거의 모두 Resource 타입입니다.
 
-Resource 타입은 빈으로 등록하지 않고 `<property>` 태그의 value 를 사용해 문자열로 값을 넣는데, 이 때 문자열인 리소스 정보를 Resource 오브젝트로 변환해서 프로퍼티에 주입할 때도 애플리케이션 컨텍스트 자신이 리소스 로더로서 변환과 로딩 기능을 담당합니다.
+Resource 타입은 빈으로 등록하지 않고 `<property>` 태그의 value 를 사용해 문자열로 값을 넣습니다.
+
+문자열인 리소스 정보를 Resource 오브젝트로 변환해서 프로퍼티에 주입할 때, 애플리케이션 컨텍스트 자신이 리소스 로더로서 변환과 로딩 기능을 담당합니다.
 
 만약 myFile 이라는 이름의 프로퍼티가 Resource 타입이라고 하면 다음과 같은 문자열로 리소스를 표현할 수 있습니다.
 
@@ -1535,11 +1540,19 @@ myFile 프로퍼티 입장에서는 추상화된 Resource 타입의 오브젝트
 
 OxmSqlService 에 Resource 를 적용해서 SQL 매핑정보가 담긴 파일을 가져올 수 있게 합니다.
 
-스트링으로 되어 있던 sqlmapFile 프로퍼티를 Resource 타입으로 바꿉니다.
+문자열로 되어 있던 sqlmapFile 프로퍼티를 Resource 타입으로 바꿉니다.
 
-Resource 타입은 실제 소스가 어떤 것이든 상관없이 getInputStream() 메소드를 이용해 스트림으로 가져올 수 있습니다.
+Resource 타입은 getInputStream() 메소드를 이용하면 실제 소스가 어떤 것이든 관계없이 스트림으로 가져올 수 있습니다.
 
-Resource 을 사용할 때는 Resource 오브젝트가 실제 리소스가 아니라는 점을 알아야 합니다.
+Resource 를 사용할 때는 Resource 오브젝트가 실제 리소스가 아니라는 점을 알아야 합니다.
+
+:::note 7장_ 스프링 핵심 기술의 응용, 615.
+Resource 를 사용할 때는 Resource 오브젝트가 실제 리소스가 아니라는 점을 주의해야 한다.
+
+Resource 는 단지 리소스에 접근할 수 있는 추상화된 핸들러일 뿐이다.
+
+따라서 Resource 타입의 오브젝트가 만들어졌다고 해도 실제로 리소스가 존재하지 않을 수 있다.
+:::
 
 ## 7.4 인터페이스 상속을 통한 안전한 기능확장
 
