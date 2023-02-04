@@ -1580,11 +1580,17 @@ DI 를 적용하려면 적절한 책임에 따라 분리된 오브젝트가 서�
 
 또한 DI 는 런타임 시에 의존 오브젝트를 다이내믹하게 연결해줘서 유연한 확장을 꾀하는 것이 목적입니다.
 
-따라서 항상 확장에 염두를 두고 오브젝트 관계를 생각해야 합니다.
+항상 확장에 염두를 두고 오브젝트 관계를 생각해야 합니다.
 
-확장은 항상 미래에 일어납니다.
+:::note 7장_ 스프링 핵심 기술의 응용, 618.
+확장은 항상 미래에 일어난다.
 
-DI 란 결국 미래를 프로그래밍하는 것입니다.
+지금 당장 기능이 동작하는 데 아무런 문제가 없으면 된다고 생각하면 오늘을 위한 설계밖에 나오지 않는다.
+
+DI 는 확장을 위해 필요한 것이므로 항상 미래에 일어날 변화를 예상하고 고민해야 적합한 설계가 가능해진다.
+
+DI 란 결국 미래를 프로그래밍하는 것이다.
+:::
 
 #### DI와 인터페이스 프로그래밍
 
@@ -1606,7 +1612,9 @@ A 가 B 의 인터페이스를 사용한다는 말은 A 가 B 를 바라볼 때 
 
 DI 는 특별한 이유가 없는 한 항상 인터페이스를 사용한다고 생각해야 합니다.
 
-단지 인터페이스를 추가하기 귀찮아서 약간의 게으름을 부리고자 인터페이스를 생략했다면 이후의 개발, 디버깅, 테스트, 기능의 추가, 변화 등에서 적지 않은 부담을 안게 될 것입니다.
+:::note 7장_ 스프링 핵심 기술의 응용, 620.
+단지 인터페이스를 추가하기 귀찮아서 약간의 게으름을 부리고자 인터페이스를 생략했다면 이후의 개발, 디버깅, 테스트, 기능의 추가, 변화 등에서 적지 않은 부담을 안게 될 것이다.
+:::
 
 ### 7.4.2 인터페이스상속
 
@@ -1897,13 +1905,13 @@ public class EmbeddedDbTest {
 
 학습테스트에서 살펴본 것 처럼 스프링에서 내장형 DB 를 사용하려면 EmbeddedDatabaseBuilder 를 사용하면 됩니다.
 
-EmbeddedDatabaseBuilder 는 초기화 코드가 필요합니다.
+EmbeddedDatabaseBuilder 를 사용하기 위해서는 초기화 코드가 필요합니다.
 
 초기화 코드가 필요할 때는 팩토리 빈으로 만들어주면 좋습니다.
 
 EmbeddedDatabaseBuilder 를 활용해서 EmbeddedDatabase 타입의 오브젝트를 생성해주는 팩토리 빈을 만들어야 합니다.
 
-스프링에는 팩토리 빈을 만드는 작업을 대신해주는 전용 태그가 있습니다.
+스프링에는 팩토리 빈을 만드는 작업을 대신해주는 전용 태그인 `<jdbc:embedded-database>`가 있습니다.
 
 ```xml title="test-applicationContext.xml"
 <beans xmlns="..." >
@@ -1917,7 +1925,8 @@ EmbeddedDatabaseBuilder 를 활용해서 EmbeddedDatabase 타입의 오브젝트
   
   // highlight-start
   <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-    <jdbc:script location="classpath:schema.sql"/>
+    <jdbc:script location="classpath:/springbook/learningtest/spring/embeddeddb/schema.sql"/>
+    <jdbc:script location="classpath:/springbook/learningtest/spring/embeddeddb/data.sql"/>
   </jdbc:embedded-database>
   // highlight-end
   
@@ -1925,7 +1934,7 @@ EmbeddedDatabaseBuilder 를 활용해서 EmbeddedDatabase 타입의 오브젝트
 </beans>
 ```
 
-EmbeddedDatabase 타입의 embeddedDatabase 아이디를 가진 빈이 등록됩니다.
+EmbeddedDatabase 타입의 embeddedDatabase 아이디를 가진 빈이 dataSource 로 등록됩니다.
 
 ```java title="EmbeddedDbSqlRegistry.java"
 public class EmbeddedDbSqlRegistry implements UpdatableSqlRegistry {
@@ -1948,9 +1957,11 @@ public class EmbeddedDbSqlRegistry implements UpdatableSqlRegistry {
 
 물론 EmbeddedDatabase 인터페이스는 DataSource 를 상속한 인터페이스입니다.
 
-클라이언트가 자신이 필요로 하는 기능을 가진 인터페이스를 통해 의존 오브젝트를 DI 하는 것이 가장 바람직합니다. 
+:::info
+클라이언트는 자신이 필요로 하는 기능을 가진 인터페이스를 통해 의존 오브젝트를 DI 하는 것이 가장 바람직합니다.
 
-따라서 DB 종료기능을 가진 EmbeddedDatabase 대신 DataSource 을 사용한 것입니다. 
+따라서 DB 종료기능을 가진 EmbeddedDatabase 대신 DataSource 을 사용한 것입니다.
+:::
 
 #### UpdatableSqlRegistry 테스트 코드의 재사용
 
@@ -2208,11 +2219,187 @@ XML 과 다르게 애노테이션은 자바 코드에 존재하므로 변경할 
 
 지금까지 만든 XML 설정은 테스트용 DI 설정입니다.
 
+이제부터는 DI 관련 정보를 스프링 3.1로 변경하는 일과 테스트환경과 운영환경에서 동작할 때 필요로 하는 DI 정보를 분리해내는 일도 포함된다.
+
 #### 테스트 컨텍스트의 변경
 
-#### \<context:annotation-config /\> 제거
+스프링 3.1 은 애노테이션과 자바 코드로 만들어진 DI 설정정보와 XML 을 동시에 사용할 수 있는 방법을 제공해줍니다.
 
-#### \<bean\> 의 전환
+그래서 순차적으로 XML 파일을 애노테이션과 자바 코드로 변경해보겠습니다.
+
+UserDaoTest, UserServiceTest 에는 설정정보를 담은 XML 의 위치를 지정하는 코드가 들어가 있습니다.
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+// highlight-next-line
+@ContextConfiguration(location="/test-applicationContext.xml")
+public class UserDaoTest {
+```
+
+@ContextConfiguration 은 스프링 테스트가 테스트용 DI 정보를 어디서 가져와야 하는지 지정할 때 사용하는 애노테이션입니다.
+
+DI 설정정보를 담은 클래스는 평범한 자바 클래스를 만들고 @Configuration 애노테이션을 달아주면 만들 수 있습니다.
+
+```java
+@Configuration
+public clas TestApplicationContext {
+}
+```
+
+이제 @ContextConfiguration 의 XML 의 위치를 변경해줍니다.
+
+```java
+@RunWith(SpringJUnit4ClassRunner.class)
+// highlight-next-line
+@ContextConfiguration(class=TestApplicationContext.class)
+public class UserDaoTest {
+```
+
+이제 XML 에 있던 빈 설정정보를 TestApplicationContext 로 이동시켜야 합니다.
+
+순차적으로 옮기기 위해 우선 TestApplicationContext 에서 XML 의 빈 설정정보를 가져와서 사용하게 합니다.
+
+```java
+@Configuration
+@ImportResource("/test-applicationContext.xml")
+public class TestApplicationContext {
+```
+
+TestApplicationContext 에 자바 코드와 애노테이션으로 정의된 DI 정보와 @ImportResource 로 가져온 XML 의 DI 정보가 합쳐져서 최종 DI 설정정보로 통합됩니다.
+
+이제 단계적으로 XML 의 내용을 자바코드로 옮기고, 모든 내용을 옮기고 나면 XML 파일과 @ImportResource 를 제거할 것입니다.
+
+#### <context:annotation-config /\> 제거
+
+XML 파일에 <context:annotation-config /\> 가 있습니다.
+
+<context:annotation-config /\> 는 빈 초기화 메소드인 @PostConstruct 를 실행하도록 해주는데 사용됩니다.
+
+XML 에 담긴 DI 정보를 이용하는 스프링 컨테이너를 사용하는 경우 @PostConstruct 같은 애노테이션의 기능이 필요하면 반드시 <context:annotation-config /\> 를 포함시켜야 합니다.
+
+반면에 TestApplicationContext 처럼 @Configuration 이 붙은 설정 클래스를 사용하면 <context:annotation-config /\> 가 필요없습니다.
+
+컨테이너가 직접 @PostConstruct 애노테이션을 처리하는 빈 후처리기를 등록해주기 때문입니다.
+
+#### <bean\> 의 전환
+
+XML 에 있는 DB 연결과 트랜잭션 매니저 빈을 자바코드로 옮겨봅니다.
+
+```xml title="test-applicationContext.xml"
+<beans mxlns="..."
+  <bean id="dataSource" class="org.springframework.jdbc.datasource.SimpleDriverDataSource">
+    <property name="driverClass" value="com.mysql.jdbc.Driver" />
+    <property name="url" value="jdbc:mysql://localhost/springbook?characterEncoding=UTF-8" />
+    <property name="username" value="spring" />
+    <property name="password" value="book" />
+  </bean>
+  // ...
+</beans>
+```
+
+```java title="TestApplicationContext.java"
+@Configuration
+public class TestApplicationContext {
+
+  @Bean
+	public DataSource dataSource() {
+	  // highlight-next-line
+		SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+		
+		// highlight-next-line
+		dataSource.setDriverClass(Driver.class);
+		dataSource.setUrl("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8");
+		dataSource.setUsername("spring");
+		dataSource.setPassword("book");
+		return ds;
+	}
+	// ...
+}
+```
+
+빈 오브젝트를 저장할 로컬 변수는 빈의 구현 클래스에 맞는 프로퍼티 값 주입이 필요합니다.
+
+따라서 DataSource 가 아닌 SimpleDriverDataSource 타입으로 선언합니다.
+
+XML 에서는 문자열 "com.mysql.jdbc.Driver" 를 보고 알아서 com.mysql.jdbc.Drive.class 로 변환해줍니다.
+
+하지만 자바 코드로 작성할 때는 프로퍼티 타입에 맞는 값을 넣어야 합니다.
+
+이제 트랜잭션 매니저를 옮깁니다.
+
+빈을 다른 빈에 주입할 때는 수정자 메소드에서 주입해줄 빈의 메소드를 직접 호출해서 그 리턴 값을 넣어주면 됩니다.
+
+```xml title="test-applicationContext.xml"
+<beans mxlns="..."
+  <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />  
+	</bean>
+  // ...
+</beans>
+```
+
+```java title="TestApplicationContext.java"
+@Configuration
+public class TestApplicationContext {
+
+  @Bean
+  // highlight-next-line
+  public PlatformTransactionManager transactionManager() {
+    DataSourceTransactionManager tm = new DataSourceTransactionManager();
+    // highlight-next-line
+    tm.setDataSource(dataSource());
+    return tm;
+  }
+	// ...
+}
+```
+
+인터페이스가 TransactionManager 가 아닌 PlatformTransactionManager 입니다.
+
+수정자메소드에서 dataSource() 를 직접 호출하고 있습니다.
+
+나머지 빈들도 순차적으로 옮깁니다.
+
+testUserService 빈을 옮길 때 주의해야 합니다.
+
+```xml title="test-applicationContext.xml"
+<beans mxlns="..."
+  <bean id="userService" class="springbook.user.service.UserServiceImpl">
+		<property name="userDao" ref="userDao" />
+		<property name="mailSender" ref="mailSender" />
+	</bean>
+  <bean id="testUserService" 
+      class="springbook.user.service.UserServiceTest$TestUserService"
+      // highlight-next-line 
+      parent="userService" />
+  // ...
+</beans>
+```
+
+```java title="TestApplicationContext.java"
+@Configuration
+public class TestApplicationContext {
+
+  @Bean
+	public UserService userService() {
+		UserServiceImpl service = new UserServiceImpl();
+		service.setUserDao(userDao());
+		service.setMailSender(mailSender());
+		return service;
+	}
+	
+	@Bean
+	public UserService testUserService() {
+		TestUserService testService = new TestUserService();
+		// highlight-start
+		testService.setUserDao(userDao());
+		testService.setMailSender(mailSender());
+		// highlight-end
+		return testService;
+	}
+	// ...
+}
+```
 
 #### 전용 태그 전환
 
