@@ -2304,18 +2304,18 @@ XML 에 있는 DB 연결과 트랜잭션 매니저 빈을 자바코드로 옮겨
 public class TestApplicationContext {
 
   @Bean
-	public DataSource dataSource() {
-	  // highlight-next-line
-		SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
-		
-		// highlight-next-line
-		dataSource.setDriverClass(Driver.class);
-		dataSource.setUrl("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8");
-		dataSource.setUsername("spring");
-		dataSource.setPassword("book");
-		return ds;
-	}
-	// ...
+  public DataSource dataSource() {
+    // highlight-next-line
+    SimpleDriverDataSource dataSource = new SimpleDriverDataSource();
+    
+    // highlight-next-line
+    dataSource.setDriverClass(Driver.class);
+    dataSource.setUrl("jdbc:mysql://localhost/springbook?characterEncoding=UTF-8");
+    dataSource.setUsername("spring");
+    dataSource.setPassword("book");
+    return ds;
+  }
+  // ...
 }
 ```
 
@@ -2334,8 +2334,8 @@ XML 에서는 문자열 "com.mysql.jdbc.Driver" 를 보고 알아서 com.mysql.j
 ```xml title="test-applicationContext.xml"
 <beans mxlns="..."
   <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />  
-	</bean>
+    <property name="dataSource" ref="dataSource" />  
+  </bean>
   // ...
 </beans>
 ```
@@ -2352,7 +2352,7 @@ public class TestApplicationContext {
     tm.setDataSource(dataSource());
     return tm;
   }
-	// ...
+  // ...
 }
 ```
 
@@ -2367,9 +2367,9 @@ testUserService 빈을 옮길 때 주의해야 합니다.
 ```xml title="test-applicationContext.xml"
 <beans mxlns="..."
   <bean id="userService" class="springbook.user.service.UserServiceImpl">
-		<property name="userDao" ref="userDao" />
-		<property name="mailSender" ref="mailSender" />
-	</bean>
+    <property name="userDao" ref="userDao" />
+    <property name="mailSender" ref="mailSender" />
+  </bean>
   <bean id="testUserService" 
       class="springbook.user.service.UserServiceTest$TestUserService"
       // highlight-next-line 
@@ -2383,23 +2383,23 @@ testUserService 빈을 옮길 때 주의해야 합니다.
 public class TestApplicationContext {
 
   @Bean
-	public UserService userService() {
-		UserServiceImpl service = new UserServiceImpl();
-		service.setUserDao(userDao());
-		service.setMailSender(mailSender());
-		return service;
-	}
-	
-	@Bean
-	public UserService testUserService() {
-		TestUserService testService = new TestUserService();
-		// highlight-start
-		testService.setUserDao(userDao());
-		testService.setMailSender(mailSender());
-		// highlight-end
-		return testService;
-	}
-	// ...
+  public UserService userService() {
+    UserServiceImpl service = new UserServiceImpl();
+    service.setUserDao(userDao());
+    service.setMailSender(mailSender());
+    return service;
+  }
+  
+  @Bean
+  public UserService testUserService() {
+    TestUserService testService = new TestUserService();
+    // highlight-start
+    testService.setUserDao(userDao());
+    testService.setMailSender(mailSender());
+    // highlight-end
+    return testService;
+  }
+  // ...
 }
 ```
 
@@ -2420,17 +2420,17 @@ sqlService, sqlRegistry, unmarshaller 를 자바코드로 이동합니다.
 ```xml title="test-applicationContext.xml"
 <beans mxlns="..."
   <bean id="sqlService" class="springbook.user.sqlservice.OxmSqlService">
-		<property name="unmarshaller" ref="unmarshaller" /> 
-		<property name="sqlRegistry" ref="sqlRegistry" />
-	</bean>
-	
-	<bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
-		<property name="dataSource" ref="embeddedDatabase" />
-	</bean>
+    <property name="unmarshaller" ref="unmarshaller" /> 
+    <property name="sqlRegistry" ref="sqlRegistry" />
+  </bean>
+  
+  <bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
+    <property name="dataSource" ref="embeddedDatabase" />
+  </bean>
 
-	<bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
-		<property name="contextPath" value="springbook.user.sqlservice.jaxb" />
-	</bean>
+  <bean id="unmarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+    <property name="contextPath" value="springbook.user.sqlservice.jaxb" />
+  </bean>
   // ...
 </beans>
 ```
@@ -2439,33 +2439,33 @@ sqlService, sqlRegistry, unmarshaller 를 자바코드로 이동합니다.
 @Configuration
 public class TestApplicationContext {
   @Bean
-	public SqlService sqlService() {
-		OxmSqlService sqlService = new OxmSqlService();
-		sqlService.setUnmarshaller(unmarshaller());
-		sqlService.setSqlRegistry(sqlRegistry());
-		return sqlService;
-	}
-	
-	// highlight-start
-	@Resource
-	Database embeddedDatabase;
-	// highlight-end
-	
-	@Bean
-	public SqlRegistry sqlRegistry() {
-		EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
-		// highlight-next-line
-		sqlRegistry.setDataSource(this.embeddedDatabase);
-		return sqlRegistry;
-	}
-	
-	@Bean
-	public Unmarshaller unmarshaller() {
-		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setContextPath("springbook.user.sqlservice.jaxb");
-		return marshaller;
-	}
-	// ...
+  public SqlService sqlService() {
+    OxmSqlService sqlService = new OxmSqlService();
+    sqlService.setUnmarshaller(unmarshaller());
+    sqlService.setSqlRegistry(sqlRegistry());
+    return sqlService;
+  }
+  
+  // highlight-start
+  @Resource
+  Database embeddedDatabase;
+  // highlight-end
+  
+  @Bean
+  public SqlRegistry sqlRegistry() {
+    EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
+    // highlight-next-line
+    sqlRegistry.setDataSource(this.embeddedDatabase);
+    return sqlRegistry;
+  }
+  
+  @Bean
+  public Unmarshaller unmarshaller() {
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    marshaller.setContextPath("springbook.user.sqlservice.jaxb");
+    return marshaller;
+  }
+  // ...
 }
 ```
 
@@ -2492,8 +2492,8 @@ XML 에서 `<jdbc:embedded-database>` 전용 태그로 빈 오브젝트를 생�
 ```xml title="test-applicationContext.xml"
 <beans mxlns="..."
   <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-		<jdbc:script location="classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql"/>
-	</jdbc:embedded-database>
+    <jdbc:script location="classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql"/>
+  </jdbc:embedded-database>
   // ...
 </beans>
 ```
@@ -2502,14 +2502,14 @@ XML 에서 `<jdbc:embedded-database>` 전용 태그로 빈 오브젝트를 생�
 @Configuration
 public class TestApplicationContext {
   @Bean 
-	public DataSource embeddedDatabase() {
-		return new EmbeddedDatabaseBuilder()
-			.setName("embeddedDatabase")
-			.setType(HSQL)
-			.addScript("classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql")
-			.build();
-	}
-	// ...
+  public DataSource embeddedDatabase() {
+    return new EmbeddedDatabaseBuilder()
+      .setName("embeddedDatabase")
+      .setType(HSQL)
+      .addScript("classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql")
+      .build();
+  }
+  // ...
 }
 ```
 
@@ -2538,7 +2538,7 @@ sqlRegistry 에서 this.embeddedDatabase 로 주입받던 빈을 embeddedDatabas
 // highlight-next-line
 @EnableTransactionManagement
 public class TestApplicationContext {
-	// ...
+  // ...
 }
 ```
 
@@ -2591,11 +2591,11 @@ public class UserDaoJdbc implements UserDao {
   
   //highlight-next-line
   @Autowired
-	public void setDataSource(DataSource dataSource) {
-		this.jdbcTemplate = new JdbcTemplate(dataSource);
-	}
-	
-	// ...
+  public void setDataSource(DataSource dataSource) {
+    this.jdbcTemplate = new JdbcTemplate(dataSource);
+  }
+  
+  // ...
 }
 ```
 
@@ -2689,15 +2689,15 @@ testUserService 와 mailSender 빈은 테스트에서만 사용되는 빈입니�
 ```java
 @Configuration
 public class TestAppContext {
-	@Bean
-	public UserService testUserService() {
-		return new TestUserService();
-	}
-	
-	@Bean
-	public MailSender mailSender() {
-		return new DummyMailSender();
-	}
+  @Bean
+  public UserService testUserService() {
+    return new TestUserService();
+  }
+  
+  @Bean
+  public MailSender mailSender() {
+    return new DummyMailSender();
+  }
 }
 ```
 
@@ -2720,36 +2720,36 @@ SqlService 의 구현 클래스와 이를 지원하는 보조 빈들은 독립�
 // highlight-next-line
 @Configuration
 public class SqlServiceContext {
-	@Bean
-	public SqlService sqlService() {
-		OxmSqlService sqlService = new OxmSqlService();
-		sqlService.setUnmarshaller(unmarshaller());
-		sqlService.setSqlRegistry(sqlRegistry());
-		return sqlService;
-	}
-	
-	@Bean
-	public SqlRegistry sqlRegistry() {
-		EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
-		sqlRegistry.setDataSource(embeddedDatabase());
-		return sqlRegistry;
-	}
-	
-	@Bean
-	public Unmarshaller unmarshaller() {
-		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setContextPath("springbook.user.sqlservice.jaxb");
-		return marshaller;
-	}
-	
-	@Bean 
-	public DataSource embeddedDatabase() {
-		return new EmbeddedDatabaseBuilder()
-			.setName("embeddedDatabase")
-			.setType(HSQL)
-			.addScript("classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql")
-			.build();
-	}
+  @Bean
+  public SqlService sqlService() {
+    OxmSqlService sqlService = new OxmSqlService();
+    sqlService.setUnmarshaller(unmarshaller());
+    sqlService.setSqlRegistry(sqlRegistry());
+    return sqlService;
+  }
+  
+  @Bean
+  public SqlRegistry sqlRegistry() {
+    EmbeddedDbSqlRegistry sqlRegistry = new EmbeddedDbSqlRegistry();
+    sqlRegistry.setDataSource(embeddedDatabase());
+    return sqlRegistry;
+  }
+  
+  @Bean
+  public Unmarshaller unmarshaller() {
+    Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+    marshaller.setContextPath("springbook.user.sqlservice.jaxb");
+    return marshaller;
+  }
+  
+  @Bean 
+  public DataSource embeddedDatabase() {
+    return new EmbeddedDatabaseBuilder()
+      .setName("embeddedDatabase")
+      .setType(HSQL)
+      .addScript("classpath:springbook/user/sqlservice/updatable/sqlRegistrySchema.sql")
+      .build();
+  }
 }
 ```
 
@@ -2823,21 +2823,21 @@ ProductionAppContext 와 TestAppContext 를 AppContext 의 중첩 클래스로 �
     AppContext.ProductionAppContext.class
 })
 public class AppContext {
-	// ...
-	
-	@Configuration
-	@Profile("production")
-	// highlight-next-line
-	public static class ProductionAppContext {
-		// ...
-	}
-	
-	@Configuration
-	@Profile("test")
-	// highlight-next-line
-	public static class TestAppContext {
-		// ...
-	}
+  // ...
+  
+  @Configuration
+  @Profile("production")
+  // highlight-next-line
+  public static class ProductionAppContext {
+    // ...
+  }
+  
+  @Configuration
+  @Profile("test")
+  // highlight-next-line
+  public static class TestAppContext {
+    // ...
+  }
 }
 ```
 
@@ -2883,27 +2883,27 @@ Environment 오브젝트의 getProperty() 메소드는 프로퍼티 이름을 �
 ```java title="AppContext.java"
 // ...
 public class AppContext {
-	
-	@Autowired
-	Environment env;
-	
-	@Bean
-	public DataSource dataSource() {
-		SimpleDriverDataSource ds = new SimpleDriverDataSource();
-		
-		// highlight-start
-		try {
-			ds.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
-		} catch(ClassNotFoundException e) {
-			throw new RuntimeException(e);
-		}
-		ds.setUrl(env.getProperty("db.url"));
-		ds.setUsername(env.getProperty("db.username"));
-		ds.setPassword(env.getProperty("db.password"));
-		// highlight-end
-		
-		return ds;
-	}
+  
+  @Autowired
+  Environment env;
+  
+  @Bean
+  public DataSource dataSource() {
+    SimpleDriverDataSource ds = new SimpleDriverDataSource();
+    
+    // highlight-start
+    try {
+      ds.setDriverClass((Class<? extends java.sql.Driver>)Class.forName(env.getProperty("db.driverClass")));
+    } catch(ClassNotFoundException e) {
+      throw new RuntimeException(e);
+    }
+    ds.setUrl(env.getProperty("db.url"));
+    ds.setUsername(env.getProperty("db.username"));
+    ds.setPassword(env.getProperty("db.password"));
+    // highlight-end
+    
+    return ds;
+  }
 }
 ```
 
@@ -2916,39 +2916,39 @@ Environment 오브젝트 대신 프로퍼티 값을 직접 DI 받는 것도 가�
 ```java title="AppContext.java"
 // ...
 public class AppContext {
-	
-	@Value("${db.driverClass}")
-	Class<? extends Driver> driverClass;
-	
-	@Value("${db.url}") 
-	String url;
-	
-	@Value("${db.username}") 
-	String username;
-	
-	@Value("${db.password}") 
-	String password;
-	
-	// highlight-start
-	@Bean
-	public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
-		return new PropertySourcesPlaceholderConfigurer();
-	}
-	// highlight-end
-	
-	@Bean
-	public DataSource dataSource() {
-		SimpleDriverDataSource ds = new SimpleDriverDataSource();
-		
-		ds.setDriverClass(this.driverClass);
-		ds.setUrl(this.url);
-		ds.setUsername(this.username);
-		ds.setPassword(this.password);
-		
-		return ds;
-	}
-	
-	// ...
+  
+  @Value("${db.driverClass}")
+  Class<? extends Driver> driverClass;
+  
+  @Value("${db.url}") 
+  String url;
+  
+  @Value("${db.username}") 
+  String username;
+  
+  @Value("${db.password}") 
+  String password;
+  
+  // highlight-start
+  @Bean
+  public static PropertySourcesPlaceholderConfigurer placeholderConfigurer() {
+    return new PropertySourcesPlaceholderConfigurer();
+  }
+  // highlight-end
+  
+  @Bean
+  public DataSource dataSource() {
+    SimpleDriverDataSource ds = new SimpleDriverDataSource();
+    
+    ds.setDriverClass(this.driverClass);
+    ds.setUrl(this.url);
+    ds.setUsername(this.username);
+    ds.setPassword(this.password);
+    
+    return ds;
+  }
+  
+  // ...
 }
 ```
 
@@ -2978,7 +2978,7 @@ SqlMapConfig 인터페이스를 정의하고 SQL 매핑파일의 리소스를 �
 
 ```java title="SqlMapConfig.java"
 public interface SqlMapConfig {
-	Resource getSqlMapResouce();
+  Resource getSqlMapResouce();
 }
 ```
 
@@ -3024,14 +3024,14 @@ AppContext 가 SqlMapConfig 의 구현클래스가 되어 빈으로 만들어봅
 
 ```java title="AppContext.java"
 public class AppContext implements SqlMapConfig {
-	
-	@Override
-	public Resource getSqlMapResouce() {
-		return new ClassPathResource("sqlmap.xml", UserDao.class);
-	}
-	
-	// ...
-	
+  
+  @Override
+  public Resource getSqlMapResouce() {
+    return new ClassPathResource("sqlmap.xml", UserDao.class);
+  }
+  
+  // ...
+  
 }
 ```
 
@@ -3073,4 +3073,3 @@ public @interface EnableSqlService {
 - DI 에는 인터페이스를 사용한다. 인터페이스를 사용하면 인터페이스 분리 원칙을 잘 지키는데도 도움이 된다.
 - 클라이언트에 따라서 인터페이스를 분리할 때, 새로운 인터페이스를 만드는 방법과 인터페이스를 상속하는 방법 두 가지를 사용할 수 있다.
 - 애플리케이션에 내장하는 DB를 사용할 때는 스프링의 내장형 DB 추상화 기능과 전용 태그를 사용하면 편리하다.
-
