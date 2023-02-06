@@ -1915,25 +1915,10 @@ EmbeddedDatabaseBuilder 를 활용해서 EmbeddedDatabase 타입의 오브젝트
 
 스프링에는 팩토리 빈을 만드는 작업을 대신해주는 전용 태그인 `<jdbc:embedded-database>`가 있습니다.
 
-```xml title="test-applicationContext.xml"
-<beans xmlns="..." >
-
-  // ...
-  
-  <bean id="sqlRegistry" class="springbook.user.sqlservice.updatable.EmbeddedDbSqlRegistry">
-    // highlight-next-line
-    <property name="dataSource" ref="embeddedDatabase" />
-  </bean>
-  
-  // highlight-start
-  <jdbc:embedded-database id="embeddedDatabase" type="HSQL">
-    <jdbc:script location="classpath:/springbook/learningtest/spring/embeddeddb/schema.sql"/>
-    <jdbc:script location="classpath:/springbook/learningtest/spring/embeddeddb/data.sql"/>
-  </jdbc:embedded-database>
-  // highlight-end
-  
-  // ...
-</beans>
+```xml title="HSQL 내장형 DB 설정 예"
+<jdbc:embedded-database id="embeddedDatabase" type="HSQL">
+  <jdbc:script location="classpath:schema.sql"/>
+</jdbc:embedded-database>
 ```
 
 EmbeddedDatabase 타입의 embeddedDatabase 아이디를 가진 빈이 dataSource 로 등록됩니다.
@@ -2221,7 +2206,7 @@ XML 과 다르게 애노테이션은 자바 코드에 존재하므로 변경할 
 
 지금까지 만든 XML 설정은 테스트용 DI 설정입니다.
 
-이제부터는 DI 관련 정보를 스프링 3.1로 변경하는 일과 테스트환경과 운영환경에서 동작할 때 필요로 하는 DI 정보를 분리해내는 일도 포함된다.
+이제부터는 DI 관련 정보를 스프링 3.1로 변경하는 일과 테스트환경과 운영환경에서 동작할 때 필요로 하는 DI 정보를 분리해내는 일도 포함합니다.
 
 #### 테스트 컨텍스트의 변경
 
