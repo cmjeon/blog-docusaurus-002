@@ -4,7 +4,7 @@ sidebar_position: 7
 last_update:
   author: cm jeon
   date: 2023-01-10
-description: ""
+description: "스프링이 제공하는 세 가지 기술을 필요에 따라 응용해보면서 스프링의 개발철학과 추구하는 가치에 대해 알아보겠습니다."
 tags: ["Toby's Spring"]
 keywords: ['스프링']
 ---
@@ -13,7 +13,9 @@ import Image from '@theme/IdealImage';
 
 스프링의 3대 핵심 기술인 IoC/DI, 서비스 추상화, AOP 에 대해 간단히(?) 살펴보았습니다.
 
+:::note 7장_ 스프링 핵심 기술의 응용, 557.
 <Image img={require('./07-simple.png')} />
+:::
 
 이번 장에서는 스프링이 제공하는 세 가지 기술을 필요에 따라 응용해보면서 스프링의 개발철학과 추구하는 가치에 대해 알아보겠습니다.
 
@@ -1623,6 +1625,8 @@ DI 는 특별한 이유가 없는 한 항상 인터페이스를 사용한다고 
 하나의 오브젝트가 여러 개의 인터페이스를 만드는 이유 중의 하나는 오브젝트에게 다른 종류의 클라이언트가 등장하기 때문입니다.
 
 인터페이스 분리 원칙이 주는 장점은 모든 클라이언트가 자신의 관심에 따른 접근 방식을 불필요한 간섭없이 유지할 수 있다는 점입니다.
+
+<Image img={require('./07-10.png')} />
 
 BaseSqlService 와 그 서브클래스는 SqlReader 와 SqlRegistry 라는 두 개의 인터페이스를 통해 의존 오브젝트들을 DI 하도록 되어 있습니다.
 
