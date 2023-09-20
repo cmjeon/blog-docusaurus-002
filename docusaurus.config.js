@@ -11,7 +11,7 @@ console.log('### env', process.env.gtagTrackingId)
 const config = {
   title: 'Today I Learned',
   tagline: 'javascript, frontend, Project Management',
-  url: 'https://blog-cmjeon.vercel.app',
+  url: 'https://cmjeon.github.io',
   baseUrl: '/blog-docusaurus-002/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
@@ -20,7 +20,7 @@ const config = {
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
   organizationName: 'cmjeon', // Usually your GitHub org/user name.
-  projectName: 'cmjeon.github.io', // Usually your repo name.
+  projectName: 'blog-docusaurus-002', // Usually your repo name.
   deploymentBranch: 'gh-pages',
 
   // Even if you don't use internalization, you can use this field to set useful
