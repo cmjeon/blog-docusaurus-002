@@ -12,7 +12,7 @@ const config = {
   title: 'Today I Learned',
   tagline: 'javascript, frontend, Project Management',
   url: 'https://blog-cmjeon.vercel.app',
-  baseUrl: '/',
+  baseUrl: '/blog-docusaurus-002/',
   onBrokenLinks: 'ignore',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
