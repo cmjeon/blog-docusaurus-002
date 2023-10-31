@@ -3,6 +3,7 @@ date: 2022-11-25
 title: '2022년 11월 25일'
 authors: [cmjeon]
 tags: ['토비의스프링']
+draft: true
 ---
 
 import Image from '@theme/IdealImage';
@@ -175,6 +176,7 @@ public void jdbcContextWithStatementStrategy(StatementStrategy stmt) throws SQLE
 ```
 
 컨텍스트 메소드를 호출할 클라이언트를 만든다.
+
 클라이언트는 전략을 생성하고 컨텍스트 메소드를 호출한다.
 
 ```java

@@ -3,6 +3,7 @@ date: 2022-11-14
 title: '2022년 11월 14일'
 authors: [cmjeon]
 tags: ['서말','react.js']
+draft: true
 ---
 
 import Image from '@theme/IdealImage';

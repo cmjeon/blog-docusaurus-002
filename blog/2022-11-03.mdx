@@ -3,6 +3,7 @@ date: 2022-11-03
 title: '2022년 11월 3일'
 authors: [cmjeon]
 tags: ['토비의스프링']
+draft: true
 ---
 
 ## 토비의스프링
@@ -10,6 +11,8 @@ tags: ['토비의스프링']
 ### 1장 오브젝트와 의존관계
 
 #### 1.4 제어의 역전(IoC)
+
+##### 1.4.1 오브젝트 팩토리
 
 UserDaoTest 가 하던 UserDao 에 ConnectionMaker 을 등록하는 일을 맡길 UserDaoFactory 를 만든다.
 
@@ -50,6 +53,8 @@ UserDaoFactory 는 오브젝트간의 구조와 관계를 정의하는 역할을
 
 UserDaoFactory 를 만듦으로써 애플리케이션의 구성요소 역할을 하는 오브젝트와 구조를 결정하는 오브젝트를 분리해냈다.
 
+##### 1.4.2 오브젝트 팩토리의 활용
+
 만약 DaoFactory 에 다른 Dao 가 추가된다면 ConnectionMaker 를 생성하는 코드가 반복된다.
 
 ```java {4,8,12} title="DaoFactory.java"
@@ -70,7 +75,7 @@ public class DaoFactory {
 }
 ```
 
-ConnectionMaker 를 생성하는 코드를 추출한다.
+따라서 ConnectionMaker 를 생성하는 코드를 추출한다.
 
 ```java {15-17} title="DaoFactory.java"
 public class DaoFactory {
@@ -93,6 +98,8 @@ public class DaoFactory {
 
 )
 ```
+
+##### 1.4.3 제어권의 이전을 통한 제어관계 역전
 
 이제 제어의 역전이라는 개념을 알아보자.
 
